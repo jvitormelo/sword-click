@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Cut } from "../modules/cut/types";
+import { Cut } from "./types";
 
 type Store = {
   cuts: Array<Cut>;

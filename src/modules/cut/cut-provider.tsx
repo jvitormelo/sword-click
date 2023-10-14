@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { useCutStore } from "../../store/cut-store";
+import { useCutStore } from "./cut-store";
 import { CutMapper } from "./cut-mapper";
 
 export const CutProvider = ({ children }: PropsWithChildren) => {
