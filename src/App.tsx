@@ -24,9 +24,7 @@ function App() {
 
   return (
     <main className="flex h-screen items-center justify-center w-full  cursor-pointer">
-      <div className="p-4 bg-white border border-black">
-        <GameMap />
-      </div>
+      <GameMap />
     </main>
   );
 }

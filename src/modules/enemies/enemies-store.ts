@@ -15,9 +15,9 @@ type Store = {
   actions: {
     cutPosition: (
       position: {
-        from: Position;
-        to: Position;
-      },
+        width: number;
+        height: number;
+      } & Position,
       damage: number
     ) => void;
   };
@@ -44,22 +44,9 @@ export const useEnemiesStore = create<Store>((set) => ({
   ],
 
   actions: {
-    cutPosition: ({ from, to }, damage) => {
+    cutPosition: ({ height, width, x, y }, damage) => {
       set((state) => {
-        const formattedFrom = {
-          x: from.x - distanceFromTop.x,
-          y: from.y - distanceFromTop.y,
-        };
-
-        const formattedTo = {
-          x: to.x - distanceFromTop.x,
-          y: to.y - distanceFromTop.y,
-        };
-
         const mappedEnemies = state.enemies.map((enemy) => {
-          const cutWidth = formattedTo.x - formattedFrom.x;
-          const cutHeight = formattedTo.y - formattedFrom.y;
-
           const isTouching = arePointsTouching(
             {
               x: enemy.position.x,
@@ -68,10 +55,10 @@ export const useEnemiesStore = create<Store>((set) => ({
               height: 48,
             },
             {
-              x: formattedFrom.x,
-              y: formattedFrom.y,
-              width: cutWidth,
-              height: cutHeight,
+              x: x - distanceFromTop.x,
+              y: y - distanceFromTop.y,
+              width,
+              height,
             }
           );
 

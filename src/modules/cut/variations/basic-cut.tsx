@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useCutActions } from "../cut-store";
 import { ActiveCut } from "../types";
 import { motion } from "framer-motion";
@@ -7,25 +7,28 @@ import { useEnemiesActions } from "../../enemies/enemies-store";
 
 const duration = 500;
 
+const height = 50;
+
 export const BasicCut = ({ position, id }: ActiveCut) => {
   const { removeCut } = useCutActions();
   const { cutPosition } = useEnemiesActions();
 
+  const randomX = useMemo(() => between(-5, 5), []);
+
+  const left = position.x + randomX;
+
   useEffect(() => {
+    console.log("Montou");
     const timer = setTimeout(() => {
       removeCut(id);
     }, duration);
 
     cutPosition(
       {
-        from: {
-          x: position.x,
-          y: position.y,
-        },
-        to: {
-          x: position.x + 1,
-          y: position.y + 100,
-        },
+        height: height,
+        width: 3,
+        x: left,
+        y: position.y - height / 2,
       },
       10
     );
@@ -33,29 +36,21 @@ export const BasicCut = ({ position, id }: ActiveCut) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const randomX = between(-5, 5);
-
-  const rotate = (() => {
-    return 0;
-  })();
-
   return (
     <motion.div
-      className="shadow-md"
+      className="shadow-md z-30"
       style={{
         width: "4px",
         background: "white",
         position: "absolute",
         border: "1px solid black",
-        left: position.x + randomX,
-        top: position.y - 60,
+        left: left,
+        top: position.y,
         borderRadius: "50%",
-        rotate: rotate,
+        height: 50,
+        translateY: "-50%",
       }}
-      animate={{
-        // make the height grow from bottom to top
-        height: [30, 120],
-      }}
+      animate={{}}
       transition={{
         duration: 0.1,
         ease: "easeInOut",

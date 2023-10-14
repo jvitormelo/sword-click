@@ -6,7 +6,7 @@ interface Point {
 }
 
 export function arePointsTouching(point1: Point, point2: Point): boolean {
-  console.log();
+  console.log(point1, point2);
   return (
     point1.x < point2.x + point2.width &&
     point1.x + point1.width > point2.x &&

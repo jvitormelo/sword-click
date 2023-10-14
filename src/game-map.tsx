@@ -16,12 +16,20 @@ export const GameMap = () => {
   }, []);
 
   return (
-    <div ref={boardRef} className="text-xl bg-white w-96 h-96 flex gap-4">
+    <div
+      ref={boardRef}
+      className="text-xl bg-white w-96 h-96 flex gap-4 relative"
+    >
       {enemies.map((enemy) => (
         <div
+          style={{
+            left: enemy.position.x,
+            top: enemy.position.y,
+            position: "absolute",
+          }}
           data-id={enemy.id}
           key={enemy.id}
-          className="bg-green-800 w-12 h-12 rounded-full z-10"
+          className="bg-green-800 w-12 h-12  rounded-lg"
         >
           <div className="pointer-events-none">{enemy.health}</div>
         </div>
