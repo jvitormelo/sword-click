@@ -7,5 +7,5 @@ const cutMap = {
 };
 
 export const CutMapper = memo(({ type, ...props }: Cut) => {
-  return cutMap[type] ? cutMap[type](props) : null;
+  return cutMap[type] ? cutMap[type]({ ...props }) : null;
 });

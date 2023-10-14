@@ -10,3 +10,5 @@ export type Cut = {
     y: number;
   };
 };
+
+export type ActiveCut = Omit<Cut, "type">;

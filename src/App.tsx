@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useEventListener } from "./hooks/useEventListener";
 import { useCutActions } from "./modules/cut/cut-store";
 import { CutType } from "./modules/cut/types";
+import { GameMap } from "./game-map";
 
 function App() {
   const { addCut } = useCutActions();
@@ -23,7 +24,9 @@ function App() {
 
   return (
     <main className="flex h-screen items-center justify-center w-full  cursor-pointer">
-      <div data-clickable="true" className="text-xl bg-white w-96 h-96" />
+      <div className="p-4 bg-white border border-black">
+        <GameMap />
+      </div>
     </main>
   );
 }

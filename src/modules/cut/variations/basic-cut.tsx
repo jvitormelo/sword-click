@@ -1,50 +1,42 @@
 import { useEffect } from "react";
 import { useCutActions } from "../cut-store";
-import { Cut } from "../types";
+import { ActiveCut } from "../types";
 import { motion } from "framer-motion";
 import { between } from "../../../utils/random";
-
-type CutWithoutType = Omit<Cut, "type">;
+import { useEnemiesActions } from "../../enemies/enemies-store";
 
 const duration = 500;
 
-export const BasicCut = ({ position, id }: CutWithoutType) => {
+export const BasicCut = ({ position, id }: ActiveCut) => {
   const { removeCut } = useCutActions();
+  const { cutPosition } = useEnemiesActions();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       removeCut(id);
     }, duration);
+
+    cutPosition(
+      {
+        from: {
+          x: position.x,
+          y: position.y,
+        },
+        to: {
+          x: position.x + 1,
+          y: position.y + 100,
+        },
+      },
+      10
+    );
+
     return () => clearTimeout(timer);
   }, []);
 
   const randomX = between(-5, 5);
 
   const rotate = (() => {
-    const mapper = {
-      leftToRight: 0,
-      rightToLeft: 180,
-      topToBottom: 90,
-      bottomToTop: 270,
-      leftTopToRightBottom: 45,
-      rightBottomToLeftTop: 225,
-      leftBottomToRightTop: 135,
-      rightTopToLeftBottom: 315,
-    };
-
-    const values = [
-      mapper["leftToRight"],
-      mapper["rightToLeft"],
-      mapper["topToBottom"],
-      mapper["bottomToTop"],
-      mapper["leftTopToRightBottom"],
-      mapper["rightBottomToLeftTop"],
-      mapper["leftBottomToRightTop"],
-      mapper["rightTopToLeftBottom"],
-    ];
-
-    const randomIndex = between(0, values.length - 1);
-    return values[randomIndex];
+    return 0;
   })();
 
   return (
