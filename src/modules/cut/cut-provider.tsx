@@ -6,9 +6,11 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
   const { cuts } = useCutStore();
   return (
     <>
-      {cuts.map((cut) => (
-        <CutMapper key={cut.id} {...cut} />
-      ))}
+      <div className="cursor-pointer">
+        {cuts.map((cut) => (
+          <CutMapper key={cut.id} {...cut} />
+        ))}
+      </div>
       {children}
     </>
   );

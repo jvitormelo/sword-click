@@ -7,7 +7,7 @@ import { useEnemiesActions } from "../../enemies/enemies-store";
 
 const duration = 500;
 
-const height = 50;
+const height = 150;
 
 export const BasicCut = ({ position, id }: ActiveCut) => {
   const { removeCut } = useCutActions();
@@ -18,7 +18,6 @@ export const BasicCut = ({ position, id }: ActiveCut) => {
   const left = position.x + randomX;
 
   useEffect(() => {
-    console.log("Montou");
     const timer = setTimeout(() => {
       removeCut(id);
     }, duration);
@@ -43,14 +42,19 @@ export const BasicCut = ({ position, id }: ActiveCut) => {
         width: "4px",
         background: "white",
         position: "absolute",
-        border: "1px solid black",
+
         left: left,
         top: position.y,
         borderRadius: "50%",
-        height: 50,
+        height,
+        transformOrigin: "0 100%",
+        scaleY: 0,
         translateY: "-50%",
       }}
-      animate={{}}
+      animate={{
+        border: "1px solid black",
+        scaleY: 1,
+      }}
       transition={{
         duration: 0.1,
         ease: "easeInOut",
