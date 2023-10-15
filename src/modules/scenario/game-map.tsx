@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   Enemy,
   useEnemiesOnFieldActions,
@@ -30,6 +30,8 @@ export const GameMap = () => {
     }
   }, []);
 
+  const enemyArr = useMemo(() => Array.from(enemies), [enemies]);
+
   return (
     <div className="flex flex-col">
       <span className="text-end">
@@ -42,8 +44,8 @@ export const GameMap = () => {
           </div>
         )}
         <AnimatePresence>
-          {enemies.map((enemy) => (
-            <Enemy {...enemy} key={enemy.id} />
+          {enemyArr.map(([key, enemy]) => (
+            <Enemy {...enemy} key={key} />
           ))}
         </AnimatePresence>
 
@@ -83,6 +85,14 @@ const Enemy = ({ id, position, health }: Enemy) => {
   useEffect(() => {
     const interval = setInterval(() => {
       moveToPlayer(id, 10);
+      elementRef.current?.animate(
+        [
+          // shake
+        ],
+        {
+          duration: 100,
+        }
+      );
     }, 333);
 
     return () => {

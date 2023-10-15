@@ -15,7 +15,7 @@ export type Enemy = {
 };
 
 type Store = {
-  enemies: Array<Enemy>;
+  enemies: Map<string, Enemy>;
   actions: {
     spawn: (enemy: Enemy) => void;
     moveToPlayer: (id: string, distance: number) => void;
@@ -30,81 +30,70 @@ type Store = {
 };
 
 export const useEnemiesOnFieldStore = create<Store>((set) => ({
-  enemies: [],
+  enemies: new Map(),
 
   actions: {
     spawn: (enemy: Enemy) => {
       set((state) => {
         return {
-          enemies: [...state.enemies, enemy],
+          enemies: new Map(state.enemies).set(enemy.id, enemy),
         };
       });
     },
     moveToPlayer: (id, distance) => {
       set((state) => {
-        const mappedEnemies = state.enemies.map((enemy) => {
-          if (enemy.id === id) {
-            return {
-              ...enemy,
-              position: {
-                x: enemy.position.x,
-                y: enemy.position.y + distance,
-              },
-            };
-          }
+        const foundEnemy = state.enemies.get(id);
 
-          return enemy;
-        });
+        if (!foundEnemy) return state;
 
-        const enemiesToAttack = mappedEnemies.filter((enemy) => {
-          // MAGIC NUMBER FOR NOW
-          return enemy.position.y >= 304;
-        });
+        const newPosY = foundEnemy.position.y + distance;
 
-        for (const enemy of enemiesToAttack) {
-          // TODO change to Map
-          mappedEnemies.splice(mappedEnemies.indexOf(enemy), 1);
+        // hard coded danger position
 
+        if (newPosY >= 320) {
+          state.enemies.delete(foundEnemy.id);
           usePlayerStore.getState().actions.takeDamage(10);
+        } else {
+          foundEnemy.position.y = newPosY;
         }
 
         return {
-          enemies: mappedEnemies,
+          enemies: new Map(state.enemies),
         };
       });
     },
     cutPosition: ({ height, width, x, y }, damage) => {
       set((state) => {
-        const mappedEnemies = state.enemies
-          .map((enemy) => {
-            const isTouching = arePointsTouching(
-              {
-                x: enemy.position.x,
-                y: enemy.position.y,
-                width: 48,
-                height: 48,
-              },
-              {
-                x: x - distanceFromTop.x,
-                y: y - distanceFromTop.y,
-                width,
-                height,
-              }
-            );
-
-            if (isTouching) {
-              return {
-                ...enemy,
-                health: enemy.health - damage,
-              };
+        const newEnemies = new Map();
+        for (const enemy of state.enemies.values()) {
+          const isTouching = arePointsTouching(
+            {
+              x: enemy.position.x,
+              y: enemy.position.y,
+              width: 48,
+              height: 48,
+            },
+            {
+              x: x - distanceFromTop.x,
+              y: y - distanceFromTop.y,
+              width,
+              height,
             }
+          );
 
-            return enemy;
-          })
-          .filter((enemy) => enemy.health > 0);
+          if (isTouching) {
+            const newHealth = enemy.health - damage;
+
+            enemy.health = newHealth;
+          }
+
+          if (enemy.health > 0) {
+            newEnemies.set(enemy.id, enemy);
+          }
+        }
 
         return {
-          enemies: mappedEnemies,
+          enemies: newEnemies,
         };
       });
     },
