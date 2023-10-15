@@ -1,18 +1,25 @@
 import { create } from "zustand";
 import ExtendIcon from "../../assets/skills/extend-range.png";
 import RuleOfThirds from "../../assets/skills/rule-of-thirds.png";
-import { ActiveSkill, PassiveSkill, SkillCode, SkillType } from "./types";
+import {
+  ActiveSkill,
+  EnhanceSkill,
+  PassiveSkill,
+  SkillCode,
+  SkillType,
+} from "./types";
 import { RuleOfThirdsHandler } from "./handlers/passives/rule-of-thirds";
+import { ExtendRangeHandler } from "./handlers/enhance/extend-range";
 
-const extendRange: ActiveSkill = {
+const extendRange: EnhanceSkill = {
   id: "1",
   code: SkillCode.ExtendRange,
-  cost: 10,
   name: "Extend Range",
   type: SkillType.Enhance,
   description:
     "Increase the range of your basic cut, also slightly increase the width of your cut.",
   icon: ExtendIcon,
+  handler: new ExtendRangeHandler(),
 };
 
 const ruleOfThirds: PassiveSkill = {
@@ -27,13 +34,13 @@ const ruleOfThirds: PassiveSkill = {
 };
 
 type Store = {
-  equippedSkills: ActiveSkill[];
-  activeSkill: ActiveSkill | null;
+  equippedSkills: Array<ActiveSkill | EnhanceSkill>;
+  activeSkill: ActiveSkill | EnhanceSkill | null;
   passiveSkills: PassiveSkill[];
   guardSkills: PassiveSkill[];
   actions: {
     removeActiveSkill: () => void;
-    activateSkill: (skill: ActiveSkill) => void;
+    activateSkill: (skill: ActiveSkill | EnhanceSkill) => void;
   };
 };
 

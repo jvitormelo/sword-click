@@ -9,7 +9,7 @@ import { distanceFromTop } from "../../constants";
 import Zombie from "../../assets/zombie.png";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlayerHealth } from "../PlayerHealth";
-import { SkillBar } from "../Skill";
+import { SkillBar } from "../skill/skill-bar";
 
 const quantity = 20;
 

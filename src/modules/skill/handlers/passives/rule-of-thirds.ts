@@ -1,7 +1,7 @@
 import { Cut } from "../../../cut/types";
-import { PassiveSkillHandler } from "../../types";
+import { SkillHandler } from "../../types";
 
-export class RuleOfThirdsHandler implements PassiveSkillHandler {
+export class RuleOfThirdsHandler implements SkillHandler {
   counter = 0;
 
   before(cut: Cut) {
@@ -10,8 +10,6 @@ export class RuleOfThirdsHandler implements PassiveSkillHandler {
       cut.damage[1] = cut.damage[1] * 2;
       cut.background = "red";
     }
-
-    return cut;
   }
 
   after() {

@@ -1,6 +1,6 @@
-import { useEventListener } from "../hooks/useEventListener";
-import { useSkillActions, useSkillStore } from "./skill/skill-store";
-import { ActiveSkill } from "./skill/types";
+import { useEventListener } from "../../hooks/useEventListener";
+import { useSkillActions, useSkillStore } from "./skill-store";
+import { ActiveSkill, EnhanceSkill } from "./types";
 
 export const SkillBar = () => {
   const skills = useSkillStore((s) => s.equippedSkills);
@@ -8,7 +8,7 @@ export const SkillBar = () => {
   const activeSkill = useSkillStore((s) => s.activeSkill);
   const { activateSkill, removeActiveSkill } = useSkillActions();
 
-  function toggleSkill(skill: ActiveSkill) {
+  function toggleSkill(skill: ActiveSkill | EnhanceSkill) {
     if (activeSkill?.id === skill.id) {
       removeActiveSkill();
     } else {

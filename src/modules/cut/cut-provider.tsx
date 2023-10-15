@@ -9,7 +9,6 @@ import { AnimatePresence } from "framer-motion";
 import { between } from "../../utils/random";
 import { useEnemiesOnFieldActions } from "../enemies/enemies-store";
 import { useSkillStore } from "../skill/skill-store";
-import { SkillCode } from "../skill/types";
 
 const isOutsideBoard = (clientX: number, clientY: number) => {
   const { x, y } = distanceFromTop;
@@ -74,20 +73,24 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
     [addCut, cutPosition, removeCut]
   );
 
-  const cutFactory = useCallback(
-    (cut: Omit<Cut, "id">) => {
-      const id = Math.random().toString();
-
-      const newCut: Cut = {
-        ...cut,
-        id,
-      };
-
+  const cutBefore = useCallback(
+    (cut: Cut) => {
       passives.forEach((passive) => {
-        passive.handler.before(newCut);
+        passive.handler.before(cut);
       });
 
-      return newCut;
+      if (activeSkill && "handler" in activeSkill) {
+        activeSkill.handler.before(cut);
+      }
+
+      return cut;
+    },
+    [activeSkill, passives]
+  );
+
+  const cutAfter = useCallback(
+    (cut: Cut) => {
+      passives.forEach((passive) => passive.handler.after(cut));
     },
     [passives]
   );
@@ -98,43 +101,18 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
 
       if (isOutsideBoard(clientX, clientY)) return;
 
-      const height = (() => {
-        if (activeSkill?.code === SkillCode.ExtendRange) {
-          return 300;
-        }
-
-        return between(50, 80);
-      })();
-
-      const width = (() => {
-        if (activeSkill?.code === SkillCode.ExtendRange) {
-          return 8;
-        }
-
-        return 3;
-      })();
-
-      const damage: [number, number] = (() => {
-        const baseDamage = [30, 50] as [number, number];
-
-        return baseDamage;
-      })();
-
-      const background = (() => {
-        return "white";
-      })();
-
       const randomX = between(-5, 5);
 
       const left = clientX + randomX;
 
-      const cut = cutFactory({
-        damage,
+      const cut = cutBefore({
+        id: Math.random().toString(),
+        damage: [30, 50],
         duration: 500,
-        height,
-        width,
+        height: between(50, 80),
+        width: 3,
         border: "1px solid black",
-        background,
+        background: "white",
         type: CutType.Basic,
         position: {
           x: left,
@@ -144,10 +122,10 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
 
       cutHandler(cut);
 
-      passives.forEach((passive) => passive.handler.after(cut));
+      cutAfter(cut);
     },
 
-    [cutFactory, cutHandler, passives, activeSkill?.code]
+    [cutAfter, cutBefore, cutHandler]
   );
 
   useEventListener("click", onClick);

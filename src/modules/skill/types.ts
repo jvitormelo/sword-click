@@ -17,9 +17,7 @@ export interface BaseSkill {
   id: string;
   icon: string;
   name: string;
-
   description: string;
-
   code: SkillCode;
   type: SkillType;
 }
@@ -28,11 +26,13 @@ export type ActiveSkill = BaseSkill & {
   cost: number | null;
 };
 
-export type PassiveSkillHandler = {
-  before: (cut: Cut) => Cut;
+export type SkillHandler = {
+  before: (cut: Cut) => void;
   after: (cut: Cut) => void;
 };
 
 export type PassiveSkill = BaseSkill & {
-  handler: PassiveSkillHandler;
+  handler: SkillHandler;
 };
+
+export type EnhanceSkill = PassiveSkill;
