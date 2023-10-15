@@ -40,7 +40,7 @@ export const GameMap = () => {
       </span>
       <div
         ref={boardRef}
-        className="bg-blue-300 w-96 h-96 flex gap-4 relative"
+        className="bg-blue-300 w-96 h-96 flex gap-4 relative cursor-pointer"
         id="game"
       >
         {!isGameActive && (

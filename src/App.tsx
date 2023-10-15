@@ -2,7 +2,7 @@ import { GameMap } from "./modules/scenario/game-map";
 
 function App() {
   return (
-    <main className="flex h-screen items-center justify-center flex-col w-screen cursor-pointer select-none p-4">
+    <main className="flex h-screen items-center justify-center flex-col w-screen select-none p-4">
       <GameMap />
     </main>
   );

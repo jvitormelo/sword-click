@@ -80,7 +80,7 @@ export const SkillBar = () => {
       {skills.map((skill) => (
         <img
           data-active={activeSkill?.id === skill.id}
-          onClick={() => activateSkill(skill)}
+          onClick={() => toggleSkill(skill)}
           key={skill.id}
           className="w-8 h-8 border-white border data-[active='true']:border-red-700"
           src={skill.icon}

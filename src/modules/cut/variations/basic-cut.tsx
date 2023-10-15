@@ -1,30 +1,10 @@
 import { motion } from "framer-motion";
-import { useEffect } from "react";
-import { useCutActions } from "../cut-store";
 import { ActiveCut } from "../types";
 
-export const BasicCut = ({
-  position,
-  id,
-  height,
-  width,
-  duration,
-}: ActiveCut) => {
-  const { removeCut } = useCutActions();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      removeCut(id);
-    }, duration);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
-
+export const BasicCut = ({ position, height, width }: ActiveCut) => {
   return (
     <motion.div
-      className="shadow-md z-30"
+      className="shadow-md z-30 cursor-pointer"
       style={{
         width,
         background: "white",
@@ -40,10 +20,15 @@ export const BasicCut = ({
       animate={{
         border: "1px solid black",
         scaleY: 1,
+        transition: {},
       }}
       transition={{
         duration: 0.1,
         ease: "easeInOut",
+      }}
+      exit={{
+        scaleY: 0,
+        opacity: 0,
       }}
     />
   );

@@ -7,6 +7,7 @@ import { useEventListener } from "../../hooks/useEventListener";
 import { SkillCode, useSkillStore } from "../Skill";
 import { between } from "../../utils/random";
 import { useEnemiesOnFieldActions } from "../enemies/enemies-store";
+import { AnimatePresence } from "framer-motion";
 
 const isOutsideBoard = (clientX: number, clientY: number) => {
   const { x, y } = distanceFromTop;
@@ -25,7 +26,7 @@ const isOutsideBoard = (clientX: number, clientY: number) => {
 
 export const CutProvider = ({ children }: PropsWithChildren) => {
   const { cuts } = useCutStore();
-  const { addCut } = useCutActions();
+  const { addCut, removeCut } = useCutActions();
   const activeSkill = useSkillStore((s) => s.activeSkill);
   const { cutPosition } = useEnemiesOnFieldActions();
 
@@ -50,8 +51,12 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
         },
         between(damage[0], damage[1])
       );
+
+      setTimeout(() => {
+        removeCut(id);
+      }, duration);
     },
-    [addCut, cutPosition]
+    [addCut, cutPosition, removeCut]
   );
 
   const onClick = useCallback(
@@ -107,11 +112,11 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <div className="cursor-pointer">
+      <AnimatePresence>
         {cuts.map((cut) => (
           <CutMapper key={cut.id} {...cut} />
         ))}
-      </div>
+      </AnimatePresence>
       {children}
     </>
   );
