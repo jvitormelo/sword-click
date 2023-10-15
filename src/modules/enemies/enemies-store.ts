@@ -4,7 +4,7 @@ import { distanceFromTop } from "../../constants";
 import { arePointsTouching } from "../../utils/geometry";
 import { useEffect, useRef, useState } from "react";
 import { between } from "../../utils/random";
-import { usePlayerStore } from "../PlayerHealth";
+import { usePlayerStore } from "../player/player-store";
 
 export type Enemy = {
   id: string;

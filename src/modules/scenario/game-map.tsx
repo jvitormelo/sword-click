@@ -8,7 +8,7 @@ import {
 import { distanceFromTop } from "../../constants";
 import Zombie from "../../assets/zombie.png";
 import { AnimatePresence, motion } from "framer-motion";
-import { PlayerHealth } from "../PlayerHealth";
+import { PlayerBars } from "../player/player-bars";
 import { SkillBar } from "../skill/skill-bar";
 
 const quantity = 20;
@@ -59,7 +59,7 @@ export const GameMap = () => {
         </div>
       </div>
 
-      <PlayerHealth />
+      <PlayerBars />
       <SkillBar />
     </div>
   );

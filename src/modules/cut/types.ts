@@ -15,6 +15,7 @@ export type Cut = {
   duration: number;
   background: string;
   border: string;
+  cost: number;
 };
 
 export type ActiveCut = Omit<Cut, "type">;
