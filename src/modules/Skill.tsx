@@ -1,67 +1,14 @@
-import { create } from "zustand";
-import icon from "../assets/skills/extend-range.png";
 import { useEventListener } from "../hooks/useEventListener";
-
-export enum SkillCode {
-  ExtendRange,
-}
-
-export enum SkillType {
-  Passive,
-  Enhance,
-  Guard,
-  Active,
-  Ultimate,
-}
-
-interface Skill {
-  id: string;
-  icon: string;
-  name: string;
-
-  description: string;
-  cost: number;
-  code: SkillCode;
-  type: SkillType;
-}
-
-const extendRange: Skill = {
-  id: "1",
-  code: SkillCode.ExtendRange,
-  cost: 10,
-  name: "Extend Range",
-  type: SkillType.Enhance,
-  description:
-    "Increase the range of your basic cut, also slightly increase the width of your cut.",
-  icon,
-};
-
-type Store = {
-  equippedSkills: Skill[];
-  activeSkill: Skill | null;
-  actions: {
-    removeActiveSkill: () => void;
-    activateSkill: (skill: Skill) => void;
-  };
-};
-
-export const useSkillStore = create<Store>((set) => ({
-  equippedSkills: [extendRange],
-  activeSkill: null,
-  actions: {
-    removeActiveSkill: () => set({ activeSkill: null }),
-    activateSkill: (skill) => set({ activeSkill: skill }),
-  },
-}));
-
-export const useSkillActions = () => useSkillStore((s) => s.actions);
+import { useSkillActions, useSkillStore } from "./skill/skill-store";
+import { ActiveSkill } from "./skill/types";
 
 export const SkillBar = () => {
   const skills = useSkillStore((s) => s.equippedSkills);
+  const passivesSkills = useSkillStore((s) => s.passiveSkills);
   const activeSkill = useSkillStore((s) => s.activeSkill);
   const { activateSkill, removeActiveSkill } = useSkillActions();
 
-  function toggleSkill(skill: Skill) {
+  function toggleSkill(skill: ActiveSkill) {
     if (activeSkill?.id === skill.id) {
       removeActiveSkill();
     } else {
@@ -76,17 +23,30 @@ export const SkillBar = () => {
   });
 
   return (
-    <div className="pt-1">
-      {skills.map((skill) => (
-        <img
-          data-active={activeSkill?.id === skill.id}
-          onClick={() => toggleSkill(skill)}
-          key={skill.id}
-          className="w-8 h-8 border-white border data-[active='true']:border-red-700"
-          src={skill.icon}
-          alt={skill.name}
-        />
-      ))}
+    <div className="pt-1 flex">
+      <section>
+        {skills.map((skill) => (
+          <img
+            data-active={activeSkill?.id === skill.id}
+            onClick={() => toggleSkill(skill)}
+            key={skill.id}
+            className="w-8 h-8 border-white border data-[active='true']:border-red-700"
+            src={skill.icon}
+            alt={skill.name}
+          />
+        ))}
+      </section>
+      <div className="mx-4 w-[1px] h-full bg-white"></div>
+      <section className="ml-auto">
+        {passivesSkills.map((skill) => (
+          <img
+            key={skill.id}
+            className="w-8 h-8 border-2 border-blue-500"
+            src={skill.icon}
+            alt={skill.name}
+          />
+        ))}
+      </section>
     </div>
   );
 };

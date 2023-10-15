@@ -13,6 +13,8 @@ export type Cut = {
   height: number;
   width: number;
   duration: number;
+  background: string;
+  border: string;
 };
 
 export type ActiveCut = Omit<Cut, "type">;

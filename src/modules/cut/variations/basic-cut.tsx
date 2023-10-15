@@ -1,13 +1,19 @@
 import { motion } from "framer-motion";
 import { ActiveCut } from "../types";
 
-export const BasicCut = ({ position, height, width }: ActiveCut) => {
+export const BasicCut = ({
+  position,
+  height,
+  width,
+  background,
+  border,
+}: ActiveCut) => {
   return (
     <motion.div
       className="shadow-md z-30 cursor-pointer"
       style={{
         width,
-        background: "white",
+        background,
         position: "absolute",
         left: position.x,
         top: position.y,
@@ -18,7 +24,7 @@ export const BasicCut = ({ position, height, width }: ActiveCut) => {
         translateY: "-50%",
       }}
       animate={{
-        border: "1px solid black",
+        border,
         scaleY: 1,
         transition: {},
       }}
