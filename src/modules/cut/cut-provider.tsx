@@ -2,28 +2,63 @@ import { PropsWithChildren, useCallback } from "react";
 import { useCutActions, useCutStore } from "./cut-store";
 import { CutMapper } from "./cut-mapper";
 import { boardSize, distanceFromTop } from "../../constants";
-import { CutType } from "./types";
+import { Cut, CutType } from "./types";
 import { useEventListener } from "../../hooks/useEventListener";
 import { SkillCode, useSkillStore } from "../Skill";
 import { between } from "../../utils/random";
+import { useEnemiesOnFieldActions } from "../enemies/enemies-store";
+
+const isOutsideBoard = (clientX: number, clientY: number) => {
+  const { x, y } = distanceFromTop;
+
+  if (
+    clientX < x ||
+    clientY < y ||
+    clientX > x + boardSize.width ||
+    clientY > y + boardSize.height
+  ) {
+    return true;
+  }
+
+  return false;
+};
 
 export const CutProvider = ({ children }: PropsWithChildren) => {
   const { cuts } = useCutStore();
   const { addCut } = useCutActions();
   const activeSkill = useSkillStore((s) => s.activeSkill);
+  const { cutPosition } = useEnemiesOnFieldActions();
+
+  const cutHandler = useCallback(
+    ({ damage, duration, height, position, id, type, width }: Cut) => {
+      addCut({
+        position,
+        id,
+        type,
+        height,
+        width,
+        damage,
+        duration,
+      });
+
+      cutPosition(
+        {
+          height,
+          width,
+          x: position.x,
+          y: position.y - height / 2,
+        },
+        between(damage[0], damage[1])
+      );
+    },
+    [addCut, cutPosition]
+  );
 
   const onClick = useCallback(
     (e: PointerEvent) => {
       const { clientX, clientY } = e;
 
-      const { x, y } = distanceFromTop;
-
-      if (
-        clientX < x ||
-        clientY < y ||
-        clientX > x + boardSize.width ||
-        clientY > y + boardSize.height
-      ) {
+      if (isOutsideBoard(clientX, clientY)) {
         return;
       }
 
@@ -43,18 +78,29 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
         return 3;
       })();
 
-      addCut({
-        position: { x: clientX, y: clientY },
+      const damage: [number, number] = (() => {
+        return [30, 50];
+      })();
+
+      const randomX = between(-5, 5);
+
+      const left = clientX + randomX;
+
+      cutHandler({
         id: Math.random().toString(),
-        type: CutType.Basic,
+        damage,
+        duration: 500,
         height,
         width,
-        damage: [30, 40],
-        duration: 500,
+        type: CutType.Basic,
+        position: {
+          x: left,
+          y: clientY,
+        },
       });
     },
 
-    [addCut, activeSkill]
+    [cutHandler, activeSkill]
   );
 
   useEventListener("click", onClick);
