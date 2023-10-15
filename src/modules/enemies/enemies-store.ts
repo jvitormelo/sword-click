@@ -2,8 +2,9 @@ import { create } from "zustand";
 import { Position } from "../../types";
 import { distanceFromTop } from "../../constants";
 import { arePointsTouching } from "../../utils/geometry";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { between } from "../../utils/random";
+import { usePlayerStore } from "../PlayerHealth";
 export type Enemy = {
   id: string;
   health: number;
@@ -54,6 +55,18 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
 
           return enemy;
         });
+
+        const enemiesToAttack = mappedEnemies.filter((enemy) => {
+          // MAGIC NUMBER FOR NOW
+          return enemy.position.y >= 304;
+        });
+
+        for (const enemy of enemiesToAttack) {
+          // TODO change to Map
+          mappedEnemies.splice(mappedEnemies.indexOf(enemy), 1);
+
+          usePlayerStore.getState().actions.takeDamage(10);
+        }
 
         return {
           enemies: mappedEnemies,
@@ -113,10 +126,20 @@ export const useEnemyFactory = ({
 }) => {
   const { spawn } = useEnemiesOnFieldActions();
   const spawnedQuantity = useRef(0);
+
+  const [isGameActive, setIsGameActive] = useState(false);
+
+  const intervalRef = useRef<NodeJS.Timeout>();
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [interval]);
+
+  const start = () => {
+    intervalRef.current = setInterval(() => {
       if (spawnedQuantity.current >= quantity) {
-        clearInterval(intervalId);
+        clearInterval(spawnedQuantity.current);
         return;
       }
 
@@ -127,6 +150,9 @@ export const useEnemyFactory = ({
         const extraSpawn = between(1, 5);
 
         for (let i = 0; i < extraSpawn; i++) {
+          if (spawnedQuantity.current >= quantity) {
+            return;
+          }
           const zombie: Enemy = {
             id: Math.random().toString(),
             health: 100,
@@ -153,9 +179,12 @@ export const useEnemyFactory = ({
       spawn(zombie);
       spawnedQuantity.current++;
     }, interval);
+    setIsGameActive(true);
+  };
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [interval]);
+  return {
+    start,
+    isGameActive,
+    spawnedQuantity: spawnedQuantity.current,
+  };
 };

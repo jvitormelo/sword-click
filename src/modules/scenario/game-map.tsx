@@ -8,11 +8,14 @@ import {
 import { distanceFromTop } from "../../constants";
 import Zombie from "../../assets/zombie.png";
 import { AnimatePresence, motion } from "framer-motion";
+import { PlayerHealth } from "../PlayerHealth";
+
+const quantity = 20;
 
 export const GameMap = () => {
-  useEnemyFactory({
+  const { isGameActive, start, spawnedQuantity } = useEnemyFactory({
     interval: 1500,
-    quantity: 20,
+    quantity,
     randomizeIntervalEvery: 5,
   });
   const enemies = useEnemiesOnFieldStore((s) => s.enemies);
@@ -28,12 +31,26 @@ export const GameMap = () => {
   }, []);
 
   return (
-    <div ref={boardRef} className="bg-white w-96 h-96 flex gap-4 relative">
-      <AnimatePresence>
-        {enemies.map((enemy) => (
-          <Enemy {...enemy} key={enemy.id} />
-        ))}
-      </AnimatePresence>
+    <div className="flex flex-col">
+      <span className="text-end">
+        {spawnedQuantity}/{quantity}
+      </span>
+      <div ref={boardRef} className="bg-white w-96 h-96 flex gap-4 relative">
+        {!isGameActive && (
+          <div className="flex w-full  items-center justify-center">
+            <button onClick={start}>Start</button>
+          </div>
+        )}
+        <AnimatePresence>
+          {enemies.map((enemy) => (
+            <Enemy {...enemy} key={enemy.id} />
+          ))}
+        </AnimatePresence>
+
+        <div className="absolute bottom-0 w-full bg-red-300 h-10"></div>
+      </div>
+
+      <PlayerHealth />
     </div>
   );
 };
@@ -48,9 +65,13 @@ const Enemy = ({ id, position, health }: Enemy) => {
     if (health !== maxHealth.current) {
       elementRef.current?.animate(
         [
-          { transform: "translate(0px 0px)" },
-          { transform: "translate(10px -10px)" },
-          { transform: "translate(-10px 0px)" },
+          // shake
+          { transform: "translateX(0px)" },
+          { transform: "translateX(-5px)" },
+          { transform: "translateX(5px)" },
+          { transform: "translateX(-5px)" },
+          { transform: "translateX(0px)" },
+          { filter: "brightness(0.5) sepia(100%)" },
         ],
         {
           duration: 200,
@@ -80,7 +101,7 @@ const Enemy = ({ id, position, health }: Enemy) => {
         transition: "all 0.1s ease-in-out",
       }}
       exit={{
-        scale: [1, 1.2, 1],
+        scale: [1, 1.3, 0.5],
         translateX: [0, -5, 5, -5, 0],
       }}
       transition={{
@@ -91,7 +112,7 @@ const Enemy = ({ id, position, health }: Enemy) => {
         scale: [1, 1.2, 1],
       }}
       data-id={id}
-      className="w-12 h-12  rounded-lg"
+      className="w-12 h-12  z-10"
       src={Zombie}
     />
   );
