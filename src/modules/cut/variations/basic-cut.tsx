@@ -3,7 +3,7 @@ import { useCutActions } from "../cut-store";
 import { ActiveCut } from "../types";
 import { motion } from "framer-motion";
 import { between } from "../../../utils/random";
-import { useEnemiesActions } from "../../enemies/enemies-store";
+import { useEnemiesOnFieldActions } from "../../enemies/enemies-store";
 
 const duration = 500;
 
@@ -11,7 +11,7 @@ const height = 150;
 
 export const BasicCut = ({ position, id }: ActiveCut) => {
   const { removeCut } = useCutActions();
-  const { cutPosition } = useEnemiesActions();
+  const { cutPosition } = useEnemiesOnFieldActions();
 
   const randomX = useMemo(() => between(-5, 5), []);
 

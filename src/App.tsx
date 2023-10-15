@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useEventListener } from "./hooks/useEventListener";
 import { useCutActions } from "./modules/cut/cut-store";
 import { CutType } from "./modules/cut/types";
-import { GameMap } from "./game-map";
+import { GameMap } from "./modules/scenario/game-map";
 
 function App() {
   const { addCut } = useCutActions();
@@ -23,7 +23,7 @@ function App() {
   useEventListener("click", onClick);
 
   return (
-    <main className="flex h-screen items-center justify-center w-full  cursor-pointer">
+    <main className="flex h-screen items-center justify-center w-full  cursor-pointer select-none">
       <GameMap />
     </main>
   );
