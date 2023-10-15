@@ -29,7 +29,7 @@ export const BasicCut = ({ position, id }: ActiveCut) => {
         x: left,
         y: position.y - height / 2,
       },
-      10
+      49
     );
 
     return () => clearTimeout(timer);
