@@ -35,7 +35,7 @@ export const PlayerHealth = () => {
 
   useEffect(() => {
     if (life <= 0) {
-      alert("Game Over, burrao");
+      console.log("You died");
     }
   }, [life]);
 

@@ -5,6 +5,7 @@ import { arePointsTouching } from "../../utils/geometry";
 import { useEffect, useRef, useState } from "react";
 import { between } from "../../utils/random";
 import { usePlayerStore } from "../PlayerHealth";
+
 export type Enemy = {
   id: string;
   health: number;

@@ -9,6 +9,7 @@ import { distanceFromTop } from "../../constants";
 import Zombie from "../../assets/zombie.png";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlayerHealth } from "../PlayerHealth";
+import { SkillBar } from "../Skill";
 
 const quantity = 20;
 
@@ -37,7 +38,11 @@ export const GameMap = () => {
       <span className="text-end">
         {spawnedQuantity}/{quantity}
       </span>
-      <div ref={boardRef} className="bg-blue-300 w-96 h-96 flex gap-4 relative">
+      <div
+        ref={boardRef}
+        className="bg-blue-300 w-96 h-96 flex gap-4 relative"
+        id="game"
+      >
         {!isGameActive && (
           <div className="flex w-full  items-center justify-center">
             <button onClick={start}>Start</button>
@@ -55,6 +60,7 @@ export const GameMap = () => {
       </div>
 
       <PlayerHealth />
+      <SkillBar />
     </div>
   );
 };
@@ -88,7 +94,7 @@ const Enemy = ({ id, position, health }: Enemy) => {
   useEffect(() => {
     const interval = setInterval(() => {
       moveToPlayer(id, 10);
-    }, 333);
+    }, 200);
 
     return () => {
       clearInterval(interval);

@@ -1,15 +1,18 @@
-import { useEffect, useMemo } from "react";
-import { useCutActions } from "../cut-store";
-import { ActiveCut } from "../types";
 import { motion } from "framer-motion";
+import { useEffect, useMemo } from "react";
 import { between } from "../../../utils/random";
 import { useEnemiesOnFieldActions } from "../../enemies/enemies-store";
+import { useCutActions } from "../cut-store";
+import { ActiveCut } from "../types";
 
-const duration = 500;
-
-const height = 150;
-
-export const BasicCut = ({ position, id }: ActiveCut) => {
+export const BasicCut = ({
+  position,
+  id,
+  height,
+  width,
+  damage,
+  duration,
+}: ActiveCut) => {
   const { removeCut } = useCutActions();
   const { cutPosition } = useEnemiesOnFieldActions();
 
@@ -22,28 +25,30 @@ export const BasicCut = ({ position, id }: ActiveCut) => {
       removeCut(id);
     }, duration);
 
+    console.log("Chamou");
     cutPosition(
       {
         height: height,
-        width: 3,
+        width,
         x: left,
         y: position.y - height / 2,
       },
-      49
+      between(damage[0], damage[1])
     );
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
     <motion.div
       className="shadow-md z-30"
       style={{
-        width: "4px",
+        width,
         background: "white",
         position: "absolute",
-
-        left: left,
+        left,
         top: position.y,
         borderRadius: "50%",
         height,
