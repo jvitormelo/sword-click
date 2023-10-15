@@ -139,9 +139,8 @@ export const useEnemyFactory = ({
         const extraSpawn = between(1, 5);
 
         for (let i = 0; i < extraSpawn; i++) {
-          if (spawnedQuantity.current >= quantity) {
-            return;
-          }
+          if (spawnedQuantity.current >= quantity) return;
+
           const zombie: Enemy = {
             id: Math.random().toString(),
             health: 100,
@@ -153,8 +152,6 @@ export const useEnemyFactory = ({
           spawn(zombie);
           spawnedQuantity.current++;
         }
-
-        console.log("randomize interval");
       }
 
       const zombie: Enemy = {

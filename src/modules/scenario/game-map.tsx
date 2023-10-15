@@ -37,7 +37,7 @@ export const GameMap = () => {
       <span className="text-end">
         {spawnedQuantity}/{quantity}
       </span>
-      <div ref={boardRef} className="bg-white w-96 h-96 flex gap-4 relative">
+      <div ref={boardRef} className="bg-blue-300 w-96 h-96 flex gap-4 relative">
         {!isGameActive && (
           <div className="flex w-full  items-center justify-center">
             <button onClick={start}>Start</button>
@@ -49,7 +49,9 @@ export const GameMap = () => {
           ))}
         </AnimatePresence>
 
-        <div className="absolute bottom-0 w-full bg-red-300 h-10"></div>
+        <div className="absolute bottom-0 w-full border-t border-red-500 h-10 flex items-center justify-center">
+          <div>(You)</div>
+        </div>
       </div>
 
       <PlayerHealth />
@@ -60,11 +62,12 @@ export const GameMap = () => {
 const Enemy = ({ id, position, health }: Enemy) => {
   const maxHealth = useRef(health);
   const { moveToPlayer } = useEnemiesOnFieldActions();
+  const initialPosition = useRef(position);
 
   const elementRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    if (health !== maxHealth.current) {
+    if (health !== maxHealth.current && health > 0) {
       elementRef.current?.animate(
         [
           // shake
@@ -85,14 +88,6 @@ const Enemy = ({ id, position, health }: Enemy) => {
   useEffect(() => {
     const interval = setInterval(() => {
       moveToPlayer(id, 10);
-      elementRef.current?.animate(
-        [
-          // shake
-        ],
-        {
-          duration: 100,
-        }
-      );
     }, 333);
 
     return () => {
@@ -105,24 +100,25 @@ const Enemy = ({ id, position, health }: Enemy) => {
       ref={elementRef}
       draggable={false}
       style={{
-        left: position.x,
-        top: position.y,
+        left: initialPosition.current.x,
+        top: initialPosition.current.y,
         position: "absolute",
-        transition: "all 0.1s ease-in-out",
       }}
       exit={{
-        scale: [1, 1.3, 0.5],
-        translateX: [0, -5, 5, -5, 0],
+        scale: [1.1, 0.3],
       }}
       transition={{
-        duration: 0.2,
+        duration: 0.3,
         ease: "easeInOut",
       }}
       animate={{
-        scale: [1, 1.2, 1],
+        top: position.y,
+        left: position.x,
+        scale: [0.8, 1.1, 1],
+        rotate: [0, -5, 5, 0],
       }}
       data-id={id}
-      className="w-12 h-12  z-10"
+      className="w-12 h-12 z-10"
       src={Zombie}
     />
   );
