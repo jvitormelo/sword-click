@@ -15,7 +15,7 @@ import { SkillBar } from "../skill/skill-bar";
 const quantity = 20;
 
 export const GameMap = () => {
-  const { start, spawnedQuantity } = useEnemyFactory({
+  const { start } = useEnemyFactory({
     interval: 800,
     quantity,
     randomizeIntervalEvery: 5,
@@ -43,7 +43,7 @@ export const GameMap = () => {
         <span>Gold: {gold}</span>
 
         <span className="text-end">
-          {spawnedQuantity}/{quantity}
+          {enemyArr.length}/ {quantity}
         </span>
       </div>
       <div

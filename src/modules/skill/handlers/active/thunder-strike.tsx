@@ -50,8 +50,6 @@ export class ThunderStrikeHandler {
         }
       );
 
-      console.log(distance);
-
       if (distance < closestDistance.value) {
         closestDistance.value = distance;
         closestDistance.enemy = enemy;
