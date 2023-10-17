@@ -7,9 +7,10 @@ import { Cut, CutType } from "./types";
 
 import { AnimatePresence } from "framer-motion";
 import { between } from "../../utils/random";
-import { useEnemiesOnFieldActions } from "../enemies/enemies-store";
+
 import { useSkillStore } from "../skill/skill-store";
 import { ActiveSkill, SkillType } from "../skill/types";
+import { useGameLevelStore } from "../../stores/game-level-store";
 
 const isOutsideBoard = (clientX: number, clientY: number) => {
   const { x, y } = distanceFromTop;
@@ -30,7 +31,7 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
   const { cuts } = useCutStore();
   const { addCut, removeCut } = useCutActions();
   const activeSkill = useSkillStore((s) => s.activeSkill);
-  const { cutPosition } = useEnemiesOnFieldActions();
+  const { damageLineArea: cutPosition } = useGameLevelStore((s) => s.actions);
   const passives = useSkillStore((s) => s.passiveSkills);
 
   const cutBefore = useCallback(

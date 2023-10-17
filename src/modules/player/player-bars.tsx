@@ -1,31 +1,28 @@
 import { useEffect, useRef } from "react";
-
-import { usePlayerStore } from "./player-store";
-import { useRegenEnergy } from "./useRegenEnergy";
+import { useGameLevelStore } from "../../stores/game-level-store";
 
 export const PlayerBars = () => {
-  const { life } = usePlayerStore();
-  const { energy, maxEnergy } = useRegenEnergy();
+  const { health, energy, maxEnergy } = useGameLevelStore((s) => s.player);
 
-  const maxLife = useRef(life);
+  const maxLife = useRef(health);
 
   useEffect(() => {
-    if (life <= 0) {
+    if (health <= 0) {
       console.log("You died");
     }
-  }, [life]);
+  }, [health]);
 
   return (
     <div>
       <div className="w-full bg-red-700 h-4 flex items-center justify-center relative">
         <div
           style={{
-            width: `${(life / maxLife.current) * 100}%`,
+            width: `${(health / maxLife.current) * 100}%`,
           }}
           className="bg-green-500 h-full absolute left-0 top-0"
         />
         <span className="z-10">
-          {life} / {maxLife.current}
+          {health} / {maxLife.current}
         </span>
       </div>
       <div className="w-full bg-yellow-800 h-4 flex items-center justify-center relative">

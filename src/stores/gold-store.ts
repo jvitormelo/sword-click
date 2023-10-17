@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Enemy } from "../modules/enemies/enemies-store";
+import { Enemy } from "../modules/enemies/use-enemy-factory";
 import { between } from "../utils/random";
 
 interface GoldStore {

@@ -1,12 +1,12 @@
 import { PropsWithChildren, useEffect } from "react";
-import { useEnemiesOnFieldActions } from "./modules/enemies/enemies-store";
+import { useGameLevelStore } from "./stores/game-level-store";
 
 export const GameLoop = ({ children }: PropsWithChildren) => {
-  const { moveEnemiesToPlayer } = useEnemiesOnFieldActions();
+  const { tick } = useGameLevelStore((s) => s.actions);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      moveEnemiesToPlayer();
+      tick();
     }, 333);
 
     return () => {

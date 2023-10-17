@@ -2,12 +2,14 @@ import { animationStore } from "../../../../animation-provider";
 import { distanceFromTop } from "../../../../constants";
 import { Position } from "../../../../types";
 import { closestDistanceToCircle } from "../../../../utils/geometry";
-import { Enemy, useEnemiesOnFieldStore } from "../../../enemies/enemies-store";
+
 import ThunderStrikeHit from "../../../../assets/skills/thunder-strike-hit.png";
 import { ActiveSkill, SkillCode, SkillType } from "../../types";
 import ThunderStrikeIcon from "../../../../assets/icons/thunder-strike.png";
 import { between } from "../../../../utils/random";
 import { motion } from "framer-motion";
+import { EnemyOnLevel } from "../../../../domain/types";
+import { useGameLevelStore } from "../../../../stores/game-level-store";
 
 function createDamageRange(min: number, max: number) {
   return [min, max] as [number, number];
@@ -36,16 +38,17 @@ export class ThunderStrikeSkill implements ActiveSkill {
   }
 
   activate(pos: Position) {
-    const affectedEnemies = useEnemiesOnFieldStore
-      .getState()
-      .actions.circleDamage(
-        {
-          radius: this.radius,
-          x: pos.x - distanceFromTop.x,
-          y: pos.y - distanceFromTop.y,
-        },
-        between(this.damage[0], this.damage[1])
-      );
+    const affectedEnemies: EnemyOnLevel[] = [];
+
+    useGameLevelStore.getState().actions.damageCircleArea(
+      {
+        radius: this.radius,
+        x: pos.x - distanceFromTop.x,
+        y: pos.y - distanceFromTop.y,
+      },
+      between(this.damage[0], this.damage[1]),
+      affectedEnemies
+    );
 
     if (affectedEnemies.length === 0) return;
 
@@ -56,11 +59,11 @@ export class ThunderStrikeSkill implements ActiveSkill {
       })
     );
 
-    const enemies = useEnemiesOnFieldStore.getState().enemies.values();
+    const enemies = useGameLevelStore.getState().enemies.values();
 
     const closestDistance = {
       value: Number.MAX_SAFE_INTEGER,
-      enemy: null as null | Enemy,
+      enemy: null as null | EnemyOnLevel,
     };
 
     for (const enemy of enemies) {
@@ -89,7 +92,7 @@ export class ThunderStrikeSkill implements ActiveSkill {
     }
 
     if (closestDistance.enemy) {
-      useEnemiesOnFieldStore
+      useGameLevelStore
         .getState()
         .actions.damageEnemy(
           closestDistance.enemy.id,

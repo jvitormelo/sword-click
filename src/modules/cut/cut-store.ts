@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Cut } from "./types";
-import { useEnergyStore } from "../player/player-store";
+import { useGameLevelStore } from "../../stores/game-level-store";
 
 type Store = {
   cuts: Array<Cut>;
@@ -13,13 +13,15 @@ type Store = {
 export const useCutStore = create<Store>((set) => ({
   actions: {
     addCut: (cut) => {
-      const playerEnergy = useEnergyStore.getState().energy;
+      const playerEnergy = useGameLevelStore.getState().player.energy;
 
       if (playerEnergy < cut.cost) return false;
 
       set((state) => ({ cuts: [...state.cuts, cut] }));
 
-      useEnergyStore.getState().actions.decrease(cut.cost);
+      useGameLevelStore.getState();
+
+      useGameLevelStore.getState().actions.addEnergy(-cut.cost);
 
       return true;
     },
