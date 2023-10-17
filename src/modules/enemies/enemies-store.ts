@@ -1,7 +1,11 @@
 import { create } from "zustand";
 import { Position } from "../../types";
 import { distanceFromTop } from "../../constants";
-import { arePointsTouching } from "../../utils/geometry";
+import {
+  Circle,
+  areCircleAndRectangleTouching,
+  arePointsTouching,
+} from "../../utils/geometry";
 import { useEffect, useRef, useState } from "react";
 import { between } from "../../utils/random";
 import { usePlayerStore } from "../player/player-store";
@@ -28,6 +32,8 @@ type Store = {
       } & Position,
       damage: number
     ) => void;
+    circleDamage: (circle: Circle, damage: number) => Enemy[];
+    damageEnemy: (id: string, damage: number) => void;
   };
 };
 
@@ -99,6 +105,51 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
 
         return {
           enemies: newEnemies,
+        };
+      });
+    },
+    circleDamage(circle, damage) {
+      const hittedEnemies: Enemy[] = [];
+      set((state) => {
+        const newMap = new Map();
+        for (const enemy of state.enemies.values()) {
+          if (
+            areCircleAndRectangleTouching(circle, {
+              x: enemy.position.x,
+              height: 48,
+              width: 48,
+              y: enemy.position.y,
+            })
+          ) {
+            enemy.health -= damage;
+            hittedEnemies.push(enemy);
+          }
+
+          if (enemy.health > 0) {
+            newMap.set(enemy.id, enemy);
+          }
+        }
+        return {
+          enemies: newMap,
+        };
+      });
+
+      return hittedEnemies;
+    },
+    damageEnemy(id, damage) {
+      set((state) => {
+        const enemy = state.enemies.get(id);
+
+        if (!enemy) return state;
+
+        enemy.health -= damage;
+
+        if (enemy.health <= 0) {
+          state.enemies.delete(enemy.id);
+        }
+
+        return {
+          enemies: new Map(state.enemies),
         };
       });
     },

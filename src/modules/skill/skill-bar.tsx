@@ -17,9 +17,11 @@ export const SkillBar = () => {
   }
 
   useEventListener("keydown", (e: KeyboardEvent) => {
-    if (e.key === "1") {
-      toggleSkill(skills[0]);
-    }
+    const numberKey = Number(e.key);
+
+    if (Number.isNaN(numberKey)) return;
+
+    toggleSkill(skills[numberKey - 1]);
   });
 
   return (

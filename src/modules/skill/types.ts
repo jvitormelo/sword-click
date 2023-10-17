@@ -1,8 +1,10 @@
+import { Position } from "../../types";
 import { Cut } from "../cut/types";
 
 export enum SkillCode {
   ExtendRange = "extend-range",
   RuleOfThirds = "rule-of-thirds",
+  ThunderStrike = "thunder-strike",
 }
 
 export enum SkillType {
@@ -19,11 +21,14 @@ export interface BaseSkill {
   name: string;
   description: string;
   code: SkillCode;
-  type: SkillType;
 }
 
 export type ActiveSkill = BaseSkill & {
+  type: SkillType.Active;
   cost: number | null;
+  handler: {
+    activate: (pos: Position) => void;
+  };
 };
 
 export type SkillHandler = {
@@ -32,9 +37,12 @@ export type SkillHandler = {
 };
 
 export type PassiveSkill = BaseSkill & {
+  type: SkillType.Passive | SkillType.Guard;
   handler: SkillHandler;
 };
 
-export type EnhanceSkill = PassiveSkill & {
+export type EnhanceSkill = BaseSkill & {
+  type: SkillType.Enhance;
+  handler: SkillHandler;
   costModifier: number;
 };

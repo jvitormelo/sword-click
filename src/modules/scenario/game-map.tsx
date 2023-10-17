@@ -1,22 +1,22 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
+import Zombie from "../../assets/zombie.png";
+import { distanceFromTop } from "../../constants";
+import { useGoldStore } from "../../stores/gold-store";
 import {
   Enemy,
   useEnemiesOnFieldActions,
   useEnemiesOnFieldStore,
   useEnemyFactory,
 } from "../enemies/enemies-store";
-import { distanceFromTop } from "../../constants";
-import Zombie from "../../assets/zombie.png";
-import { AnimatePresence, motion } from "framer-motion";
 import { PlayerBars } from "../player/player-bars";
 import { SkillBar } from "../skill/skill-bar";
-import { useGoldStore } from "../../stores/gold-store";
 
 const quantity = 20;
 
 export const GameMap = () => {
   const { isGameActive, start, spawnedQuantity } = useEnemyFactory({
-    interval: 1000,
+    interval: 800,
     quantity,
     randomizeIntervalEvery: 5,
   });
