@@ -6,21 +6,20 @@ import { Enemy, useEnemiesOnFieldStore } from "../../../enemies/enemies-store";
 import ThunderStrike from "../../../../assets/skills/thunder-strike.gif";
 
 export class ThunderStrikeHandler {
+  radius = 4;
   activate(pos: Position) {
-    const affectedsEnemies = useEnemiesOnFieldStore
+    const affectedEnemies = useEnemiesOnFieldStore
       .getState()
       .actions.circleDamage(
         {
-          radius: 8,
+          radius: this.radius,
           x: pos.x - distanceFromTop.x,
           y: pos.y - distanceFromTop.y,
         },
         1000
       );
 
-    if (affectedsEnemies.length === 0) {
-      return;
-    }
+    if (affectedEnemies.length === 0) return;
 
     animationStore.getState().addAnimation(
       thunderStrikeAnimationFactory({
@@ -30,6 +29,7 @@ export class ThunderStrikeHandler {
     );
 
     const enemies = useEnemiesOnFieldStore.getState().enemies.values();
+
     const closestDistance = {
       value: Number.MAX_SAFE_INTEGER,
       enemy: null as null | Enemy,
@@ -44,7 +44,7 @@ export class ThunderStrikeHandler {
           y: enemy.position.y,
         },
         {
-          radius: 8,
+          radius: this.radius,
           x: pos.x - distanceFromTop.x,
           y: pos.y - distanceFromTop.y,
         }

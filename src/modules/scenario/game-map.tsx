@@ -15,7 +15,7 @@ import { SkillBar } from "../skill/skill-bar";
 const quantity = 20;
 
 export const GameMap = () => {
-  const { isGameActive, start, spawnedQuantity } = useEnemyFactory({
+  const { start, spawnedQuantity } = useEnemyFactory({
     interval: 800,
     quantity,
     randomizeIntervalEvery: 5,
@@ -39,6 +39,7 @@ export const GameMap = () => {
   return (
     <div className="flex flex-col">
       <div className="flex justify-end gap-4">
+        <span onClick={start}>Start</span>
         <span>Gold: {gold}</span>
 
         <span className="text-end">
@@ -50,11 +51,6 @@ export const GameMap = () => {
         className="bg-blue-300 w-96 h-96 flex gap-4 relative cursor-pointer"
         id="game"
       >
-        {!isGameActive && (
-          <div className="flex w-full  items-center justify-center">
-            <button onClick={start}>Start</button>
-          </div>
-        )}
         <AnimatePresence>
           {enemyArr.map(([key, enemy]) => (
             <Enemy {...enemy} key={key} />
@@ -65,7 +61,6 @@ export const GameMap = () => {
           <div>(You)</div>
         </div>
       </div>
-
       <PlayerBars />
       <SkillBar />
     </div>
@@ -80,7 +75,7 @@ const Enemy = ({ id, position, health }: Enemy) => {
   const elementRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    if (health !== maxHealth.current && health > 0) {
+    if (health !== maxHealth.current) {
       elementRef.current?.animate(
         [
           // shake
@@ -119,16 +114,21 @@ const Enemy = ({ id, position, health }: Enemy) => {
       }}
       exit={{
         scale: [1.1, 0.3],
-      }}
-      transition={{
-        duration: 0.3,
-        ease: "easeInOut",
+        filter: "brightness(0.5) sepia(100%)",
+        transition: {
+          duration: 0.2,
+        },
       }}
       animate={{
         top: position.y,
         left: position.x,
         scale: [0.8, 1.1, 1],
         rotate: [0, -5, 5, 0],
+        transition: {
+          type: "spring",
+          damping: 10,
+          stiffness: 100,
+        },
       }}
       data-id={id}
       className="w-12 h-12 z-10"

@@ -130,7 +130,7 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <SkillOverlay></SkillOverlay>
+      <SkillOverlay />
       <AnimatePresence>
         {cuts.map((cut) => (
           <CutMapper key={cut.id} {...cut} />
@@ -168,7 +168,7 @@ const SkillOverlay = () => {
 
   return (
     <div
-      className="absolute bg-black w-4 h-4 rounded-full pointer-events-none cursor-pointer opacity-25 z-50"
+      className="absolute bg-black w-2 h-2 rounded-full pointer-events-none cursor-pointer opacity-25 z-50"
       style={{
         transform: `translate(-50%, -50%)`,
         top: y,

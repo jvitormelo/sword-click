@@ -37,6 +37,20 @@ type Store = {
   };
 };
 
+function enemiesCleanup(value: Map<string, Enemy>) {
+  const newValue = new Map();
+
+  for (const [key, enemy] of value) {
+    if (enemy.health > 0) {
+      newValue.set(key, enemy);
+    } else {
+      useGoldStore.getState().generateGold(enemy);
+    }
+  }
+
+  return newValue;
+}
+
 export const useEnemiesOnFieldStore = create<Store>((set) => ({
   enemies: new Map(),
 
@@ -72,7 +86,6 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
     },
     cutPosition: ({ height, width, x, y }, damage) => {
       set((state) => {
-        const newEnemies = new Map();
         for (const enemy of state.enemies.values()) {
           const isTouching = arePointsTouching(
             {
@@ -90,28 +103,18 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
           );
 
           if (isTouching) {
-            const newHealth = enemy.health - damage;
-
-            enemy.health = newHealth;
-          }
-
-          if (enemy.health > 0) {
-            newEnemies.set(enemy.id, enemy);
-          } else {
-            // enemy died
-            useGoldStore.getState().generateGold(enemy);
+            enemy.health -= damage;
           }
         }
 
         return {
-          enemies: newEnemies,
+          enemies: enemiesCleanup(state.enemies),
         };
       });
     },
     circleDamage(circle, damage) {
-      const hittedEnemies: Enemy[] = [];
+      const enemiesHit: Enemy[] = [];
       set((state) => {
-        const newMap = new Map();
         for (const enemy of state.enemies.values()) {
           if (
             areCircleAndRectangleTouching(circle, {
@@ -121,20 +124,16 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
               y: enemy.position.y,
             })
           ) {
+            enemiesHit.push(enemy);
             enemy.health -= damage;
-            hittedEnemies.push(enemy);
-          }
-
-          if (enemy.health > 0) {
-            newMap.set(enemy.id, enemy);
           }
         }
         return {
-          enemies: newMap,
+          enemies: enemiesCleanup(state.enemies),
         };
       });
 
-      return hittedEnemies;
+      return enemiesHit;
     },
     damageEnemy(id, damage) {
       set((state) => {
@@ -144,12 +143,8 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
 
         enemy.health -= damage;
 
-        if (enemy.health <= 0) {
-          state.enemies.delete(enemy.id);
-        }
-
         return {
-          enemies: new Map(state.enemies),
+          enemies: enemiesCleanup(state.enemies),
         };
       });
     },
@@ -175,6 +170,7 @@ export const useEnemyFactory = ({
   const [isGameActive, setIsGameActive] = useState(false);
 
   const intervalRef = useRef<NodeJS.Timeout>();
+
   useEffect(() => {
     return () => {
       clearInterval(intervalRef.current);
@@ -182,6 +178,7 @@ export const useEnemyFactory = ({
   }, [interval]);
 
   const start = () => {
+    spawnedQuantity.current = 0;
     intervalRef.current = setInterval(() => {
       if (spawnedQuantity.current >= quantity) {
         clearInterval(spawnedQuantity.current);
