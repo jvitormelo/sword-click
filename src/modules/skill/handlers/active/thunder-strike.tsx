@@ -1,4 +1,4 @@
-import { animationStore } from "../../../../animation-provider";
+import { animationStore } from "../../../../providers/animation-provider";
 import { distanceFromTop } from "../../../../constants";
 import { Position } from "../../../../types";
 import { closestDistanceToCircle } from "../../../../utils/geometry";

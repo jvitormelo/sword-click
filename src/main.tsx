@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+
 import "./index.css";
 import { CutProvider } from "./modules/cut/cut-provider";
-import { AnimationProvider } from "./animation-provider";
-import { GameLoop } from "./game-loop";
+import { AnimationProvider } from "./providers/animation-provider";
+import { GameLoop } from "./providers/game-loop";
+import { App } from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

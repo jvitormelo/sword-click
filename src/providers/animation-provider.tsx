@@ -1,7 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { PropsWithChildren, ReactNode, useMemo } from "react";
 import { create } from "zustand";
-import ThunderSound from "./assets/sounds/thunder-strike-sound.mp3";
+import ThunderSound from "../assets/sounds/thunder-strike-sound.mp3";
 
 type AnimationStore = {
   animations: Map<string, (props: { id: string }) => ReactNode>;
