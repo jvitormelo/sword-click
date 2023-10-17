@@ -10,12 +10,13 @@ import Zombie from "../../assets/zombie.png";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlayerBars } from "../player/player-bars";
 import { SkillBar } from "../skill/skill-bar";
+import { useGoldStore } from "../../stores/gold-store";
 
 const quantity = 20;
 
 export const GameMap = () => {
   const { isGameActive, start, spawnedQuantity } = useEnemyFactory({
-    interval: 1500,
+    interval: 1000,
     quantity,
     randomizeIntervalEvery: 5,
   });
@@ -33,11 +34,17 @@ export const GameMap = () => {
 
   const enemyArr = useMemo(() => Array.from(enemies), [enemies]);
 
+  const gold = useGoldStore((s) => s.gold);
+
   return (
     <div className="flex flex-col">
-      <span className="text-end">
-        {spawnedQuantity}/{quantity}
-      </span>
+      <div className="flex justify-end gap-4">
+        <span>Gold: {gold}</span>
+
+        <span className="text-end">
+          {spawnedQuantity}/{quantity}
+        </span>
+      </div>
       <div
         ref={boardRef}
         className="bg-blue-300 w-96 h-96 flex gap-4 relative cursor-pointer"

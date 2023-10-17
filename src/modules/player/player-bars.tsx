@@ -1,30 +1,19 @@
 import { useEffect, useRef } from "react";
 
-import { useEnergyStore, usePlayerStore } from "./player-store";
+import { usePlayerStore } from "./player-store";
+import { useRegenEnergy } from "./useRegenEnergy";
 
 export const PlayerBars = () => {
   const { life } = usePlayerStore();
-  const energy = useEnergyStore((s) => s.energy);
-  const { regenerate } = useEnergyStore((s) => s.actions);
+  const { energy, maxEnergy } = useRegenEnergy();
 
   const maxLife = useRef(life);
-  const maxEnergy = useRef(energy);
 
   useEffect(() => {
     if (life <= 0) {
       console.log("You died");
     }
   }, [life]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      regenerate();
-    }, 666);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   return (
     <div>
@@ -39,13 +28,13 @@ export const PlayerBars = () => {
           {life} / {maxLife.current}
         </span>
       </div>
-      <div className="w-full bg-blue-700 h-4 flex items-center justify-center relative">
+      <div className="w-full bg-yellow-800 h-4 flex items-center justify-center relative">
         <div
-          style={{ width: `${(energy / maxEnergy.current) * 100}%` }}
+          style={{ width: `${(energy / maxEnergy) * 100}%` }}
           className="bg-yellow-500 h-full absolute left-0 top-0 transition-all duration-75"
         />
         <span className="z-10">
-          {energy} / {maxEnergy.current}
+          {energy} / {maxEnergy}
         </span>
       </div>
     </div>

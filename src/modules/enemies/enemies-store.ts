@@ -5,6 +5,7 @@ import { arePointsTouching } from "../../utils/geometry";
 import { useEffect, useRef, useState } from "react";
 import { between } from "../../utils/random";
 import { usePlayerStore } from "../player/player-store";
+import { useGoldStore } from "../../stores/gold-store";
 
 export type Enemy = {
   id: string;
@@ -90,6 +91,9 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
 
           if (enemy.health > 0) {
             newEnemies.set(enemy.id, enemy);
+          } else {
+            // enemy died
+            useGoldStore.getState().generateGold(enemy);
           }
         }
 
