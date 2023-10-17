@@ -101,11 +101,8 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
   );
 
   const skillHandler = useCallback(
-    (clientX: number, clientY: number, activeSkill: ActiveSkill) => {
-      activeSkill.handler.activate({
-        x: clientX,
-        y: clientY,
-      });
+    (x: number, y: number, activeSkill: ActiveSkill) => {
+      activeSkill.activate({ x, y });
     },
     []
   );

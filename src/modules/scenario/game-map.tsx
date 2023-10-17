@@ -12,13 +12,13 @@ import {
 import { PlayerBars } from "../player/player-bars";
 import { SkillBar } from "../skill/skill-bar";
 
-const quantity = 20;
+const quantity = 30;
 
 export const GameMap = () => {
   const { start } = useEnemyFactory({
     interval: 800,
     quantity,
-    randomizeIntervalEvery: 5,
+    randomizeIntervalEvery: 3,
   });
   const enemies = useEnemiesOnFieldStore((s) => s.enemies);
 

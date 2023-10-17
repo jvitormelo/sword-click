@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import ExtendIcon from "../../assets/skills/extend-range.png";
 import RuleOfThirds from "../../assets/skills/rule-of-thirds.png";
+import { ThunderStrikeSkill } from "./handlers/active/thunder-strike";
+import { ExtendRangeHandler } from "./handlers/enhance/extend-range";
+import { RuleOfThirdsHandler } from "./handlers/passives/rule-of-thirds";
 import {
   ActiveSkill,
   EnhanceSkill,
@@ -8,9 +11,6 @@ import {
   SkillCode,
   SkillType,
 } from "./types";
-import { RuleOfThirdsHandler } from "./handlers/passives/rule-of-thirds";
-import { ExtendRangeHandler } from "./handlers/enhance/extend-range";
-import { ThunderStrikeHandler } from "./handlers/active/thunder-strike";
 
 const extendRange: EnhanceSkill = {
   id: "1",
@@ -34,17 +34,7 @@ const ruleOfThirds: PassiveSkill = {
   handler: new RuleOfThirdsHandler(),
 };
 
-const thunderStrike: ActiveSkill = {
-  code: SkillCode.ThunderStrike,
-  cost: 10,
-  description:
-    "Strike a point with thunder, if it hits, it will bounce to the closest enemy",
-  icon: RuleOfThirds,
-  id: "3",
-  name: "Thunder Strike",
-  type: SkillType.Active,
-  handler: new ThunderStrikeHandler(),
-};
+const thunderStrike = new ThunderStrikeSkill();
 
 type Store = {
   equippedSkills: Array<ActiveSkill | EnhanceSkill>;
