@@ -20,16 +20,27 @@ export const GameMap = () => {
     quantity,
     randomizeIntervalEvery: 3,
   });
+
   const enemies = useEnemiesOnFieldStore((s) => s.enemies);
 
   const boardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (boardRef.current) {
-      const { top, left } = boardRef.current.getBoundingClientRect();
-      distanceFromTop.x = left;
-      distanceFromTop.y = top;
-    }
+    const onResize = () => {
+      if (boardRef.current) {
+        const { top, left } = boardRef.current.getBoundingClientRect();
+        distanceFromTop.x = left;
+        distanceFromTop.y = top;
+      }
+    };
+
+    addEventListener("resize", onResize);
+
+    onResize();
+
+    return () => {
+      removeEventListener("resize", onResize);
+    };
   }, []);
 
   const enemyArr = useMemo(() => Array.from(enemies), [enemies]);
