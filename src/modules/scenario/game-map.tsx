@@ -5,20 +5,19 @@ import { distanceFromTop } from "../../constants";
 import { useGoldStore } from "../../stores/gold-store";
 import {
   Enemy,
-  useEnemiesOnFieldActions,
   useEnemiesOnFieldStore,
   useEnemyFactory,
 } from "../enemies/enemies-store";
 import { PlayerBars } from "../player/player-bars";
 import { SkillBar } from "../skill/skill-bar";
 
-const quantity = 30;
+const quantity = 500;
 
 export const GameMap = () => {
   const { start } = useEnemyFactory({
-    interval: 800,
+    interval: 10,
     quantity,
-    randomizeIntervalEvery: 3,
+    randomizeIntervalEvery: 1,
   });
 
   const enemies = useEnemiesOnFieldStore((s) => s.enemies);
@@ -80,7 +79,6 @@ export const GameMap = () => {
 
 const Enemy = ({ id, position, health }: Enemy) => {
   const maxHealth = useRef(health);
-  const { moveToPlayer } = useEnemiesOnFieldActions();
   const initialPosition = useRef(position);
 
   const elementRef = useRef<HTMLImageElement>(null);
@@ -103,16 +101,6 @@ const Enemy = ({ id, position, health }: Enemy) => {
       );
     }
   }, [health]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      moveToPlayer(id, 10);
-    }, 200);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   return (
     <motion.img

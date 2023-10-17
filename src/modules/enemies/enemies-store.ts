@@ -24,7 +24,6 @@ type Store = {
   enemies: Map<string, Enemy>;
   actions: {
     spawn: (enemy: Enemy) => void;
-    moveToPlayer: (id: string, distance: number) => void;
     cutPosition: (
       position: {
         width: number;
@@ -34,6 +33,7 @@ type Store = {
     ) => void;
     circleDamage: (circle: Circle, damage: number) => Enemy[];
     damageEnemy: (id: string, damage: number) => void;
+    moveEnemiesToPlayer: () => void;
   };
 };
 
@@ -62,28 +62,7 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
         };
       });
     },
-    moveToPlayer: (id, distance) => {
-      set((state) => {
-        const foundEnemy = state.enemies.get(id);
 
-        if (!foundEnemy) return state;
-
-        const newPosY = foundEnemy.position.y + distance;
-
-        // hard coded danger position
-
-        if (newPosY >= 320) {
-          state.enemies.delete(foundEnemy.id);
-          usePlayerStore.getState().actions.takeDamage(10);
-        } else {
-          foundEnemy.position.y = newPosY;
-        }
-
-        return {
-          enemies: new Map(state.enemies),
-        };
-      });
-    },
     cutPosition: ({ height, width, x, y }, damage) => {
       set((state) => {
         for (const enemy of state.enemies.values()) {
@@ -142,6 +121,29 @@ export const useEnemiesOnFieldStore = create<Store>((set) => ({
         if (!enemy) return state;
 
         enemy.health -= damage;
+
+        return {
+          enemies: enemiesCleanup(state.enemies),
+        };
+      });
+    },
+    moveEnemiesToPlayer: () => {
+      set((state) => {
+        let damageDealt = 0;
+        for (const enemy of state.enemies.values()) {
+          const newPosY = enemy.position.y + 20;
+
+          // hard coded danger position
+
+          if (newPosY >= 320) {
+            enemy.health = 0;
+            damageDealt += 10;
+          } else {
+            enemy.position.y = newPosY;
+          }
+        }
+
+        usePlayerStore.getState().actions.takeDamage(damageDealt);
 
         return {
           enemies: enemiesCleanup(state.enemies),
