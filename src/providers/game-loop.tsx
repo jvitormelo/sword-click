@@ -1,5 +1,6 @@
 import { PropsWithChildren, useEffect } from "react";
 import { useGameLevelStore } from "../stores/game-level-store";
+import { gameTick } from "@/constants";
 
 export const GameLoop = ({ children }: PropsWithChildren) => {
   const { tick } = useGameLevelStore((s) => s.actions);
@@ -7,7 +8,7 @@ export const GameLoop = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const interval = setInterval(() => {
       tick();
-    }, 333);
+    }, gameTick);
 
     return () => {
       clearInterval(interval);

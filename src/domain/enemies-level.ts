@@ -59,8 +59,8 @@ export class EnemiesLevel implements EnemiesAction {
         {
           x: enemy.position.x,
           y: enemy.position.y,
-          width: 48,
-          height: 48,
+          width: enemy.size.width,
+          height: enemy.size.height,
         },
         {
           x: x - distanceFromTop.x,
@@ -87,8 +87,8 @@ export class EnemiesLevel implements EnemiesAction {
       if (
         areCircleAndRectangleTouching(circle, {
           x: enemy.position.x,
-          height: 48,
-          width: 48,
+          height: enemy.size.height,
+          width: enemy.size.width,
           y: enemy.position.y,
         })
       ) {
@@ -111,10 +111,10 @@ export class EnemiesLevel implements EnemiesAction {
 
   tick() {
     for (const enemy of this.level.enemies.values()) {
-      const newPosY = enemy.position.y + 20;
+      const newPosY = enemy.position.y + enemy.speed;
 
       if (newPosY >= 320) {
-        this.level.player.health -= 1;
+        this.level.player.health -= enemy.attack;
       } else {
         enemy.position.y = newPosY;
       }

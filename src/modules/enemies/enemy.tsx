@@ -2,9 +2,7 @@ import { useEffect, useRef } from "react";
 import { EnemyOnLevel } from "../../domain/types";
 import { motion } from "framer-motion";
 
-import Zombie from "../../assets/zombie.png";
-
-export const Enemy = ({ id, position, health }: EnemyOnLevel) => {
+export const Enemy = ({ id, position, health, size, image }: EnemyOnLevel) => {
   const maxHealth = useRef(health);
   const initialPosition = useRef(position);
 
@@ -37,6 +35,8 @@ export const Enemy = ({ id, position, health }: EnemyOnLevel) => {
         left: initialPosition.current.x,
         top: initialPosition.current.y,
         position: "absolute",
+        width: size.width,
+        height: size.height,
       }}
       exit={{
         scale: [1.1, 0.3],
@@ -57,8 +57,8 @@ export const Enemy = ({ id, position, health }: EnemyOnLevel) => {
         },
       }}
       data-id={id}
-      className="w-12 h-12 z-10"
-      src={Zombie}
+      className="z-10"
+      src={image}
     />
   );
 };

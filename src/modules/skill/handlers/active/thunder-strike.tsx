@@ -73,8 +73,8 @@ export class ThunderStrikeSkill implements ActiveSkill {
 
       const distance = closestDistanceToCircle(
         {
-          height: 48,
-          width: 48,
+          height: enemy.size.height,
+          width: enemy.size.width,
           x: enemy.position.x,
           y: enemy.position.y,
         },
@@ -99,8 +99,16 @@ export class ThunderStrikeSkill implements ActiveSkill {
           between(this.damage[0], this.damage[1])
         );
 
-      const x = distanceFromTop.x + closestDistance.enemy.position.x + 24;
-      const y = distanceFromTop.y + closestDistance.enemy.position.y + 24;
+      const x =
+        distanceFromTop.x +
+        closestDistance.enemy.position.x +
+        closestDistance.enemy.size.width / 2;
+
+      const y =
+        distanceFromTop.y +
+        closestDistance.enemy.position.y +
+        closestDistance.enemy.size.height / 2;
+
       animationStore.getState().addAnimation(
         thunderStrikeAnimationFactory({
           x,
@@ -123,8 +131,6 @@ const thunderStrikeAnimationFactory = ({ x, y }: { x: number; y: number }) => {
         animate={{
           opacity: [0, 1],
           translateY: ["-300%", "-50%"],
-          // glitch effect
-
           transition: {
             duration: 0.1,
             ease: "easeOut",

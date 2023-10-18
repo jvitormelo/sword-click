@@ -10,6 +10,7 @@ type Store = {
   enemies: Map<string, EnemyOnLevel>;
   actions: {
     addEnergy: (energy: number) => void;
+    bulkSpawn: (enemies: EnemyOnLevel[]) => void;
   } & EnemiesAction;
 };
 
@@ -51,14 +52,27 @@ export const useGameLevelStore = create<Store>((set) => ({
         };
       });
     },
-    spawn: (enemy: EnemyOnLevel) => {
+    bulkSpawn: (enemies: EnemyOnLevel[]) => {
       set((state) => {
-        const enemiesLevel = new EnemiesLevel(state);
+        const newEnemies = new Map(state.enemies);
 
-        enemiesLevel.spawn(enemy);
+        for (const enemy of enemies) {
+          newEnemies.set(enemy.id, enemy);
+        }
 
         return {
-          enemies: new Map(state.enemies),
+          enemies: newEnemies,
+        };
+      });
+    },
+    spawn: (enemy: EnemyOnLevel) => {
+      set((state) => {
+        const enemies = new Map(state.enemies);
+
+        enemies.set(enemy.id, enemy);
+
+        return {
+          enemies,
         };
       });
     },

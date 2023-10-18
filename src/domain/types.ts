@@ -5,6 +5,14 @@ export type EnemyOnLevel = {
     x: number;
     y: number;
   };
+  size: {
+    width: number;
+    height: number;
+  };
+
+  image: string;
+  attack: number;
+  speed: number;
 };
 
 export type PlayerOnLevel = {
