@@ -75,6 +75,7 @@ function zombieFactory(): EnemyOnLevel {
       x: between(0, 344),
       y: between(0, 24),
     },
+    ailments: [],
   };
 }
 
@@ -93,5 +94,6 @@ function goblinFactory(): EnemyOnLevel {
       x: between(0, 344),
       y: between(0, 24),
     },
+    ailments: [],
   };
 }

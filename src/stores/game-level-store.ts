@@ -76,11 +76,11 @@ export const useGameLevelStore = create<Store>((set) => ({
         };
       });
     },
-    damageLineArea: (line, damage) => {
+    damageLineArea: (line, damage, ailments) => {
       set((state) => {
         const enemiesController = new EnemiesLevel(state);
 
-        enemiesController.damageLineArea(line, damage);
+        enemiesController.damageLineArea(line, damage, ailments);
 
         return {
           enemies: new Map(state.enemies),

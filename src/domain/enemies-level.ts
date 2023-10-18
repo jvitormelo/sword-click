@@ -7,6 +7,10 @@ import {
 } from "../utils/geometry";
 import { EnemyOnLevel, LevelModel } from "./types";
 
+export enum Ailment {
+  Burn = "Burn",
+}
+
 export type EnemiesAction = {
   spawn: (enemy: EnemyOnLevel) => void;
   damageLineArea: (
@@ -14,7 +18,8 @@ export type EnemiesAction = {
       width: number;
       height: number;
     } & Position,
-    damage: number
+    damage: number,
+    ailments: Ailment[]
   ) => void;
   damageCircleArea: (
     circle: Circle,
@@ -52,7 +57,8 @@ export class EnemiesLevel implements EnemiesAction {
       width: number;
       height: number;
     } & Position,
-    damage: number
+    damage: number,
+    ailments: Ailment[]
   ) {
     for (const enemy of this.level.enemies.values()) {
       const isTouching = arePointsTouching(
@@ -72,6 +78,7 @@ export class EnemiesLevel implements EnemiesAction {
 
       if (isTouching) {
         enemy.health -= damage;
+        enemy.ailments = [...enemy.ailments, ...ailments];
       }
     }
 
@@ -112,6 +119,10 @@ export class EnemiesLevel implements EnemiesAction {
   tick() {
     for (const enemy of this.level.enemies.values()) {
       const newPosY = enemy.position.y + enemy.speed;
+
+      if (enemy.ailments.includes(Ailment.Burn)) {
+        enemy.health -= 10;
+      }
 
       const isInAttackRange =
         newPosY + enemy.size.height / 2 >= boardSize.dangerZone;

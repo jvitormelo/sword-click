@@ -91,7 +91,8 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
           x: cut.position.x - distanceFromTop.x,
           y: cut.position.y - cut.height / 2 - distanceFromTop.y,
         },
-        between(cut.damage[0], cut.damage[1])
+        between(cut.damage[0], cut.damage[1]),
+        []
       );
 
       playSound(SlashSound);

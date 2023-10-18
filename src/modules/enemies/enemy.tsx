@@ -1,12 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { EnemyOnLevel } from "../../domain/types";
 import { motion } from "framer-motion";
+import { Ailment } from "@/domain/enemies-level";
 
-export const Enemy = ({ id, position, health, size, image }: EnemyOnLevel) => {
+export const Enemy = ({
+  id,
+  position,
+  health,
+  size,
+  image,
+  ailments,
+}: EnemyOnLevel) => {
   const maxHealth = useRef(health);
   const initialPosition = useRef(position);
 
   const elementRef = useRef<HTMLImageElement>(null);
+
+  const hasBurn = useMemo(() => ailments.includes(Ailment.Burn), [ailments]);
 
   useEffect(() => {
     if (health !== maxHealth.current) {
@@ -37,6 +47,7 @@ export const Enemy = ({ id, position, health, size, image }: EnemyOnLevel) => {
         position: "absolute",
         width: size.width,
         height: size.height,
+        backgroundColor: hasBurn ? "red" : undefined,
       }}
       exit={{
         scale: [1.1, 0.3],

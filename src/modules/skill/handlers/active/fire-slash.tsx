@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import FireSlashHit from "@/assets/skills/fire-slash-hit.png";
 import { animationStore, playSound } from "@/providers/animation-provider";
 import FireSound from "@/assets/sounds/fire.mp3";
+import { Ailment } from "@/domain/enemies-level";
 export class FireSlash implements ActiveSkill {
   id = "fire-slash";
   aoe = 8;
@@ -27,7 +28,8 @@ export class FireSlash implements ActiveSkill {
         width: boardSize.width,
         height: 10,
       },
-      between(this.damage[0], this.damage[1])
+      between(this.damage[0], this.damage[1]),
+      [Ailment.Burn]
     );
 
     const animationDuration = 300;
