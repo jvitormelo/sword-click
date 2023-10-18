@@ -11,7 +11,7 @@ export const EnemiesSpawn = () => {
   return (
     <AnimatePresence>
       {enemyArr.map(([key, enemy]) => (
-        <Enemy {...enemy} key={key} />
+        <Enemy enemy={enemy} key={key} />
       ))}
     </AnimatePresence>
   );

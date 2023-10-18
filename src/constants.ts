@@ -11,4 +11,6 @@ export const boardSize = {
   },
 };
 
-export const gameTick = 333;
+export const FPS = 5;
+
+export const gameTick = 1000 / FPS;

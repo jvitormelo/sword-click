@@ -2,15 +2,11 @@ import { useEffect, useMemo, useRef } from "react";
 import { EnemyOnLevel } from "../../domain/types";
 import { motion } from "framer-motion";
 import { Ailment } from "@/domain/enemies-level";
+import { gameTick } from "@/constants";
 
-export const Enemy = ({
-  id,
-  position,
-  health,
-  size,
-  image,
-  ailments,
-}: EnemyOnLevel) => {
+export const Enemy = ({ enemy }: { enemy: EnemyOnLevel }) => {
+  const { id, position, health, size, image, ailments } = enemy;
+
   const maxHealth = useRef(health);
   const initialPosition = useRef(position);
 
@@ -62,9 +58,10 @@ export const Enemy = ({
         scale: [0.8, 1.1, 1],
         rotate: [0, -5, 5, 0],
         transition: {
-          type: "spring",
-          damping: 10,
-          stiffness: 100,
+          // walk animation
+          duration: gameTick / 1000,
+          ease: "linear",
+          loop: Infinity,
         },
       }}
       data-id={id}

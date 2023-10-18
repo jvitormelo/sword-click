@@ -1,4 +1,4 @@
-import { boardSize } from "../constants";
+import { FPS, boardSize } from "../constants";
 import { Position } from "../types";
 import {
   Circle,
@@ -61,12 +61,15 @@ export class EnemiesLevel implements EnemiesAction {
     ailments: Ailment[]
   ) {
     for (const enemy of this.level.enemies.values()) {
+      const movementMargin = enemy.speed / FPS / 2;
+
+      console.log(enemy);
       const isTouching = arePointsTouching(
         {
           x: enemy.position.x,
-          y: enemy.position.y,
+          y: enemy.position.y - movementMargin,
           width: enemy.size.width,
-          height: enemy.size.height,
+          height: enemy.size.height + movementMargin * 2,
         },
         {
           x,
@@ -118,7 +121,7 @@ export class EnemiesLevel implements EnemiesAction {
 
   tick() {
     for (const enemy of this.level.enemies.values()) {
-      const newPosY = enemy.position.y + enemy.speed;
+      const newPosY = enemy.position.y + enemy.speed / FPS;
 
       if (enemy.ailments.includes(Ailment.Burn)) {
         enemy.health -= 10;

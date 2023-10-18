@@ -66,7 +66,7 @@ function zombieFactory(): EnemyOnLevel {
     health: 100,
     attack: 10,
     image: Zombie,
-    speed: 10,
+    speed: 30,
     size: {
       height: 48,
       width: 48,
@@ -84,7 +84,7 @@ function goblinFactory(): EnemyOnLevel {
     id: crypto.randomUUID(),
     health: 30,
     attack: 30,
-    speed: 50,
+    speed: 80,
     image: Goblin,
     size: {
       height: 24,
