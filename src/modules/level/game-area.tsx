@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { distanceFromTop } from "../../constants";
+import { boardSize, distanceFromTop } from "../../constants";
 import { EnemiesSpawn } from "../enemies/enemies-spawn";
 
 export const GameArea = () => {
@@ -9,9 +9,12 @@ export const GameArea = () => {
   useEffect(() => {
     const onResize = () => {
       if (boardRef.current) {
-        const { top, left } = boardRef.current.getBoundingClientRect();
+        const { top, left, width, height } =
+          boardRef.current.getBoundingClientRect();
         distanceFromTop.x = left;
         distanceFromTop.y = top;
+        boardSize.width = Math.floor(width);
+        boardSize.height = Math.floor(height);
       }
     };
 
@@ -31,7 +34,7 @@ export const GameArea = () => {
       id="game"
     >
       <EnemiesSpawn />
-      <div className="absolute bottom-0 w-full border-t border-red-500 h-10 flex items-center justify-center">
+      <div className="absolute bottom-0 w-full border-t bg-red-300 opacity-30 border-red-500 h-[5%] flex items-center justify-center">
         <div>(You)</div>
       </div>
     </div>

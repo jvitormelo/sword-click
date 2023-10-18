@@ -1,4 +1,4 @@
-import { distanceFromTop } from "../constants";
+import { boardSize, distanceFromTop } from "../constants";
 import { Position } from "../types";
 import {
   Circle,
@@ -113,8 +113,12 @@ export class EnemiesLevel implements EnemiesAction {
     for (const enemy of this.level.enemies.values()) {
       const newPosY = enemy.position.y + enemy.speed;
 
-      if (newPosY >= 320) {
+      const isInAttackRange =
+        newPosY + enemy.size.height / 2 >= boardSize.dangerZone;
+
+      if (isInAttackRange) {
         this.level.player.health -= enemy.attack;
+        enemy.position.y = boardSize.dangerZone - enemy.size.height / 2;
       } else {
         enemy.position.y = newPosY;
       }

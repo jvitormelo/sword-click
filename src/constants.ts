@@ -6,6 +6,9 @@ export const distanceFromTop = {
 export const boardSize = {
   width: 384,
   height: 384,
+  get dangerZone() {
+    return this.height - this.height * 0.1;
+  },
 };
 
 export const gameTick = 333;
