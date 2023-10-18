@@ -5,6 +5,7 @@ export enum SkillCode {
   ExtendRange = "extend-range",
   RuleOfThirds = "rule-of-thirds",
   ThunderStrike = "thunder-strike",
+  FireSlash = "fire-slash",
 }
 
 export enum SkillType {
@@ -29,7 +30,7 @@ export type ActiveSkill = BaseSkill & {
   aoe: number;
 
   damage: [number, number];
-  activate: (pos: Position) => void;
+  activate: (absolutePos: Position, boardPos: Position) => void;
 };
 
 export type SkillHandler = {

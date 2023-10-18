@@ -1,4 +1,4 @@
-import { boardSize, distanceFromTop } from "../constants";
+import { boardSize } from "../constants";
 import { Position } from "../types";
 import {
   Circle,
@@ -63,8 +63,8 @@ export class EnemiesLevel implements EnemiesAction {
           height: enemy.size.height,
         },
         {
-          x: x - distanceFromTop.x,
-          y: y - distanceFromTop.y,
+          x,
+          y,
           width,
           height,
         }

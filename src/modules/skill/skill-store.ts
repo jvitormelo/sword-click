@@ -11,6 +11,7 @@ import {
   SkillCode,
   SkillType,
 } from "./types";
+import { FireSlash } from "./handlers/active/fire-slash";
 
 const extendRange: EnhanceSkill = {
   id: "1",
@@ -36,6 +37,8 @@ const ruleOfThirds: PassiveSkill = {
 
 const thunderStrike = new ThunderStrikeSkill();
 
+const flameCleave = new FireSlash();
+
 type Store = {
   equippedSkills: Array<ActiveSkill | EnhanceSkill>;
   activeSkill: ActiveSkill | EnhanceSkill | null;
@@ -48,7 +51,7 @@ type Store = {
 };
 
 export const useSkillStore = create<Store>((set) => ({
-  equippedSkills: [extendRange, thunderStrike],
+  equippedSkills: [extendRange, thunderStrike, flameCleave],
   activeSkill: null,
   passiveSkills: [ruleOfThirds],
   guardSkills: [],

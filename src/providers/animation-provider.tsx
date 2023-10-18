@@ -1,26 +1,25 @@
 import { AnimatePresence } from "framer-motion";
-import { PropsWithChildren, ReactNode, useMemo } from "react";
+import { Fragment, PropsWithChildren, ReactNode, useMemo } from "react";
 import { create } from "zustand";
-import ThunderSound from "../assets/sounds/thunder-strike-sound.mp3";
 
 type AnimationStore = {
-  animations: Map<string, (props: { id: string }) => ReactNode>;
-  addAnimation: (animation: (props: { id: string }) => ReactNode) => void;
+  animations: Map<string, ReactNode>;
+  addAnimation: (animation: ReactNode, duration: number) => void;
   removeAnimation: (id: string) => void;
 };
 
-function playSound(src: string) {
+export function playSound(src: string, removeAfter: number = 300) {
   const audio = new Audio(src);
   audio.play();
 
   setTimeout(() => {
     audio.pause();
     audio.remove();
-  }, 300);
+  }, removeAfter);
 }
 
 export const animationStore = create<AnimationStore>((set) => ({
-  addAnimation: (animation) => {
+  addAnimation: (animation, duration) => {
     const id = Math.random().toString();
     set((s) => {
       s.animations.set(id, animation);
@@ -29,8 +28,6 @@ export const animationStore = create<AnimationStore>((set) => ({
       };
     });
 
-    playSound(ThunderSound);
-
     setTimeout(() => {
       set((s) => {
         s.animations.delete(id);
@@ -38,7 +35,7 @@ export const animationStore = create<AnimationStore>((set) => ({
           animations: new Map(s.animations),
         };
       });
-    }, 150);
+    }, duration);
   },
   animations: new Map(),
   removeAnimation: (id) => {
@@ -58,8 +55,8 @@ export const AnimationProvider = ({ children }: PropsWithChildren) => {
   return (
     <>
       <AnimatePresence>
-        {arr.map(([key, Animation]) => (
-          <Animation key={key} id={key} />
+        {arr.map(([key, animation]) => (
+          <Fragment key={key}>{animation}</Fragment>
         ))}
       </AnimatePresence>
       {children}

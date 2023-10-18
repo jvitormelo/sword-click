@@ -26,7 +26,7 @@ export const SkillBar = () => {
 
   return (
     <div className="pt-1 flex">
-      <section>
+      <section className="flex gap-2">
         {skills.map((skill) => (
           <img
             data-active={activeSkill?.id === skill.id}

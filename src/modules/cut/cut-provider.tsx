@@ -9,8 +9,10 @@ import { AnimatePresence } from "framer-motion";
 import { between } from "../../utils/random";
 
 import { useSkillStore } from "../skill/skill-store";
-import { ActiveSkill, SkillType } from "../skill/types";
+import { ActiveSkill, SkillCode, SkillType } from "../skill/types";
 import { useGameLevelStore } from "../../stores/game-level-store";
+import { playSound } from "@/providers/animation-provider";
+import SlashSound from "@/assets/sounds/slash.mp3";
 
 const isOutsideBoard = (clientX: number, clientY: number) => {
   const { x, y } = distanceFromTop;
@@ -86,12 +88,13 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
         {
           height: cut.height,
           width: cut.width,
-          x: cut.position.x,
-          y: cut.position.y - cut.height / 2,
+          x: cut.position.x - distanceFromTop.x,
+          y: cut.position.y - cut.height / 2 - distanceFromTop.y,
         },
         between(cut.damage[0], cut.damage[1])
       );
 
+      playSound(SlashSound);
       setTimeout(() => {
         removeCut(cut.id);
       }, cut.duration);
@@ -103,7 +106,13 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
 
   const skillHandler = useCallback(
     (x: number, y: number, activeSkill: ActiveSkill) => {
-      activeSkill.activate({ x, y });
+      activeSkill.activate(
+        { x, y },
+        {
+          x: x - distanceFromTop.x,
+          y: y - distanceFromTop.y,
+        }
+      );
     },
     []
   );
@@ -162,7 +171,7 @@ const SkillOverlay = () => {
 
   const activeSkill = useSkillStore((s) => s.activeSkill);
 
-  if (activeSkill?.type !== SkillType.Active) return;
+  if (activeSkill?.code !== SkillCode.ThunderStrike) return;
 
   return (
     <div
