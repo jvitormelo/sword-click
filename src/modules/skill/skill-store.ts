@@ -1,43 +1,13 @@
 import { create } from "zustand";
-import ExtendIcon from "../../assets/skills/extend-range.png";
-import RuleOfThirds from "../../assets/skills/rule-of-thirds.png";
-import { ThunderStrikeSkill } from "./handlers/active/thunder-strike";
-import { ExtendRangeHandler } from "./handlers/enhance/extend-range";
-import { RuleOfThirdsHandler } from "./handlers/passives/rule-of-thirds";
+
 import {
   ActiveSkill,
+  AnySkill,
   EnhanceSkill,
   PassiveSkill,
-  SkillCode,
   SkillType,
 } from "./types";
-import { FireSlash } from "./handlers/active/fire-slash";
-
-const extendRange: EnhanceSkill = {
-  id: "1",
-  code: SkillCode.ExtendRange,
-  name: "Extend Range",
-  type: SkillType.Enhance,
-  description:
-    "Increase the range of your basic cut, also slightly increase the width of your cut.",
-  icon: ExtendIcon,
-  handler: new ExtendRangeHandler(),
-  costModifier: 1.2,
-};
-
-const ruleOfThirds: PassiveSkill = {
-  id: "2",
-  code: SkillCode.RuleOfThirds,
-  name: "Rule of Thirds",
-  type: SkillType.Passive,
-  description: "Increase the damage of your basic cut every 3rd",
-  icon: RuleOfThirds,
-  handler: new RuleOfThirdsHandler(),
-};
-
-const thunderStrike = new ThunderStrikeSkill();
-
-const flameCleave = new FireSlash();
+import { allSkills } from "./all-skills";
 
 type Store = {
   equippedSkills: Array<ActiveSkill | EnhanceSkill>;
@@ -47,17 +17,38 @@ type Store = {
   actions: {
     removeActiveSkill: () => void;
     activateSkill: (skill: ActiveSkill | EnhanceSkill) => void;
+    setSkills: (skills: string[]) => void;
   };
 };
 
 export const useSkillStore = create<Store>((set) => ({
-  equippedSkills: [extendRange, thunderStrike, flameCleave],
+  equippedSkills: [],
   activeSkill: null,
-  passiveSkills: [ruleOfThirds],
+  passiveSkills: [],
   guardSkills: [],
   actions: {
     removeActiveSkill: () => set({ activeSkill: null }),
     activateSkill: (skill) => set({ activeSkill: skill }),
+    setSkills: (skillIds) => {
+      const mappedSkills = skillIds.map((skillId) => {
+        const skill = allSkills.find((s) => s.id === skillId);
+
+        return skill;
+      });
+      const skills = mappedSkills.filter((skill): skill is AnySkill => !!skill);
+      const activeSkills = skills.filter(
+        (skill): skill is ActiveSkill | EnhanceSkill =>
+          skill.type === SkillType.Active || skill.type === SkillType.Enhance
+      );
+      const passiveSkills = skills.filter(
+        (skill): skill is PassiveSkill => skill.type === SkillType.Passive
+      );
+
+      set({
+        equippedSkills: activeSkills,
+        passiveSkills,
+      });
+    },
   },
 }));
 

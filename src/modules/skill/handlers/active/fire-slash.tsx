@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import FireSlashHit from "@/assets/skills/fire-slash-hit.png";
 import { animationStore, playSound } from "@/providers/animation-provider";
 import FireSound from "@/assets/sounds/fire.mp3";
-import { Ailment } from "@/domain/enemies-level";
+import { Ailment } from "@/modules/enemies/enemies-level";
 export class FireSlash implements ActiveSkill {
   id = "fire-slash";
   aoe = 8;

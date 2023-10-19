@@ -5,6 +5,8 @@ import { LifeGlobe } from "./modules/player/life-globe";
 import { ManaGlobe } from "./modules/player/mana-globe";
 import { PlayerOnLevel } from "./modules/player/player-bars";
 import { SkillBar } from "./modules/skill/skill-bar";
+import { Views, useViewStore } from "./stores/view-store";
+import { SkillBuyer } from "./modules/town/skill-buyer";
 
 export function App() {
   return (
@@ -12,7 +14,7 @@ export function App() {
       <div className="flex flex-col bg-stone-950 p-4 rounded-md">
         <div className="flex gap-4">
           <PlayerOnLevel />
-          <GameLevel />
+          <CurrentView />
           <LevelSelector />
         </div>
 
@@ -24,4 +26,12 @@ export function App() {
       </div>
     </main>
   );
+}
+
+function CurrentView() {
+  const view = useViewStore((s) => s.view);
+
+  if (view === Views.Town) return <SkillBuyer />;
+
+  return <GameLevel />;
 }

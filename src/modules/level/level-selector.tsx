@@ -15,6 +15,7 @@ import { useRef } from "react";
 import { usePlayer } from "../player/use-player";
 import { completedLevels } from "./completed-levels";
 import { GoldCounter } from "../player/gold-counter";
+import { Views, useViewStore } from "@/stores/view-store";
 
 const levels: Array<Level> = [
   {
@@ -69,9 +70,11 @@ function ActiveLevel({ level }: { level: Level }) {
 
 function Levels() {
   const { play } = useGameLevelStore((s) => s.actions);
+  const { setView } = useViewStore((s) => s.actions);
   const { player } = usePlayer();
 
   function selectLevel(level: Level) {
+    setView(Views.Game);
     play(structuredClone(level), {
       energy: player.mana,
       maxEnergy: player.mana,
@@ -81,6 +84,8 @@ function Levels() {
   }
   return (
     <>
+      <button onClick={() => setView(Views.Town)}>Town</button>
+
       {levels.map((level) => (
         <button
           data-completed={completedLevels.some(

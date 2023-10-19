@@ -1,11 +1,11 @@
-import { FPS, boardSize } from "../constants";
-import { Position } from "../types";
+import { FPS, boardSize } from "../../constants";
+import { Position } from "../../types";
 import {
   Circle,
   areCircleAndRectangleTouching,
   arePointsTouching,
-} from "../utils/geometry";
-import { EnemyOnLevel, LevelModel } from "./types";
+} from "../../utils/geometry";
+import { EnemyOnLevel, LevelModel } from "../../domain/types";
 
 export enum Ailment {
   Burn = "Burn",

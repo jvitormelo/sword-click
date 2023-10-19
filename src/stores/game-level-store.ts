@@ -3,8 +3,8 @@ import { useModalStore } from "@/hooks/useOpenModal";
 import { completedLevels } from "@/modules/level/completed-levels";
 import { Level } from "@/modules/level/level-selector";
 import { create } from "zustand";
-import { EnemiesAction, EnemiesLevel } from "../domain/enemies-level";
-import { PlayerLevel } from "../domain/player-level";
+import { EnemiesAction, EnemiesLevel } from "../modules/enemies/enemies-level";
+import { PlayerLevel } from "../modules/player/player-level";
 import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
 import { updatePlayer } from "@/modules/player/use-player";
 

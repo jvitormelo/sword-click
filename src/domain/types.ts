@@ -1,4 +1,4 @@
-import { Ailment } from "./enemies-level";
+import { Ailment } from "../modules/enemies/enemies-level";
 
 export type EnemyOnLevel = {
   id: string;

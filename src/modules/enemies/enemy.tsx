@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { EnemyOnLevel } from "../../domain/types";
 import { motion } from "framer-motion";
-import { Ailment } from "@/domain/enemies-level";
+import { Ailment } from "@/modules/enemies/enemies-level";
 import { gameTick } from "@/constants";
 
 export const Enemy = ({ enemy }: { enemy: EnemyOnLevel }) => {

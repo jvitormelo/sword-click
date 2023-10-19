@@ -48,3 +48,5 @@ export type EnhanceSkill = BaseSkill & {
   handler: SkillHandler;
   costModifier: number;
 };
+
+export type AnySkill = ActiveSkill | PassiveSkill | EnhanceSkill;

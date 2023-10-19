@@ -1,18 +1,23 @@
 import { queryClient } from "@/lib/query-client";
 import { useQuery } from "@tanstack/react-query";
 
-type PlayerAsync = {
+export type PlayerModel = {
   life: number;
   mana: number;
   manaRegen: number;
   gold: number;
+
+  skills: string[];
+  equippedSkills: string[];
 };
 
-const defaultPlayer: PlayerAsync = {
+const defaultPlayer: PlayerModel = {
   life: 100,
   mana: 100,
   manaRegen: 20,
   gold: 0,
+  equippedSkills: [],
+  skills: [],
 };
 
 export const useLoadPlayer = () => {
@@ -27,7 +32,7 @@ export const useLoadPlayer = () => {
         return defaultPlayer;
       }
 
-      return JSON.parse(player) as PlayerAsync;
+      return JSON.parse(player) as PlayerModel;
     },
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -44,21 +49,26 @@ export const usePlayer = () => {
 
 export const updatePlayer = (
   player:
-    | Partial<PlayerAsync>
-    | ((oldPlayer: PlayerAsync) => Partial<PlayerAsync>)
+    | Partial<PlayerModel>
+    | ((oldPlayer: PlayerModel) => Partial<PlayerModel>)
 ) => {
-  queryClient.setQueryData<PlayerAsync>(["player"], (oldValue) => {
-    if (!oldValue) return oldValue;
+  const result = queryClient.setQueryData<PlayerModel>(
+    ["player"],
+    (oldValue) => {
+      if (!oldValue) return oldValue;
 
-    const newValue = typeof player === "function" ? player(oldValue) : player;
+      const newValue = typeof player === "function" ? player(oldValue) : player;
 
-    const updatedValue = {
-      ...oldValue,
-      ...newValue,
-    };
+      const updatedValue = {
+        ...oldValue,
+        ...newValue,
+      };
 
-    localStorage.setItem("player", JSON.stringify(updatedValue));
+      localStorage.setItem("player", JSON.stringify(updatedValue));
 
-    return updatedValue;
-  });
+      return updatedValue;
+    }
+  );
+
+  return result;
 };

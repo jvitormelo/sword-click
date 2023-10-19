@@ -1,5 +1,5 @@
 import { FPS } from "@/constants";
-import { LevelModel } from "./types";
+import { LevelModel } from "../../domain/types";
 
 export class PlayerLevel {
   constructor(protected level: LevelModel) {}
