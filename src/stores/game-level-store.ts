@@ -7,6 +7,7 @@ import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
 import { useModalStore } from "@/hooks/useOpenModal";
 import { completedLevels } from "@/modules/level/completed-levels";
 import { asyncGold } from "@/async-data/gold";
+import { defaultPlayer } from "@/async-data/player";
 
 type Store = {
   gold: number;
@@ -29,10 +30,10 @@ export const useGameLevelStore = create<Store>((set, get) => ({
   level: null,
   gold: asyncGold.value,
   player: {
-    energy: 100,
-    maxEnergy: 100,
-    energyRegen: 10,
-    health: 100,
+    energy: defaultPlayer.mana,
+    maxEnergy: defaultPlayer.mana,
+    energyRegen: defaultPlayer.manaRegen,
+    health: defaultPlayer.life,
   },
   actions: {
     addEnergy: (energy) => {
@@ -50,7 +51,16 @@ export const useGameLevelStore = create<Store>((set, get) => ({
       if (interval) {
         clearInterval(interval);
       }
-      set({ level, isPlaying: true });
+      set({
+        level,
+        isPlaying: true,
+        player: {
+          energy: defaultPlayer.mana,
+          energyRegen: defaultPlayer.manaRegen,
+          health: defaultPlayer.life,
+          maxEnergy: defaultPlayer.mana,
+        },
+      });
 
       interval = setInterval(() => {
         set((state) => {
@@ -83,12 +93,15 @@ export const useGameLevelStore = create<Store>((set, get) => ({
 
         if (isFinished && interval) {
           clearInterval(interval);
-          useModalStore.getState().actions.openVictory({
-            goldEarned: get().gold,
-          });
           asyncGold.value += get().gold;
           completedLevels.push(get().level!);
-          set({ isPlaying: false, level: null });
+
+          setTimeout(() => {
+            useModalStore.getState().actions.openVictory({
+              goldEarned: get().gold,
+            });
+            set({ isPlaying: false, level: null });
+          }, 500);
         }
       }, gameTick);
     },

@@ -12,6 +12,7 @@ export type Level = {
 import { useGameLevelStore } from "../../stores/game-level-store";
 
 import { useRef } from "react";
+import { completedLevels } from "./completed-levels";
 
 const levels: Array<Level> = [
   {
@@ -66,10 +67,19 @@ function Levels() {
   return (
     <>
       {levels.map((level) => (
-        <button key={level.id} onClick={() => selectLevel(level)}>
+        <button
+          data-completed={completedLevels.some(
+            (completedLevel) => completedLevel.id === level.id
+          )}
+          className="data-[completed='true']:bg-green-400"
+          key={level.id}
+          onClick={() => selectLevel(level)}
+        >
           Map {level.number}
         </button>
       ))}
+
+      <button hidden={completedLevels.length === 0}>Soon...</button>
 
       <button onClick={() => selectLevel(createSandBoxLevel(50))}>
         Sandbox
