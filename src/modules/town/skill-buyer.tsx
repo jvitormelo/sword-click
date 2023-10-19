@@ -29,6 +29,7 @@ export const SkillBuyer = () => {
   }
 
   const totalPrice = selectedSkills.size * 100;
+
   function buySelectedSkill() {
     if (player.gold < totalPrice)
       return open({
@@ -57,29 +58,28 @@ export const SkillBuyer = () => {
   }
 
   return (
-    <div className="w-96 h-96">
-      <section>
-        <ul className="flex gap-2">
-          {filteredSkill.map((skill) => (
-            <img
-              key={skill.id}
-              onClick={() => toggleSkill(skill.id)}
-              data-active={selectedSkills.has(skill.id)}
-              className="border border-white data-[active='true']:border-amber-800"
-              width={24}
-              src={skill.icon}
-            />
-          ))}
-        </ul>
+    <section>
+      <ul className="flex gap-2">
+        {filteredSkill.map((skill) => (
+          <img
+            key={skill.id}
+            onClick={() => toggleSkill(skill.id)}
+            data-active={selectedSkills.has(skill.id)}
+            className="border border-white data-[active='true']:border-amber-800"
+            width={24}
+            src={skill.icon}
+          />
+        ))}
+      </ul>
 
-        <span className="flex items-center">
-          <span>price</span> <GoldCounter gold={totalPrice} />
-        </span>
-
-        {selectedSkills.size > 0 && (
+      {selectedSkills.size > 0 && (
+        <>
+          <span className="flex items-center">
+            <span>price</span> <GoldCounter gold={totalPrice} />
+          </span>
           <button onClick={buySelectedSkill}>Buy</button>
-        )}
-      </section>
-    </div>
+        </>
+      )}
+    </section>
   );
 };

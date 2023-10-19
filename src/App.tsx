@@ -5,8 +5,8 @@ import { LifeGlobe } from "./modules/player/life-globe";
 import { ManaGlobe } from "./modules/player/mana-globe";
 import { PlayerOnLevel } from "./modules/player/player-bars";
 import { SkillBar } from "./modules/skill/skill-bar";
+import { Town } from "./modules/town";
 import { Views, useViewStore } from "./stores/view-store";
-import { SkillBuyer } from "./modules/town/skill-buyer";
 
 export function App() {
   return (
@@ -31,7 +31,7 @@ export function App() {
 function CurrentView() {
   const view = useViewStore((s) => s.view);
 
-  if (view === Views.Town) return <SkillBuyer />;
+  if (view === Views.Town) return <Town />;
 
   return <GameLevel />;
 }

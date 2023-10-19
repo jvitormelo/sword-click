@@ -2,6 +2,7 @@ import { queryClient } from "@/lib/query-client";
 import { useQuery } from "@tanstack/react-query";
 
 export type PlayerModel = {
+  level: number;
   life: number;
   mana: number;
   manaRegen: number;
@@ -12,9 +13,10 @@ export type PlayerModel = {
 };
 
 const defaultPlayer: PlayerModel = {
+  level: 1,
   life: 100,
   mana: 100,
-  manaRegen: 20,
+  manaRegen: 10,
   gold: 0,
   equippedSkills: [],
   skills: [],

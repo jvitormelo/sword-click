@@ -1,3 +1,4 @@
+import { Card } from "@/components/Card";
 import { useEventListener } from "../../hooks/useEventListener";
 import { useSkillActions, useSkillStore } from "./skill-store";
 import { ActiveSkill, EnhanceSkill } from "./types";
@@ -25,8 +26,8 @@ export const SkillBar = () => {
   });
 
   return (
-    <div className="flex w-96 bg-slate-800 p-2 border-amber-900 border rounded-md">
-      <section className="flex gap-2 ">
+    <Card className="flex-row w-96 my-auto">
+      <section className="flex gap-2">
         {skills.map((skill) => (
           <img
             data-active={activeSkill?.id === skill.id}
@@ -38,7 +39,7 @@ export const SkillBar = () => {
           />
         ))}
       </section>
-      <div className="mx-4 w-[1px] h-full bg-white"></div>
+
       <section className="ml-auto">
         {passivesSkills.map((skill) => (
           <img
@@ -49,6 +50,6 @@ export const SkillBar = () => {
           />
         ))}
       </section>
-    </div>
+    </Card>
   );
 };

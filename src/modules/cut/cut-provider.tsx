@@ -1,6 +1,5 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { distanceFromTop } from "../../constants";
-import { useEventListener } from "../../hooks/useEventListener";
 import { CutMapper } from "./cut-mapper";
 import { useCutActions, useCutStore } from "./cut-store";
 import { Cut, CutType } from "./types";
@@ -109,7 +108,7 @@ export const CutProvider = () => {
   );
 
   const onClick = useCallback(
-    (e: PointerEvent) => {
+    (e: MouseEvent) => {
       if (!level) return;
 
       const { clientX, clientY } = e;
@@ -124,7 +123,17 @@ export const CutProvider = () => {
     [activeSkill, cutHandler, skillHandler, level]
   );
 
-  useEventListener("click", onClick, document.getElementById("game-level")!);
+  useEffect(() => {
+    const board = document.getElementById("game-level")!;
+
+    if (!board) return;
+
+    board.addEventListener("click", onClick);
+
+    return () => {
+      board.removeEventListener("click", onClick);
+    };
+  }, [onClick]);
 
   return (
     <AnimatePresence>

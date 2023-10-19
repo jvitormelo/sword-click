@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { useGameLevelStore } from "../../stores/game-level-store";
 import { GoldCounter } from "./gold-counter";
 import { usePlayer } from "./use-player";
+import { Card } from "@/components/Card";
 
 export const PlayerOnLevel = () => {
   const { health } = useGameLevelStore((s) => s.player);
@@ -36,7 +37,7 @@ export const PlayerOnLevel = () => {
   }, [health]);
 
   return (
-    <div className="border border-amber-900 bg-slate-800 p-4 rounded-md flex-shrink-0 flex-grow">
+    <Card>
       <img
         width={100}
         ref={imgRef}
@@ -44,6 +45,6 @@ export const PlayerOnLevel = () => {
         className="rounded-md border border-amber-700"
       />
       <GoldCounter gold={player.gold} />
-    </div>
+    </Card>
   );
 };

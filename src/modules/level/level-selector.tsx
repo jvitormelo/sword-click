@@ -16,6 +16,7 @@ import { usePlayer } from "../player/use-player";
 import { completedLevels } from "./completed-levels";
 import { GoldCounter } from "../player/gold-counter";
 import { Views, useViewStore } from "@/stores/view-store";
+import { Card } from "@/components/Card";
 
 const levels: Array<Level> = [
   {
@@ -50,9 +51,9 @@ export const LevelSelector = () => {
   const isActive = !!level;
 
   return (
-    <div className="flex gap-2 w-[140px] border rounded-md bg-slate-800 border-amber-800 p-4 flex-col">
+    <Card className="gap-2 w-[140px]">
       {isActive ? <ActiveLevel level={level} /> : <Levels />}
-    </div>
+    </Card>
   );
 };
 

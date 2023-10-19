@@ -4,6 +4,7 @@ import { boardSize, distanceFromTop } from "../../constants";
 import { EnemiesSpawned } from "../enemies/enemies-spawn";
 import { useGameLevelStore } from "@/stores/game-level-store";
 import CampfireBf from "@/assets/campfire.jpeg";
+import { Card } from "@/components/Card";
 
 export const GameLevel = () => {
   const boardRef = useRef<HTMLDivElement>(null);
@@ -32,9 +33,9 @@ export const GameLevel = () => {
   }, []);
 
   return (
-    <div
+    <Card
       ref={boardRef}
-      className="bg-slate-500 w-96 h-96 flex gap-4 relative rounded-md border border-amber-800"
+      className="w-96 h-96 relative"
       style={{
         backgroundImage: `url(${level?.background ?? CampfireBf})`,
         backgroundSize: "cover",
@@ -46,7 +47,7 @@ export const GameLevel = () => {
       id="game-level"
     >
       <EnemiesSpawned />
-      <div className="absolute bottom-0 rounded-b-md w-full border-t bg-red-300 opacity-60  border-red-500 h-[5%] flex items-center justify-center" />
-    </div>
+      <div className="absolute left-0 bottom-0 rounded-b-md w-full border-t bg-red-300 opacity-60  border-red-500 h-[5%] flex items-center justify-center" />
+    </Card>
   );
 };
