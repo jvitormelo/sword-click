@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { boardSize, distanceFromTop } from "../../constants";
-import { EnemiesSpawn } from "../enemies/enemies-spawn";
+import { EnemiesSpawned } from "../enemies/enemies-spawn";
 
 export const GameArea = () => {
   const boardRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ export const GameArea = () => {
       className="bg-slate-500 w-96 h-96 flex gap-4 relative cursor-pointer rounded-md border border-amber-800"
       id="game"
     >
-      <EnemiesSpawn />
+      <EnemiesSpawned />
       <div className="absolute bottom-0 rounded-b-md w-full border-t bg-red-300 opacity-60  border-red-500 h-[5%] flex items-center justify-center" />
     </div>
   );

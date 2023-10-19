@@ -3,7 +3,7 @@ import { useGameLevelStore } from "../../stores/game-level-store";
 import { useMemo } from "react";
 import { Enemy } from "./enemy";
 
-export const EnemiesSpawn = () => {
+export const EnemiesSpawned = () => {
   const enemies = useGameLevelStore((s) => s.enemies);
 
   const enemyArr = useMemo(() => Array.from(enemies), [enemies]);

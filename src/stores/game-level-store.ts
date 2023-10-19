@@ -3,19 +3,27 @@ import { EnemiesAction, EnemiesLevel } from "../domain/enemies-level";
 import { GameLevel } from "../domain/game-level";
 import { PlayerLevel } from "../domain/player-level";
 import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
+import { gameTick } from "@/constants";
+import { Level } from "@/modules/level/level-selector";
 
 type Store = {
   gold: number;
+  level: Level | null;
   player: PlayerOnLevel;
   enemies: Map<string, EnemyOnLevel>;
   actions: {
     addEnergy: (energy: number) => void;
     bulkSpawn: (enemies: EnemyOnLevel[]) => void;
-  } & EnemiesAction;
+    play: (level: Level) => void;
+  } & Omit<EnemiesAction, "tick">;
 };
 
-export const useGameLevelStore = create<Store>((set) => ({
+let interval: NodeJS.Timeout | null = null;
+
+export const useGameLevelStore = create<Store>((set, get) => ({
   enemies: new Map(),
+
+  level: null,
   gold: 0,
   player: {
     energy: 100,
@@ -35,22 +43,33 @@ export const useGameLevelStore = create<Store>((set) => ({
         };
       });
     },
-    tick() {
-      set((state) => {
-        const gameLevel = new GameLevel({
-          enemies: state.enemies,
-          gold: state.gold,
-          player: state.player,
-        });
+    play(level) {
+      if (interval) {
+        clearInterval(interval);
+      }
+      set({ level });
 
-        gameLevel.tick();
-
-        return {
-          enemies: new Map(state.enemies),
-          gold: state.gold,
-          player: { ...state.player },
-        };
+      level.enemies.forEach((enemy) => {
+        get().actions.spawn(enemy);
       });
+
+      interval = setInterval(() => {
+        set((state) => {
+          const gameLevel = new GameLevel({
+            enemies: state.enemies,
+            gold: state.gold,
+            player: state.player,
+          });
+
+          gameLevel.tick();
+
+          return {
+            enemies: new Map(state.enemies),
+            gold: state.gold,
+            player: { ...state.player },
+          };
+        });
+      }, gameTick);
     },
     bulkSpawn: (enemies: EnemyOnLevel[]) => {
       set((state) => {

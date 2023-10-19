@@ -1,4 +1,4 @@
-import { LevelSelector } from "./level-selector";
+import { LevelSelector } from "./modules/level/level-selector";
 
 import { GameArea } from "./modules/level/game-area";
 import { LifeGlobe } from "./modules/player/life-globe";
