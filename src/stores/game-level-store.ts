@@ -1,14 +1,17 @@
-import { create } from "zustand";
-import { EnemiesAction, EnemiesLevel } from "../domain/enemies-level";
-import { GameLevel } from "../domain/game-level";
-import { PlayerLevel } from "../domain/player-level";
-import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
 import { gameTick } from "@/constants";
 import { Level } from "@/modules/level/level-selector";
+import { create } from "zustand";
+import { EnemiesAction, EnemiesLevel } from "../domain/enemies-level";
+import { PlayerLevel } from "../domain/player-level";
+import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
+import { useModalStore } from "@/hooks/useOpenModal";
+import { completedLevels } from "@/modules/level/completed-levels";
+import { asyncGold } from "@/async-data/gold";
 
 type Store = {
   gold: number;
   level: Level | null;
+  isPlaying: boolean;
   player: PlayerOnLevel;
   enemies: Map<string, EnemyOnLevel>;
   actions: {
@@ -22,9 +25,9 @@ let interval: NodeJS.Timeout | null = null;
 
 export const useGameLevelStore = create<Store>((set, get) => ({
   enemies: new Map(),
-
+  isPlaying: false,
   level: null,
-  gold: 0,
+  gold: asyncGold.value,
   player: {
     energy: 100,
     maxEnergy: 100,
@@ -47,28 +50,46 @@ export const useGameLevelStore = create<Store>((set, get) => ({
       if (interval) {
         clearInterval(interval);
       }
-      set({ level });
-
-      level.enemies.forEach((enemy) => {
-        get().actions.spawn(enemy);
-      });
+      set({ level, isPlaying: true });
 
       interval = setInterval(() => {
         set((state) => {
-          const gameLevel = new GameLevel({
+          const nextToSpawn = state.level?.enemies.shift();
+
+          const level = {
             enemies: state.enemies,
             gold: state.gold,
             player: state.player,
-          });
+          };
 
-          gameLevel.tick();
+          new EnemiesLevel(level).tick();
+          new PlayerLevel(level).tick();
+
+          const newEnemies = new Map(level.enemies);
+
+          if (nextToSpawn) {
+            newEnemies.set(nextToSpawn.id, nextToSpawn);
+          }
 
           return {
-            enemies: new Map(state.enemies),
-            gold: state.gold,
-            player: { ...state.player },
+            enemies: newEnemies,
+            gold: level.gold,
+            player: { ...level.player },
           };
         });
+
+        const isFinished =
+          get().level?.enemies.length === 0 && get().enemies.size === 0;
+
+        if (isFinished && interval) {
+          clearInterval(interval);
+          useModalStore.getState().actions.openVictory({
+            goldEarned: get().gold,
+          });
+          asyncGold.value += get().gold;
+          completedLevels.push(get().level!);
+          set({ isPlaying: false, level: null });
+        }
       }, gameTick);
     },
     bulkSpawn: (enemies: EnemyOnLevel[]) => {

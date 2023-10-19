@@ -1,4 +1,4 @@
-import { PropsWithChildren, useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { boardSize, distanceFromTop } from "../../constants";
 import { useEventListener } from "../../hooks/useEventListener";
 import { CutMapper } from "./cut-mapper";
@@ -8,11 +8,11 @@ import { Cut, CutType } from "./types";
 import { AnimatePresence } from "framer-motion";
 import { between } from "../../utils/random";
 
-import { useSkillStore } from "../skill/skill-store";
-import { ActiveSkill, SkillCode, SkillType } from "../skill/types";
-import { useGameLevelStore } from "../../stores/game-level-store";
-import { playSound } from "@/providers/animation-provider";
 import SlashSound from "@/assets/sounds/slash.mp3";
+import { playSound } from "@/providers/animation-provider";
+import { useGameLevelStore } from "../../stores/game-level-store";
+import { useSkillStore } from "../skill/skill-store";
+import { ActiveSkill, SkillType } from "../skill/types";
 
 const isOutsideBoard = (clientX: number, clientY: number) => {
   const { x, y } = distanceFromTop;
@@ -29,7 +29,7 @@ const isOutsideBoard = (clientX: number, clientY: number) => {
   return false;
 };
 
-export const CutProvider = ({ children }: PropsWithChildren) => {
+export const CutProvider = () => {
   const { cuts } = useCutStore();
   const { addCut, removeCut } = useCutActions();
   const activeSkill = useSkillStore((s) => s.activeSkill);
@@ -141,51 +141,10 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
   useEventListener("click", onClick);
 
   return (
-    <>
-      <SkillOverlay />
-      <AnimatePresence>
-        {cuts.map((cut) => (
-          <CutMapper key={cut.id} {...cut} />
-        ))}
-      </AnimatePresence>
-      {children}
-    </>
-  );
-};
-
-const useMousePosition = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  const updateMousePosition = (e: MouseEvent) => {
-    setMousePosition({ x: e.clientX, y: e.clientY });
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousemove", updateMousePosition);
-
-    return () => window.removeEventListener("mousemove", updateMousePosition);
-  }, []);
-
-  return {
-    ...mousePosition,
-  };
-};
-
-const SkillOverlay = () => {
-  const { x, y } = useMousePosition();
-
-  const activeSkill = useSkillStore((s) => s.activeSkill);
-
-  if (activeSkill?.code !== SkillCode.ThunderStrike) return;
-
-  return (
-    <div
-      className="absolute bg-black w-2 h-2 rounded-full pointer-events-none cursor-pointer opacity-25 z-50"
-      style={{
-        transform: `translate(-50%, -50%)`,
-        top: y,
-        left: x,
-      }}
-    ></div>
+    <AnimatePresence>
+      {cuts.map((cut) => (
+        <CutMapper key={cut.id} {...cut} />
+      ))}
+    </AnimatePresence>
   );
 };

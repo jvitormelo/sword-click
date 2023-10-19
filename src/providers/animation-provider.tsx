@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import { Fragment, PropsWithChildren, ReactNode, useMemo } from "react";
+import { Fragment, ReactNode, useMemo } from "react";
 import { create } from "zustand";
 
 type AnimationStore = {
@@ -48,18 +48,15 @@ export const animationStore = create<AnimationStore>((set) => ({
   },
 }));
 
-export const AnimationProvider = ({ children }: PropsWithChildren) => {
+export const AnimationProvider = () => {
   const { animations } = animationStore();
   const arr = useMemo(() => Array.from(animations), [animations]);
 
   return (
-    <>
-      <AnimatePresence>
-        {arr.map(([key, animation]) => (
-          <Fragment key={key}>{animation}</Fragment>
-        ))}
-      </AnimatePresence>
-      {children}
-    </>
+    <AnimatePresence>
+      {arr.map(([key, animation]) => (
+        <Fragment key={key}>{animation}</Fragment>
+      ))}
+    </AnimatePresence>
   );
 };

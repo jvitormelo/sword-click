@@ -6,13 +6,15 @@ import { CutProvider } from "./modules/cut/cut-provider";
 import { AnimationProvider } from "./providers/animation-provider";
 
 import { App } from "./App";
+import { ModalProvider } from "./providers/modal-provider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AnimationProvider>
-      <CutProvider>
-        <App />
-      </CutProvider>
-    </AnimationProvider>
+    <App />
+    <div className="pointer-events-none select-none">
+      <CutProvider />
+      <AnimationProvider />
+    </div>
+    <ModalProvider />
   </React.StrictMode>
 );

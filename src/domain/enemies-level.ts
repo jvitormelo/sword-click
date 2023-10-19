@@ -63,7 +63,6 @@ export class EnemiesLevel implements EnemiesAction {
     for (const enemy of this.level.enemies.values()) {
       const movementMargin = enemy.speed / FPS / 2;
 
-      console.log(enemy);
       const isTouching = arePointsTouching(
         {
           x: enemy.position.x,
