@@ -46,7 +46,7 @@ export const LevelSelector = () => {
   const isActive = !!level;
 
   return (
-    <div className="flex gap-2 border rounded-md bg-slate-800 border-amber-800 p-4 flex-col">
+    <div className="flex gap-2 w-[140px] border rounded-md bg-slate-800 border-amber-800 p-4 flex-col">
       {isActive ? <ActiveLevel level={level} /> : <Levels />}
     </div>
   );

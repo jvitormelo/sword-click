@@ -2,9 +2,12 @@ import { useEffect, useRef } from "react";
 
 import { boardSize, distanceFromTop } from "../../constants";
 import { EnemiesSpawned } from "../enemies/enemies-spawn";
+import { useGameLevelStore } from "@/stores/game-level-store";
 
-export const GameArea = () => {
+export const GameLevel = () => {
   const boardRef = useRef<HTMLDivElement>(null);
+
+  const level = useGameLevelStore((s) => s.level);
 
   useEffect(() => {
     const onResize = () => {
@@ -31,6 +34,13 @@ export const GameArea = () => {
     <div
       ref={boardRef}
       className="bg-slate-500 w-96 h-96 flex gap-4 relative cursor-pointer rounded-md border border-amber-800"
+      style={{
+        backgroundImage: `url(${level?.background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        boxShadow: "inset 0 0 0 2000px rgba(0, 0, 0, 0.3)",
+      }}
       id="game"
     >
       <EnemiesSpawned />
