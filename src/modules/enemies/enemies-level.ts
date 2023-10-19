@@ -130,7 +130,7 @@ export class EnemiesLevel implements EnemiesAction {
         newPosY + enemy.size.height / 2 >= boardSize.dangerZone;
 
       if (isInAttackRange) {
-        this.level.player.health -= enemy.attack;
+        this.level.player.life -= enemy.attack;
         enemy.position.y = boardSize.dangerZone - enemy.size.height / 2;
       } else {
         enemy.position.y = newPosY;

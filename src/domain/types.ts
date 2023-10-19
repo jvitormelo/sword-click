@@ -19,10 +19,11 @@ export type EnemyOnLevel = {
 };
 
 export type PlayerOnLevel = {
-  health: number;
-  energy: number;
-  energyRegen: number;
-  maxEnergy: number;
+  life: number;
+  maxLife: number;
+  mana: number;
+  manaRegen: number;
+  maxMana: number;
 };
 
 export type LevelModel = {

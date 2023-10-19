@@ -73,12 +73,9 @@ export const SkillBuyer = () => {
       </ul>
 
       {selectedSkills.size > 0 && (
-        <>
-          <span className="flex items-center">
-            <span>price</span> <GoldCounter gold={totalPrice} />
-          </span>
-          <button onClick={buySelectedSkill}>Buy</button>
-        </>
+        <button onClick={buySelectedSkill} className="flex mt-8 mx-auto">
+          Buy <GoldCounter gold={totalPrice} />
+        </button>
       )}
     </section>
   );

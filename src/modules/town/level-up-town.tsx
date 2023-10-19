@@ -16,7 +16,7 @@ export const LevelUpTown = () => {
       level: player.level + 1,
       life: life + 10,
       mana: mana + 10,
-      manaRegen: manaRegen + 0.1,
+      manaRegen: manaRegen + 1,
     };
   })();
 
@@ -38,6 +38,10 @@ export const LevelUpTown = () => {
       ...upgradedPlayer,
       gold: p.gold - levelUpPrice,
     }));
+
+    if (!updatedPlayer) return;
+
+    useGameLevelStore.getState().actions.setPlayer(updatedPlayer);
   }
 
   return (
@@ -60,11 +64,11 @@ export const LevelUpTown = () => {
 
 function StatsCard(player: PlayerModel) {
   return (
-    <Card>
+    <Card className="p-2 text-base">
       <span>Level: {player.level}</span>
       <span>Life: {player.life}</span>
       <span>Mana: {player.mana}</span>
-      <span> ManaRegen: {player.manaRegen}</span>
+      <span> ManaRegen: {player.manaRegen.toFixed(2)}</span>
     </Card>
   );
 }

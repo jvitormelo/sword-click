@@ -92,7 +92,7 @@ export const CutProvider = () => {
 
   const skillHandler = useCallback(
     (x: number, y: number, activeSkill: ActiveSkill) => {
-      if (useGameLevelStore.getState().player.energy < activeSkill.cost) return;
+      if (useGameLevelStore.getState().player.mana < activeSkill.cost) return;
 
       activeSkill.activate(
         { x, y },

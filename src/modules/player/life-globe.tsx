@@ -1,14 +1,12 @@
 import { useGameLevelStore } from "@/stores/game-level-store";
-import { useRef } from "react";
 
 export const LifeGlobe = () => {
-  const health = useGameLevelStore((s) => s.player.health);
+  const life = useGameLevelStore((s) => s.player.life);
+  const maxLife = useGameLevelStore((s) => s.player.maxLife);
 
-  const maxLife = useRef(health);
+  const height = life < 0 ? 0 : (life / maxLife) * 100;
 
-  const height = health < 0 ? 0 : (health / maxLife.current) * 100;
-
-  const currentLife = health < 0 ? 0 : health;
+  const currentLife = life < 0 ? 0 : life;
 
   return (
     <div className="relative  h-20 w-20 mx-auto aspect-square border-2 border-red-600 rounded-full overflow-hidden flex-shrink-0">
@@ -17,7 +15,7 @@ export const LifeGlobe = () => {
         style={{ height: `${height}%` }}
       />
       <div className="absolute text-[8px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold">
-        {Math.ceil(currentLife)} / {maxLife.current}
+        {Math.ceil(currentLife)} / {maxLife}
       </div>
     </div>
   );

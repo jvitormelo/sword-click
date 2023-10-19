@@ -5,16 +5,16 @@ export class PlayerLevel {
   constructor(protected level: LevelModel) {}
 
   addEnergy(energy: number) {
-    const newEnergy = this.level.player.energy + energy;
+    const newEnergy = this.level.player.mana + energy;
 
-    if (newEnergy > this.level.player.maxEnergy) {
-      this.level.player.energy = this.level.player.maxEnergy;
+    if (newEnergy > this.level.player.maxMana) {
+      this.level.player.mana = this.level.player.maxMana;
     } else {
-      this.level.player.energy = newEnergy;
+      this.level.player.mana = newEnergy;
     }
   }
 
   tick() {
-    this.addEnergy(this.level.player.energyRegen / FPS);
+    this.addEnergy(this.level.player.manaRegen / FPS);
   }
 }

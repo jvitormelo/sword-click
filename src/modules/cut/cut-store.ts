@@ -13,7 +13,7 @@ type Store = {
 export const useCutStore = create<Store>((set) => ({
   actions: {
     addCut: (cut) => {
-      const playerEnergy = useGameLevelStore.getState().player.energy;
+      const playerEnergy = useGameLevelStore.getState().player.mana;
 
       if (playerEnergy < cut.cost) return false;
 

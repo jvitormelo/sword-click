@@ -7,9 +7,7 @@ export type PlayerModel = {
   mana: number;
   manaRegen: number;
   gold: number;
-
   skills: string[];
-  equippedSkills: string[];
 };
 
 const defaultPlayer: PlayerModel = {
@@ -17,8 +15,7 @@ const defaultPlayer: PlayerModel = {
   life: 100,
   mana: 100,
   manaRegen: 10,
-  gold: 0,
-  equippedSkills: [],
+  gold: 1000,
   skills: [],
 };
 
@@ -34,7 +31,11 @@ export const useLoadPlayer = () => {
         return defaultPlayer;
       }
 
-      return JSON.parse(player) as PlayerModel;
+      const parsed = JSON.parse(player);
+      return {
+        ...defaultPlayer,
+        ...parsed,
+      } satisfies PlayerModel;
     },
     refetchOnMount: false,
     refetchOnWindowFocus: false,

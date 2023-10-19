@@ -1,12 +1,10 @@
 import { useGameLevelStore } from "@/stores/game-level-store";
-import { useRef } from "react";
 
 export const ManaGlobe = () => {
-  const energy = useGameLevelStore((s) => s.player.energy);
+  const energy = useGameLevelStore((s) => s.player.mana);
+  const maxEnergy = useGameLevelStore((s) => s.player.maxMana);
 
-  const maxEnergy = useRef(energy);
-
-  const height = energy < 0 ? 0 : (energy / maxEnergy.current) * 100;
+  const height = energy < 0 ? 0 : (energy / maxEnergy) * 100;
 
   const currentEnergy = energy < 0 ? 0 : energy;
 
@@ -17,7 +15,7 @@ export const ManaGlobe = () => {
         style={{ height: `${height}%` }}
       />
       <div className="absolute text-[8px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold">
-        {Math.ceil(currentEnergy)} / {maxEnergy.current}
+        {Math.ceil(currentEnergy)} / {maxEnergy}
       </div>
     </div>
   );

@@ -11,12 +11,11 @@ export type Level = {
 
 import { useGameLevelStore } from "../../stores/game-level-store";
 
-import { useRef } from "react";
-import { usePlayer } from "../player/use-player";
-import { completedLevels } from "./completed-levels";
-import { GoldCounter } from "../player/gold-counter";
-import { Views, useViewStore } from "@/stores/view-store";
 import { Card } from "@/components/Card";
+import { Views, useViewStore } from "@/stores/view-store";
+import { useRef } from "react";
+import { GoldCounter } from "../player/gold-counter";
+import { completedLevels } from "./completed-levels";
 
 const levels: Array<Level> = [
   {
@@ -72,17 +71,21 @@ function ActiveLevel({ level }: { level: Level }) {
 function Levels() {
   const { play } = useGameLevelStore((s) => s.actions);
   const { setView } = useViewStore((s) => s.actions);
-  const { player } = usePlayer();
+  const view = useViewStore((s) => s.view);
 
   function selectLevel(level: Level) {
     setView(Views.Game);
-    play(structuredClone(level), {
-      energy: player.mana,
-      maxEnergy: player.mana,
-      energyRegen: player.manaRegen,
-      health: player.life,
-    });
+
+    play(structuredClone(level));
   }
+
+  if (view === Views.Town)
+    return (
+      <>
+        <button onClick={() => setView(Views.Game)}>Camp</button>
+      </>
+    );
+
   return (
     <>
       <button onClick={() => setView(Views.Town)}>Town</button>

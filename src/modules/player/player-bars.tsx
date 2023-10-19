@@ -6,7 +6,7 @@ import { usePlayer } from "./use-player";
 import { Card } from "@/components/Card";
 
 export const PlayerOnLevel = () => {
-  const { health } = useGameLevelStore((s) => s.player);
+  const { life: health } = useGameLevelStore((s) => s.player);
   const { player } = usePlayer();
 
   const maxLife = useRef(health);

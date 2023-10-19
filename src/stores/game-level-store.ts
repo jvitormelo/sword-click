@@ -6,7 +6,7 @@ import { create } from "zustand";
 import { EnemiesAction, EnemiesLevel } from "../modules/enemies/enemies-level";
 import { PlayerLevel } from "../modules/player/player-level";
 import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
-import { updatePlayer } from "@/modules/player/use-player";
+import { PlayerModel, updatePlayer } from "@/modules/player/use-player";
 
 type Store = {
   gold: number;
@@ -17,7 +17,8 @@ type Store = {
   actions: {
     addEnergy: (energy: number) => void;
     bulkSpawn: (enemies: EnemyOnLevel[]) => void;
-    play: (level: Level, player: PlayerOnLevel) => void;
+    play: (level: Level) => void;
+    setPlayer: (player: PlayerModel) => void;
   } & Omit<EnemiesAction, "tick">;
 };
 
@@ -29,12 +30,24 @@ export const useGameLevelStore = create<Store>((set, get) => ({
   level: null,
   gold: 0,
   player: {
-    energy: 0,
-    maxEnergy: 0,
-    energyRegen: 0,
-    health: 1,
+    mana: 0,
+    maxMana: 0,
+    manaRegen: 0,
+    life: 1,
+    maxLife: 1,
   },
   actions: {
+    setPlayer(data) {
+      set({
+        player: {
+          life: data.life,
+          maxLife: data.life,
+          mana: data.mana,
+          maxMana: data.mana,
+          manaRegen: data.manaRegen,
+        },
+      });
+    },
     addEnergy: (energy) => {
       set((state) => {
         const player = new PlayerLevel(state);
@@ -46,15 +59,12 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         };
       });
     },
-    play(level, player) {
+    play(level) {
       if (interval) {
         clearInterval(interval);
       }
-      set({
-        level,
-        isPlaying: true,
-        player,
-      });
+
+      set({ level, isPlaying: true });
 
       interval = setInterval(() => {
         set((state) => {
