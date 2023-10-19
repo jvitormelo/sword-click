@@ -1,13 +1,12 @@
 import { gameTick } from "@/constants";
+import { useModalStore } from "@/hooks/useOpenModal";
+import { completedLevels } from "@/modules/level/completed-levels";
 import { Level } from "@/modules/level/level-selector";
 import { create } from "zustand";
 import { EnemiesAction, EnemiesLevel } from "../domain/enemies-level";
 import { PlayerLevel } from "../domain/player-level";
 import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
-import { useModalStore } from "@/hooks/useOpenModal";
-import { completedLevels } from "@/modules/level/completed-levels";
-import { asyncGold } from "@/async-data/gold";
-import { defaultPlayer } from "@/async-data/player";
+import { updatePlayer } from "@/modules/player/use-player";
 
 type Store = {
   gold: number;
@@ -18,7 +17,7 @@ type Store = {
   actions: {
     addEnergy: (energy: number) => void;
     bulkSpawn: (enemies: EnemyOnLevel[]) => void;
-    play: (level: Level) => void;
+    play: (level: Level, player: PlayerOnLevel) => void;
   } & Omit<EnemiesAction, "tick">;
 };
 
@@ -28,12 +27,12 @@ export const useGameLevelStore = create<Store>((set, get) => ({
   enemies: new Map(),
   isPlaying: false,
   level: null,
-  gold: asyncGold.value,
+  gold: 0,
   player: {
-    energy: defaultPlayer.mana,
-    maxEnergy: defaultPlayer.mana,
-    energyRegen: defaultPlayer.manaRegen,
-    health: defaultPlayer.life,
+    energy: 0,
+    maxEnergy: 0,
+    energyRegen: 0,
+    health: 1,
   },
   actions: {
     addEnergy: (energy) => {
@@ -47,19 +46,14 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         };
       });
     },
-    play(level) {
+    play(level, player) {
       if (interval) {
         clearInterval(interval);
       }
       set({
         level,
         isPlaying: true,
-        player: {
-          energy: defaultPlayer.mana,
-          energyRegen: defaultPlayer.manaRegen,
-          health: defaultPlayer.life,
-          maxEnergy: defaultPlayer.mana,
-        },
+        player,
       });
 
       interval = setInterval(() => {
@@ -93,14 +87,16 @@ export const useGameLevelStore = create<Store>((set, get) => ({
 
         if (isFinished && interval) {
           clearInterval(interval);
-          asyncGold.value += get().gold;
+          const goldEarned = get().gold;
+
           completedLevels.push(get().level!);
 
           setTimeout(() => {
             useModalStore.getState().actions.openVictory({
-              goldEarned: get().gold,
+              goldEarned,
             });
-            set({ isPlaying: false, level: null });
+            updatePlayer((old) => ({ gold: old.gold + goldEarned }));
+            set({ isPlaying: false, level: null, gold: 0 });
           }, 500);
         }
       }, gameTick);

@@ -1,10 +1,12 @@
+import MainCharacterImage from "@/assets/main-character.jpeg";
 import { useEffect, useRef } from "react";
 import { useGameLevelStore } from "../../stores/game-level-store";
-import MainCharacterImage from "@/assets/main-character.jpeg";
 import { GoldCounter } from "./gold-counter";
+import { usePlayer } from "./use-player";
 
 export const PlayerOnLevel = () => {
   const { health } = useGameLevelStore((s) => s.player);
+  const { player } = usePlayer();
 
   const maxLife = useRef(health);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -41,7 +43,7 @@ export const PlayerOnLevel = () => {
         src={MainCharacterImage}
         className="rounded-md border border-amber-700"
       />
-      <GoldCounter />
+      <GoldCounter gold={player.gold} />
     </div>
   );
 };

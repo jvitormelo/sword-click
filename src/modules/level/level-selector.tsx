@@ -12,7 +12,9 @@ export type Level = {
 import { useGameLevelStore } from "../../stores/game-level-store";
 
 import { useRef } from "react";
+import { usePlayer } from "../player/use-player";
 import { completedLevels } from "./completed-levels";
+import { GoldCounter } from "../player/gold-counter";
 
 const levels: Array<Level> = [
   {
@@ -55,14 +57,27 @@ export const LevelSelector = () => {
 
 function ActiveLevel({ level }: { level: Level }) {
   const levelRef = useRef(level.enemies);
+  const gold = useGameLevelStore((s) => s.gold);
 
-  return <div>Total enemies: {levelRef.current.length}</div>;
+  return (
+    <div className="text-xs flex flex-col">
+      <span>Enemies: {levelRef.current.length}</span>
+      <GoldCounter gold={gold} />
+    </div>
+  );
 }
 
 function Levels() {
   const { play } = useGameLevelStore((s) => s.actions);
+  const { player } = usePlayer();
+
   function selectLevel(level: Level) {
-    play(structuredClone(level));
+    play(structuredClone(level), {
+      energy: player.mana,
+      maxEnergy: player.mana,
+      energyRegen: player.manaRegen,
+      health: player.life,
+    });
   }
   return (
     <>
