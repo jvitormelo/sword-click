@@ -38,11 +38,7 @@ export const SkillBuyer = () => {
       });
 
     const result = updatePlayer(({ skills, gold }) => {
-      const skillsSet = new Set(skills);
-
-      selectedSkills.forEach((skillId) => {
-        skillsSet.add(skillId);
-      });
+      const skillsSet = new Set([...skills, ...selectedSkills]);
 
       return {
         skills: Array.from(skillsSet),
