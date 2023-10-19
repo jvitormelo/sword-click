@@ -1,4 +1,4 @@
-import PlainsBackground from "@/assets/backgrounds/plains.png";
+import PlainsBackground from "@/assets/plains-background.jpeg";
 import { EnemyOnLevel } from "../../domain/types";
 import { goblinFactory, zombieFactory } from "../enemies/enemies-factory";
 
