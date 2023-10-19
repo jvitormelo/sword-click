@@ -22,7 +22,7 @@ const extendRange: EnhanceSkill = {
     "Increase the range of your basic cut, also slightly increase the width of your cut.",
   icon: ExtendIcon,
   handler: new ExtendRangeHandler(),
-  costModifier: 1.5,
+  costModifier: 1.2,
 };
 
 const ruleOfThirds: PassiveSkill = {

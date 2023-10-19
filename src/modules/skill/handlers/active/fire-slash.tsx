@@ -13,7 +13,7 @@ export class FireSlash implements ActiveSkill {
   id = "fire-slash";
   aoe = 8;
   code: SkillCode = SkillCode.FireSlash;
-  cost = 10;
+  cost = 30;
   damage = [30, 50] as [number, number];
   description = " Deals 30-50 damage to all enemies in a 8 tile radius.";
   icon = Icon;

@@ -1,3 +1,4 @@
+import { FPS } from "@/constants";
 import { LevelModel } from "./types";
 
 export class PlayerLevel {
@@ -14,6 +15,6 @@ export class PlayerLevel {
   }
 
   tick() {
-    this.addEnergy(this.level.player.energyRegen);
+    this.addEnergy(this.level.player.energyRegen / FPS);
   }
 }

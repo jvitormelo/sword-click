@@ -1,6 +1,6 @@
+import PlainsBackground from "@/assets/backgrounds/plains.png";
 import { EnemyOnLevel } from "./domain/types";
 import { zombieFactory } from "./modules/enemies/use-enemy-factory";
-import PlainsBackground from "@/assets/backgrounds/plains.png";
 
 type Level = {
   id: string;
@@ -9,11 +9,10 @@ type Level = {
   enemies: EnemyOnLevel[];
 };
 
-import { SpawnEnemiesButton } from "./modules/enemies/spawn-enemies-button";
 import { create } from "zustand";
-import { useGameLevelStore } from "./stores/game-level-store";
-import { useEffect, useRef } from "react";
 import { gameTick } from "./constants";
+import { SpawnEnemiesButton } from "./modules/enemies/spawn-enemies-button";
+import { useGameLevelStore } from "./stores/game-level-store";
 
 const levels: Array<Level> = [
   {
@@ -31,34 +30,37 @@ const levels: Array<Level> = [
   },
 ];
 
+let interval: NodeJS.Timeout | null = null;
+
 export const useActiveLevelStore = create<{
   level: Level | null;
   actions: {
-    setLevel: (level: Level) => void;
+    playLevel: (level: Level) => void;
   };
 }>((set) => ({
   level: null,
   actions: {
-    setLevel: (level) => set({ level }),
+    playLevel: (level) => {
+      if (interval) clearInterval(interval);
+
+      set({ level });
+
+      level.enemies.forEach((enemy) => {
+        useGameLevelStore.getState().actions.spawn(enemy);
+      });
+
+      interval = setInterval(() => {
+        useGameLevelStore.getState().actions.tick();
+      }, gameTick);
+    },
   },
 }));
 
 export const LevelSelector = () => {
-  const { setLevel } = useActiveLevelStore((s) => s.actions);
-  const { tick, spawn } = useGameLevelStore((s) => s.actions);
-
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const { playLevel } = useActiveLevelStore((s) => s.actions);
 
   function selectLevel(level: Level) {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current!);
-    }
-    setLevel(level);
-    level.enemies.forEach((enemy) => spawn(enemy));
-
-    intervalRef.current = setInterval(() => {
-      tick();
-    }, gameTick);
+    playLevel(level);
   }
 
   return (

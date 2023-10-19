@@ -25,14 +25,14 @@ export const SkillBar = () => {
   });
 
   return (
-    <div className="flex bg-slate-800 p-2 border-amber-900 border rounded-lg w-full">
+    <div className="flex w-96 bg-slate-800 p-2 border-amber-900 border rounded-md">
       <section className="flex gap-2 ">
         {skills.map((skill) => (
           <img
             data-active={activeSkill?.id === skill.id}
             onClick={() => toggleSkill(skill)}
             key={skill.id}
-            className="w-8 h-8 border-white border data-[active='true']:border-red-700"
+            className="w-8 h-8 rounded-md border-white border data-[active='true']:border-amber-700 data-[active='true']:border-2"
             src={skill.icon}
             alt={skill.name}
           />
@@ -43,7 +43,7 @@ export const SkillBar = () => {
         {passivesSkills.map((skill) => (
           <img
             key={skill.id}
-            className="w-8 h-8 border-2 border-blue-500"
+            className="w-8 h-8 border rounded-md border-blue-500"
             src={skill.icon}
             alt={skill.name}
           />

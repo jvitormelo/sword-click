@@ -72,7 +72,7 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
         border: "1px solid black",
         background: "white",
         type: CutType.Basic,
-        cost: 10,
+        cost: 5,
         position: {
           x: left,
           y: clientY,
@@ -107,6 +107,8 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
 
   const skillHandler = useCallback(
     (x: number, y: number, activeSkill: ActiveSkill) => {
+      if (useGameLevelStore.getState().player.energy < activeSkill.cost) return;
+
       activeSkill.activate(
         { x, y },
         {
@@ -114,6 +116,8 @@ export const CutProvider = ({ children }: PropsWithChildren) => {
           y: y - distanceFromTop.y,
         }
       );
+
+      useGameLevelStore.getState().actions.addEnergy(-activeSkill.cost);
     },
     []
   );

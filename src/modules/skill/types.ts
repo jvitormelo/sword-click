@@ -26,7 +26,7 @@ export interface BaseSkill {
 
 export type ActiveSkill = BaseSkill & {
   type: SkillType.Active;
-  cost: number | null;
+  cost: number;
   aoe: number;
 
   damage: [number, number];
