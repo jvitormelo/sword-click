@@ -1,26 +1,26 @@
-import { EnemyCounter } from "./modules/enemies/enemy-counter";
-import { SpawnEnemiesButton } from "./modules/enemies/spawn-enemies-button";
-import { GameArea } from "./modules/level/game-area";
-import { GoldCounter } from "./modules/level/gold-counter";
-import { PlayerBars } from "./modules/player/player-bars";
-import { SkillBar } from "./modules/skill/skill-bar";
+import { LevelSelector } from "./level-selector";
 
-const quantity = 500;
+import { GameArea } from "./modules/level/game-area";
+import { LifeGlobe } from "./modules/player/life-globe";
+import { ManaGlobe } from "./modules/player/mana-globe";
+import { PlayerOnLevel } from "./modules/player/player-bars";
+import { SkillBar } from "./modules/skill/skill-bar";
 
 export function App() {
   return (
     <main className="flex h-screen items-center justify-center flex-col w-screen select-none p-4">
-      <div className="flex flex-col">
-        <div className="flex justify-end gap-4">
-          <SpawnEnemiesButton quantity={quantity} />
-          <GoldCounter />
-          <EnemyCounter quantity={quantity} />
+      <div className="flex flex-col bg-stone-950 p-4 rounded-md">
+        <div className="flex gap-4">
+          <PlayerOnLevel />
+          <GameArea />
+          <LevelSelector />
         </div>
 
-        <GameArea />
-
-        <PlayerBars />
-        <SkillBar />
+        <div className="flex gap-4 pt-2">
+          <LifeGlobe />
+          <SkillBar />
+          <ManaGlobe />
+        </div>
       </div>
     </main>
   );

@@ -4,6 +4,7 @@ import { between } from "../../utils/random";
 import Zombie from "@/assets/zombie.png";
 import Goblin from "@/assets/goblin.gif";
 import { EnemyOnLevel } from "@/domain/types";
+import { boardSize } from "@/constants";
 type Params = {
   quantity: number;
   interval: number;
@@ -60,39 +61,41 @@ export const useEnemyFactory = ({
   };
 };
 
-function zombieFactory(): EnemyOnLevel {
+export function zombieFactory(): EnemyOnLevel {
+  const size = {
+    height: 48,
+    width: 48,
+  };
   return {
     id: crypto.randomUUID(),
     health: 100,
-    attack: 10,
+    attack: 6,
     image: Zombie,
     speed: 30,
-    size: {
-      height: 48,
-      width: 48,
-    },
+    size: size,
     position: {
-      x: between(0, 344),
+      x: between(0, boardSize.width - size.width),
       y: between(0, 24),
     },
     ailments: [],
   };
 }
 
-function goblinFactory(): EnemyOnLevel {
+export function goblinFactory(): EnemyOnLevel {
+  const size = {
+    height: 24,
+    width: 24,
+  };
   return {
     id: crypto.randomUUID(),
     health: 30,
-    attack: 30,
+    attack: 5,
     speed: 80,
     image: Goblin,
-    size: {
-      height: 24,
-      width: 24,
-    },
+    size,
     position: {
-      x: between(0, 344),
-      y: between(0, 24),
+      x: between(0, boardSize.width - size.width),
+      y: between(0, 30),
     },
     ailments: [],
   };

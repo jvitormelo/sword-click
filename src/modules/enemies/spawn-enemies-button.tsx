@@ -13,7 +13,7 @@ export const SpawnEnemiesButton = memo(({ quantity }: Props) => {
     randomizeIntervalEvery: 10,
   });
 
-  return <span onClick={start}>Start</span>;
+  return <button onClick={start}>Sandbox</button>;
 });
 
 SpawnEnemiesButton.displayName = "SpawnEnemiesButton";
