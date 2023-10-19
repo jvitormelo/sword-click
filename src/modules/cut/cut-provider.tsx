@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { boardSize, distanceFromTop } from "../../constants";
+import { distanceFromTop } from "../../constants";
 import { useEventListener } from "../../hooks/useEventListener";
 import { CutMapper } from "./cut-mapper";
 import { useCutActions, useCutStore } from "./cut-store";
@@ -14,27 +14,13 @@ import { useGameLevelStore } from "../../stores/game-level-store";
 import { useSkillStore } from "../skill/skill-store";
 import { ActiveSkill, SkillType } from "../skill/types";
 
-const isOutsideBoard = (clientX: number, clientY: number) => {
-  const { x, y } = distanceFromTop;
-
-  if (
-    clientX < x ||
-    clientY < y ||
-    clientX > x + boardSize.width ||
-    clientY > y + boardSize.height
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
 export const CutProvider = () => {
   const { cuts } = useCutStore();
   const { addCut, removeCut } = useCutActions();
   const activeSkill = useSkillStore((s) => s.activeSkill);
   const { damageLineArea: cutPosition } = useGameLevelStore((s) => s.actions);
   const passives = useSkillStore((s) => s.passiveSkills);
+  const level = useGameLevelStore((s) => s.level);
 
   const cutBefore = useCallback(
     (cut: Cut) => {
@@ -124,9 +110,9 @@ export const CutProvider = () => {
 
   const onClick = useCallback(
     (e: PointerEvent) => {
-      const { clientX, clientY } = e;
+      if (!level) return;
 
-      if (isOutsideBoard(clientX, clientY)) return;
+      const { clientX, clientY } = e;
 
       if (activeSkill?.type === SkillType.Active) {
         return skillHandler(clientX, clientY, activeSkill);
@@ -135,10 +121,10 @@ export const CutProvider = () => {
       cutHandler(clientX, clientY);
     },
 
-    [activeSkill, cutHandler, skillHandler]
+    [activeSkill, cutHandler, skillHandler, level]
   );
 
-  useEventListener("click", onClick);
+  useEventListener("click", onClick, document.getElementById("game-level")!);
 
   return (
     <AnimatePresence>
