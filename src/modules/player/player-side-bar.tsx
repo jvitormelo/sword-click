@@ -5,7 +5,7 @@ import { GoldCounter } from "./gold-counter";
 import { usePlayer } from "./use-player";
 import { Card } from "@/components/Card";
 
-export const PlayerOnLevel = () => {
+export const PlayerSideBar = () => {
   const life = useGameLevelStore((s) => s.player.life);
   const maxLife = useGameLevelStore((s) => s.player.maxLife);
   const { player } = usePlayer();
@@ -41,9 +41,11 @@ export const PlayerOnLevel = () => {
       <img
         ref={imgRef}
         src={MainCharacterImage}
-        className="rounded-md w-full aspect-square border border-amber-700"
+        className="rounded-md w-full aspect-square border border-amber-700 mb-2"
       />
-      <GoldCounter gold={player.gold} />
+      <span className="text-lg">
+        <GoldCounter gold={player.gold} />
+      </span>
     </Card>
   );
 };

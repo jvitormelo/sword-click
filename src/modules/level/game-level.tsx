@@ -5,13 +5,15 @@ import { EnemiesSpawned } from "../enemies/enemies-spawn";
 import { useGameLevelStore } from "@/stores/game-level-store";
 
 import { Card } from "@/components/Card";
+import { motion } from "framer-motion";
 
 type Props = {
   background: string;
   content?: ReactNode;
+  audio?: string;
 };
 
-export const GameLevel = ({ background, content }: Props) => {
+export const GameLevel = ({ background, content, audio }: Props) => {
   const boardRef = useRef<HTMLDivElement>(null);
 
   const level = useGameLevelStore((s) => s.level);
@@ -46,7 +48,7 @@ export const GameLevel = ({ background, content }: Props) => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        boxShadow: "inset 0 0 0 2000px rgba(0, 0, 0, 0.5)",
+        boxShadow: `inset 0 0 0 2000px rgba(0, 0, 0, ${level ? 0.6 : 0.4})`,
         cursor: level ? "pointer" : "default",
       }}
       id="game-level"
@@ -54,13 +56,33 @@ export const GameLevel = ({ background, content }: Props) => {
       <EnemiesSpawned />
       {level && <DangerZone />}
 
-      {!level && content}
+      {!level && (
+        <>
+          {content}
+          {audio && (
+            <audio
+              ref={(el) => {
+                if (!el) return;
+                el.volume = 0.5;
+              }}
+              src={audio}
+              autoPlay
+              loop
+            />
+          )}
+        </>
+      )}
     </Card>
   );
 };
 
 function DangerZone() {
   return (
-    <div className="absolute left-0 bottom-0 rounded-b-md w-full border-t bg-red-300 opacity-60  border-red-500 h-[5%] flex items-center justify-center" />
+    <motion.div
+      animate={{
+        opacity: [0, 0.6],
+      }}
+      className="absolute left-0 bottom-0 rounded-b-md w-full border-t bg-red-300  border-red-500 h-[5%] flex items-center justify-center"
+    />
   );
 }

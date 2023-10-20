@@ -55,6 +55,7 @@ function Levels() {
     <>
       {Object.values(Views).map((value) => (
         <button
+          key={value}
           className={cn(view === value && "bg-amber-800 border-amber-950")}
           onClick={() => setView(value)}
         >
