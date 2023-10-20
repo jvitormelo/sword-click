@@ -1,6 +1,4 @@
-import PlainsBackground from "@/assets/plains-background.jpeg";
 import { EnemyOnLevel } from "../../domain/types";
-import { goblinFactory, zombieFactory } from "../enemies/enemies-factory";
 
 export type Level = {
   id: string;
@@ -13,20 +11,11 @@ import { useGameLevelStore } from "../../stores/game-level-store";
 
 import { Card } from "@/components/Card";
 import { Views, useViewStore } from "@/stores/view-store";
+import { cn } from "@/utils/cn";
 import { useRef } from "react";
 import { GoldCounter } from "../player/gold-counter";
+import { usePlayer } from "../player/use-player";
 import { allLevels } from "./all-levels";
-
-const createSandBoxLevel = (quantity: number): Level => {
-  return {
-    id: "sandbox",
-    number: 0,
-    background: PlainsBackground,
-    enemies: Array.from({ length: quantity }, () =>
-      Math.random() < 0.5 ? zombieFactory() : goblinFactory()
-    ),
-  };
-};
 
 export const LevelSelector = () => {
   const level = useGameLevelStore((s) => s.level);
@@ -55,18 +44,47 @@ function ActiveLevel({ level }: { level: Level }) {
 function Levels() {
   const { play } = useGameLevelStore((s) => s.actions);
   const { setView } = useViewStore((s) => s.actions);
+  const { player } = usePlayer();
   const view = useViewStore((s) => s.view);
 
   function selectLevel(level: Level) {
-    setView(Views.Game);
-
     play(level);
+  }
+
+  const visibleLevels = (() => {
+    const playerLevels = player.completedLevels
+      .map((id) => allLevels.find((l) => l.id === id))
+      .filter((l): l is Level => !!l);
+
+    const highestLevel = playerLevels.reduce((acc, level) => {
+      if (level.number > acc.number) return level;
+
+      return acc;
+    }, playerLevels[0]);
+
+    return allLevels.filter((level) => {
+      const highestNumber = highestLevel?.number || 0;
+
+      return level.number <= highestNumber + 1;
+    });
+  })();
+
+  if (view === Views.Abyss) {
+    return (
+      <>
+        <button onClick={() => setView(Views.Town)}>Town</button>
+
+        <button onClick={() => setView(Views.Camp)}>Camp</button>
+      </>
+    );
   }
 
   if (view === Views.Town)
     return (
       <>
-        <button onClick={() => setView(Views.Game)}>Camp</button>
+        <button onClick={() => setView(Views.Camp)}>Camp</button>
+
+        <button onClick={() => setView(Views.Abyss)}>Abyss</button>
       </>
     );
 
@@ -74,13 +92,15 @@ function Levels() {
     <>
       <button onClick={() => setView(Views.Town)}>Town</button>
 
-      <button onClick={() => selectLevel(createSandBoxLevel(50))}>Abyss</button>
+      <button onClick={() => setView(Views.Abyss)}>Abyss</button>
 
       <hr className="my-2" />
 
-      {allLevels.map((level) => (
+      {visibleLevels.map((level) => (
         <button
-          className="data-[completed='true']:bg-green-400"
+          className={cn(
+            player.completedLevels.includes(level.id) && "bg-green-500"
+          )}
           key={level.id}
           onClick={() => selectLevel(level)}
         >

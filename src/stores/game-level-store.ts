@@ -106,7 +106,13 @@ export const useGameLevelStore = create<Store>((set, get) => ({
               goldEarned,
               levelId: level.id,
             });
-            updatePlayer((old) => ({ gold: old.gold + goldEarned }));
+
+            updatePlayer((old) => ({
+              gold: old.gold + goldEarned,
+              completedLevels: Array.from(
+                new Set([...old.completedLevels, level.id])
+              ),
+            }));
             set({ isPlaying: false, level: null, gold: 0 });
           }, 500);
         }

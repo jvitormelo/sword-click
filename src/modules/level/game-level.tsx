@@ -1,12 +1,17 @@
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
 import { boardSize, distanceFromTop } from "../../constants";
 import { EnemiesSpawned } from "../enemies/enemies-spawn";
 import { useGameLevelStore } from "@/stores/game-level-store";
-import CampfireBf from "@/assets/campfire.jpeg";
+
 import { Card } from "@/components/Card";
 
-export const GameLevel = () => {
+type Props = {
+  background: string;
+  content?: ReactNode;
+};
+
+export const GameLevel = ({ background, content }: Props) => {
   const boardRef = useRef<HTMLDivElement>(null);
 
   const level = useGameLevelStore((s) => s.level);
@@ -37,7 +42,7 @@ export const GameLevel = () => {
       ref={boardRef}
       className="relative"
       style={{
-        backgroundImage: `url(${level?.background ?? CampfireBf})`,
+        backgroundImage: `url(${level?.background ?? background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -47,7 +52,15 @@ export const GameLevel = () => {
       id="game-level"
     >
       <EnemiesSpawned />
-      <div className="absolute left-0 bottom-0 rounded-b-md w-full border-t bg-red-300 opacity-60  border-red-500 h-[5%] flex items-center justify-center" />
+      {level && <DangerZone />}
+
+      {content}
     </Card>
   );
 };
+
+function DangerZone() {
+  return (
+    <div className="absolute left-0 bottom-0 rounded-b-md w-full border-t bg-red-300 opacity-60  border-red-500 h-[5%] flex items-center justify-center" />
+  );
+}

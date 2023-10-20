@@ -1,5 +1,6 @@
 import { LevelSelector } from "./modules/level/level-selector";
-
+import CampfireBg from "@/assets/campfire.jpeg";
+import AbyssBg from "@/assets/abyss-bg.jpeg";
 import { GameLevel } from "./modules/level/game-level";
 import { LifeGlobe } from "./modules/player/life-globe";
 import { ManaGlobe } from "./modules/player/mana-globe";
@@ -35,5 +36,17 @@ function CurrentView() {
 
   if (view === Views.Town) return <Town />;
 
-  return <GameLevel />;
+  if (view === Views.Abyss)
+    return (
+      <GameLevel
+        background={AbyssBg}
+        content={
+          <div className="absolute rounded-md font-extrabold translate-y-1/2 text-slate-100 bottom-1/2 text-xl bg-slate-900 w-fit mx-auto p-8 left-0 right-0 flex items-center justify-center ">
+            Where hope fades into darkness
+          </div>
+        }
+      />
+    );
+
+  return <GameLevel background={CampfireBg} />;
 }

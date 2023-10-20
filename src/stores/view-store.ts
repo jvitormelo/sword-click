@@ -1,8 +1,9 @@
 import { create } from "zustand";
 
 export enum Views {
-  Game = "game",
+  Camp = "camp",
   Town = "town",
+  Abyss = "abyss",
 }
 
 export const useViewStore = create<{
@@ -14,5 +15,5 @@ export const useViewStore = create<{
   actions: {
     setView: (view) => set({ view }),
   },
-  view: Views.Game,
+  view: Views.Camp,
 }));
