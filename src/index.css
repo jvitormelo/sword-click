@@ -22,6 +22,10 @@
   overflow: hidden;
 }
 
+hr {
+  border-color: #07020e;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

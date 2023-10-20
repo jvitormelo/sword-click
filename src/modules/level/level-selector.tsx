@@ -74,6 +74,10 @@ function Levels() {
     <>
       <button onClick={() => setView(Views.Town)}>Town</button>
 
+      <button onClick={() => selectLevel(createSandBoxLevel(50))}>Abyss</button>
+
+      <hr className="my-2" />
+
       {allLevels.map((level) => (
         <button
           className="data-[completed='true']:bg-green-400"
@@ -83,12 +87,6 @@ function Levels() {
           Map {level.number}
         </button>
       ))}
-
-      <button>Soon...</button>
-
-      <button onClick={() => selectLevel(createSandBoxLevel(50))}>
-        Sandbox
-      </button>
     </>
   );
 }

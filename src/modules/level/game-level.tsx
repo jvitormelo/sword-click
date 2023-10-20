@@ -41,7 +41,7 @@ export const GameLevel = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        boxShadow: "inset 0 0 0 2000px rgba(0, 0, 0, 0.3)",
+        boxShadow: "inset 0 0 0 2000px rgba(0, 0, 0, 0.5)",
         cursor: level ? "pointer" : "default",
       }}
       id="game-level"

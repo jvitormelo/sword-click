@@ -30,7 +30,7 @@ export const SkillBuyer = () => {
       });
 
     const result = updatePlayer(({ skills, gold }) => {
-      const skillsSet = new Set([...skills, ...selectSkill]);
+      const skillsSet = new Set([...skills, selectSkill]);
 
       return {
         skills: Array.from(skillsSet),
@@ -56,6 +56,7 @@ export const SkillBuyer = () => {
             skill={skill}
           />
         ))}
+        <div hidden={filteredSkill.length > 0}>More skills coming soon!</div>
       </ul>
 
       {selectSkill && (
