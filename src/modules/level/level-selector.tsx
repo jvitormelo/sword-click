@@ -15,23 +15,7 @@ import { Card } from "@/components/Card";
 import { Views, useViewStore } from "@/stores/view-store";
 import { useRef } from "react";
 import { GoldCounter } from "../player/gold-counter";
-import { completedLevels } from "./completed-levels";
-
-const levels: Array<Level> = [
-  {
-    id: "1",
-    number: 1,
-    background: PlainsBackground,
-    enemies: [
-      zombieFactory(),
-      zombieFactory(),
-      zombieFactory(),
-      zombieFactory(),
-      zombieFactory(),
-      zombieFactory(),
-    ],
-  },
-];
+import { allLevels } from "./all-levels";
 
 const createSandBoxLevel = (quantity: number): Level => {
   return {
@@ -50,7 +34,7 @@ export const LevelSelector = () => {
   const isActive = !!level;
 
   return (
-    <Card className="gap-2 w-[140px]">
+    <Card className="gap-2 w-full">
       {isActive ? <ActiveLevel level={level} /> : <Levels />}
     </Card>
   );
@@ -76,7 +60,7 @@ function Levels() {
   function selectLevel(level: Level) {
     setView(Views.Game);
 
-    play(structuredClone(level));
+    play(level);
   }
 
   if (view === Views.Town)
@@ -90,11 +74,8 @@ function Levels() {
     <>
       <button onClick={() => setView(Views.Town)}>Town</button>
 
-      {levels.map((level) => (
+      {allLevels.map((level) => (
         <button
-          data-completed={completedLevels.some(
-            (completedLevel) => completedLevel.id === level.id
-          )}
           className="data-[completed='true']:bg-green-400"
           key={level.id}
           onClick={() => selectLevel(level)}
@@ -103,7 +84,7 @@ function Levels() {
         </button>
       ))}
 
-      <button hidden={completedLevels.length === 0}>Soon...</button>
+      <button>Soon...</button>
 
       <button onClick={() => selectLevel(createSandBoxLevel(50))}>
         Sandbox

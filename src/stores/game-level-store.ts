@@ -1,12 +1,12 @@
 import { gameTick } from "@/constants";
-import { useModalStore } from "@/hooks/useOpenModal";
-import { completedLevels } from "@/modules/level/completed-levels";
+
 import { Level } from "@/modules/level/level-selector";
 import { create } from "zustand";
 import { EnemiesAction, EnemiesLevel } from "../modules/enemies/enemies-level";
 import { PlayerLevel } from "../modules/player/player-level";
 import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
 import { PlayerModel, updatePlayer } from "@/modules/player/use-player";
+import { useModalStore } from "./modal-store";
 
 type Store = {
   gold: number;
@@ -64,7 +64,7 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         clearInterval(interval);
       }
 
-      set({ level, isPlaying: true });
+      set({ level: structuredClone(level), isPlaying: true });
 
       interval = setInterval(() => {
         set((state) => {
@@ -99,11 +99,12 @@ export const useGameLevelStore = create<Store>((set, get) => ({
           clearInterval(interval);
           const goldEarned = get().gold;
 
-          completedLevels.push(get().level!);
+          const level = get().level!;
 
           setTimeout(() => {
             useModalStore.getState().actions.openVictory({
               goldEarned,
+              levelId: level.id,
             });
             updatePlayer((old) => ({ gold: old.gold + goldEarned }));
             set({ isPlaying: false, level: null, gold: 0 });

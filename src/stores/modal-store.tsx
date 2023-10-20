@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { VictoryModalBody } from "@/modules/level/victory-modal";
+import { ComponentProps, ReactNode } from "react";
 import { create } from "zustand";
 
 type ModalProps = {
@@ -11,7 +12,7 @@ export const useModalStore = create<{
   modalProps?: ModalProps;
   actions: {
     open: (modalProps: ModalProps) => void;
-    openVictory: (props: OpenVictoryProps) => void;
+    openVictory: (props: ComponentProps<typeof VictoryModalBody>) => void;
     close: () => void;
   };
 }>((set) => ({
@@ -21,27 +22,9 @@ export const useModalStore = create<{
     openVictory(props) {
       this.open({
         title: "You Won",
-        body: <VictoryBody {...props} />,
+        body: <VictoryModalBody {...props} />,
       });
     },
   },
   isOpen: false,
 }));
-
-type OpenVictoryProps = {
-  goldEarned: number;
-};
-
-const VictoryBody = ({ goldEarned = 10 }: OpenVictoryProps) => {
-  return (
-    <div>
-      <p>You earned {goldEarned} gold!</p>
-    </div>
-  );
-};
-
-export const useOpenModal = () => {
-  const { close, open } = useModalStore((s) => s.actions);
-
-  return { close, open };
-};

@@ -35,7 +35,7 @@ export const GameLevel = () => {
   return (
     <Card
       ref={boardRef}
-      className="w-96 h-96 relative"
+      className="relative"
       style={{
         backgroundImage: `url(${level?.background ?? CampfireBf})`,
         backgroundSize: "cover",

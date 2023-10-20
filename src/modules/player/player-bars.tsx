@@ -6,14 +6,14 @@ import { usePlayer } from "./use-player";
 import { Card } from "@/components/Card";
 
 export const PlayerOnLevel = () => {
-  const { life: health } = useGameLevelStore((s) => s.player);
+  const life = useGameLevelStore((s) => s.player.life);
+  const maxLife = useGameLevelStore((s) => s.player.maxLife);
   const { player } = usePlayer();
 
-  const maxLife = useRef(health);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    if (health !== maxLife.current) {
+    if (life !== maxLife) {
       // shake the image
       imgRef.current?.animate(
         [
@@ -31,18 +31,17 @@ export const PlayerOnLevel = () => {
       );
     }
 
-    if (health <= 0) {
+    if (life <= 0) {
       console.log("You died");
     }
-  }, [health]);
+  }, [life]);
 
   return (
-    <Card>
+    <Card className="w-full">
       <img
-        width={100}
         ref={imgRef}
         src={MainCharacterImage}
-        className="rounded-md border border-amber-700"
+        className="rounded-md w-full aspect-square border border-amber-700"
       />
       <GoldCounter gold={player.gold} />
     </Card>

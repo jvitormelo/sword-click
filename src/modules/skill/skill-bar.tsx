@@ -2,6 +2,7 @@ import { Card } from "@/components/Card";
 import { useEventListener } from "../../hooks/useEventListener";
 import { useSkillActions, useSkillStore } from "./skill-store";
 import { ActiveSkill, EnhanceSkill } from "./types";
+import { SkillIcon } from "./skill-icon";
 
 export const SkillBar = () => {
   const skills = useSkillStore((s) => s.equippedSkills);
@@ -29,25 +30,18 @@ export const SkillBar = () => {
     <Card className="flex-row w-96 my-auto">
       <section className="flex gap-2">
         {skills.map((skill) => (
-          <img
-            data-active={activeSkill?.id === skill.id}
+          <SkillIcon
+            active={activeSkill?.id === skill.id}
             onClick={() => toggleSkill(skill)}
+            skill={skill}
             key={skill.id}
-            className="w-8 h-8 rounded-md border-white border data-[active='true']:border-amber-700 data-[active='true']:border-2"
-            src={skill.icon}
-            alt={skill.name}
           />
         ))}
       </section>
 
       <section className="ml-auto">
         {passivesSkills.map((skill) => (
-          <img
-            key={skill.id}
-            className="w-8 h-8 border rounded-md border-blue-500"
-            src={skill.icon}
-            alt={skill.name}
-          />
+          <SkillIcon active={false} skill={skill} key={skill.id} />
         ))}
       </section>
     </Card>

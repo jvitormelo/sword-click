@@ -1,12 +1,11 @@
 import { Card } from "@/components/Card";
-import { useOpenModal } from "@/hooks/useOpenModal";
+import { useModal } from "@/hooks/useModal";
 import { GoldCounter } from "../player/gold-counter";
 import { PlayerModel, updatePlayer, usePlayer } from "../player/use-player";
-import { useGameLevelStore } from "@/stores/game-level-store";
 
 export const LevelUpTown = () => {
   const { player } = usePlayer();
-  const { open } = useOpenModal();
+  const { open } = useModal();
 
   const upgradedPlayer = (() => {
     const { life, mana, manaRegen, ...rest } = player;
@@ -34,18 +33,14 @@ export const LevelUpTown = () => {
         body: "Faz o L",
       });
 
-    const updatedPlayer = updatePlayer((p) => ({
+    updatePlayer((p) => ({
       ...upgradedPlayer,
       gold: p.gold - levelUpPrice,
     }));
-
-    if (!updatedPlayer) return;
-
-    useGameLevelStore.getState().actions.setPlayer(updatedPlayer);
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" style={{}}>
       <div className="flex items-center justify-center gap-2">
         <StatsCard {...player} />
         <span>-{`>`}</span>

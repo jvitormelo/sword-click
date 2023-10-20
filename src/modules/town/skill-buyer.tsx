@@ -1,13 +1,13 @@
-import { useModalStore } from "@/hooks/useOpenModal";
 import { useState } from "react";
 import { GoldCounter } from "../player/gold-counter";
 import { updatePlayer, usePlayer } from "../player/use-player";
 import { allSkills } from "../skill/all-skills";
 import { useSkillStore } from "../skill/skill-store";
+import { useModal } from "@/hooks/useModal";
 
 export const SkillBuyer = () => {
   const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
-  const { open } = useModalStore((s) => s.actions);
+  const { open } = useModal();
   const { player } = usePlayer();
   const { setSkills } = useSkillStore((s) => s.actions);
 
