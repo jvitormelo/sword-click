@@ -54,7 +54,7 @@ export const GameLevel = ({ background, content }: Props) => {
       <EnemiesSpawned />
       {level && <DangerZone />}
 
-      {content}
+      {!level && content}
     </Card>
   );
 };
