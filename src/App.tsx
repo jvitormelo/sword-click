@@ -41,7 +41,15 @@ function CurrentView() {
       <GameLevel
         background={AbyssBg}
         content={
-          <div className="absolute rounded-md font-extrabold translate-y-1/2 text-slate-100 bottom-1/2 text-xl bg-slate-900 w-fit mx-auto p-8 left-0 right-0 flex items-center justify-center ">
+          <div
+            style={{
+              textShadow: "0 0 10px #000",
+
+              background: "rgba(0,0,0,0.6)",
+              boxShadow: "0 0 10px #000",
+            }}
+            className="absolute rounded-md font-extrabold translate-y-1/2 text-slate-100 bottom-1/2 text-xl  w-fit mx-auto p-8 left-0 right-0 flex items-center justify-center "
+          >
             Where hope fades into darkness
           </div>
         }
