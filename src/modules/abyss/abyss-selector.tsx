@@ -5,6 +5,7 @@ import { Level } from "../level/level-selector";
 import AbyssBg from "@/assets/abyss-bg.jpeg";
 import { generateEnemies } from "../enemies/generate-enemies";
 import { useGameLevelStore } from "@/stores/game-level-store";
+import { cn } from "@/utils/cn";
 
 function getEnemies(abyssLevel: number) {
   if (abyssLevel < 10) return [zombieFactory()];
@@ -31,11 +32,10 @@ export const AbyssSelector = () => {
 
   return (
     <section className="grid grid-cols-2 gap-4">
-      <AbyssCard current {...getAbyssInfo(player.abyssLevel)} />
-
       {player.abyssLevel > 1 && (
         <AbyssCard {...getAbyssInfo(player.abyssLevel + 1)} />
       )}
+      <AbyssCard current {...getAbyssInfo(player.abyssLevel)} />
     </section>
   );
 };
@@ -47,15 +47,21 @@ const AbyssCard = (abyssInfo: AbyssInfo & { current?: boolean }) => {
     play(generateAbyssLevel(abyssInfo), true);
   }
 
+  const isCompleted = abyssInfo.current && abyssInfo.level > 1;
+
   return (
     <Card
       style={{
         background: `rgba(0,0,0,0.7)`,
       }}
-      className="group hover:!bg-slate-950 h-fit transition-all duration-100 ease-in-out"
+      className={cn(
+        "group hover:!bg-slate-950 h-fit transition-all duration-100 ease-in-out",
+
+        isCompleted && "border-2 border-green-800"
+      )}
     >
       <span className="text-lg">
-        Abyss Level {abyssInfo.level} {abyssInfo.current && `(current)`}
+        Abyss Level {abyssInfo.level} {abyssInfo.current && `(Done)`}
       </span>
       <div className="text-sm text-gray-300">
         Min Monsters: {abyssInfo.monsters}
