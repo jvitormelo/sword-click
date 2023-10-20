@@ -41,11 +41,37 @@ function ActiveLevel({ level }: { level: Level }) {
   );
 }
 
+const viewsTextMap: Record<Views, string> = {
+  [Views.Camp]: "Camp",
+  [Views.Town]: "Town",
+  [Views.Abyss]: "Abyss",
+};
+
 function Levels() {
-  const { play } = useGameLevelStore((s) => s.actions);
   const { setView } = useViewStore((s) => s.actions);
-  const { player } = usePlayer();
   const view = useViewStore((s) => s.view);
+
+  return (
+    <>
+      {Object.values(Views).map((value) => (
+        <button
+          className={cn(view === value && "bg-amber-800 border-amber-950")}
+          onClick={() => setView(value)}
+        >
+          {viewsTextMap[value]}
+        </button>
+      ))}
+
+      <hr className="my-2" />
+
+      {view === Views.Camp && <Maps />}
+    </>
+  );
+}
+
+function Maps() {
+  const { player } = usePlayer();
+  const { play } = useGameLevelStore((s) => s.actions);
 
   function selectLevel(level: Level) {
     play(level);
@@ -69,33 +95,8 @@ function Levels() {
     });
   })();
 
-  if (view === Views.Abyss) {
-    return (
-      <>
-        <button onClick={() => setView(Views.Town)}>Town</button>
-
-        <button onClick={() => setView(Views.Camp)}>Camp</button>
-      </>
-    );
-  }
-
-  if (view === Views.Town)
-    return (
-      <>
-        <button onClick={() => setView(Views.Camp)}>Camp</button>
-
-        <button onClick={() => setView(Views.Abyss)}>Abyss</button>
-      </>
-    );
-
   return (
     <>
-      <button onClick={() => setView(Views.Town)}>Town</button>
-
-      <button onClick={() => setView(Views.Abyss)}>Abyss</button>
-
-      <hr className="my-2" />
-
       {visibleLevels.map((level) => (
         <button
           className={cn(
