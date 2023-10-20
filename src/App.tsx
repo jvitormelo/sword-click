@@ -20,7 +20,7 @@ export function App() {
           <LevelSelector />
         </div>
 
-        <div className="flex gap-4 pt-2">
+        <div className="flex gap-4 pt-4 px-4">
           <LifeGlobe />
           <SkillBar />
           <ManaGlobe />

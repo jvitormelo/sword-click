@@ -4,9 +4,10 @@ import { updatePlayer, usePlayer } from "../player/use-player";
 import { allSkills } from "../skill/all-skills";
 import { useSkillStore } from "../skill/skill-store";
 import { useModal } from "@/hooks/useModal";
+import { SkillIcon } from "../skill/skill-icon";
 
 export const SkillBuyer = () => {
-  const [selectedSkills, setSelectedSkills] = useState<Set<string>>(new Set());
+  const [selectSkill, setSelectSkill] = useState<string>("");
   const { open } = useModal();
   const { player } = usePlayer();
   const { setSkills } = useSkillStore((s) => s.actions);
@@ -16,33 +17,24 @@ export const SkillBuyer = () => {
   );
 
   function toggleSkill(skillId: string) {
-    setSelectedSkills((s) => {
-      const newSet = new Set(s);
-
-      if (newSet.has(skillId)) {
-        newSet.delete(skillId);
-      } else {
-        newSet.add(skillId);
-      }
-      return newSet;
-    });
+    setSelectSkill((s) => (s === skillId ? "" : skillId));
   }
 
-  const totalPrice = selectedSkills.size * 100;
+  const price = 100;
 
   function buySelectedSkill() {
-    if (player.gold < totalPrice)
+    if (player.gold < price)
       return open({
         title: "Voce e pobre",
         body: "Usa o urubu do pix",
       });
 
     const result = updatePlayer(({ skills, gold }) => {
-      const skillsSet = new Set([...skills, ...selectedSkills]);
+      const skillsSet = new Set([...skills, ...selectSkill]);
 
       return {
         skills: Array.from(skillsSet),
-        gold: gold - totalPrice,
+        gold: gold - price,
       };
     });
 
@@ -50,27 +42,25 @@ export const SkillBuyer = () => {
       setSkills(result.skills);
     }
 
-    setSelectedSkills(new Set());
+    setSelectSkill("");
   }
 
   return (
     <section>
-      <ul className="flex gap-2">
+      <ul className="flex gap-2 bg-slate-900 p-4 rounded-md">
         {filteredSkill.map((skill) => (
-          <img
+          <SkillIcon
             key={skill.id}
             onClick={() => toggleSkill(skill.id)}
-            data-active={selectedSkills.has(skill.id)}
-            className="border border-white data-[active='true']:border-amber-800"
-            width={24}
-            src={skill.icon}
+            active={selectSkill === skill.id}
+            skill={skill}
           />
         ))}
       </ul>
 
-      {selectedSkills.size > 0 && (
+      {selectSkill && (
         <button onClick={buySelectedSkill} className="flex mt-8 mx-auto">
-          Buy <GoldCounter gold={totalPrice} />
+          Buy <GoldCounter gold={price} />
         </button>
       )}
     </section>

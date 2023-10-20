@@ -16,7 +16,9 @@ export const SkillIcon = ({ skill, onClick, active }: Props) => {
       className={cn(
         "w-12 h-12 rounded-md cursor-pointer border-white border",
         active && "border-2 border-amber-800",
-        skill.type === SkillType.Passive && "border-blue-500 cursor-default"
+        skill.type === SkillType.Passive &&
+          !onClick &&
+          "border-blue-500 cursor-default"
       )}
       src={skill.icon}
       alt={skill.name}

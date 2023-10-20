@@ -8,15 +8,21 @@ export const ModalProvider = () => {
     <>
       <div
         hidden={!isOpen}
-        className={`fixed z-40 inset-0 bg-black bg-opacity-50`}
+        className={`fixed z-40 inset-0 bg-black bg-opacity-60`}
       />
       <AnimatePresence>
         {isOpen && (
           <>
             <motion.dialog
               key={"modal"}
-              animate={{ scale: isOpen ? 1 : 0.5, inset: 0 }}
-              exit={{ scale: [1, 0], translateY: ["0vh", "100vh"] }}
+              animate={{ scale: [0, 1], inset: 0 }}
+              exit={{
+                scale: [1, 0],
+                translateY: ["0vh", "50vh"],
+                transition: {
+                  duration: 0.2,
+                },
+              }}
               open={isOpen}
               className={`z-50 p-8 min-w-[20vw] shadow-2xl my-auto rounded-md w-fit border-amber-800 border max-h-[80lvh] max-w-[50vw] flex flex-col`}
             >

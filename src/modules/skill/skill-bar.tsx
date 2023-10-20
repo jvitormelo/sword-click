@@ -27,7 +27,7 @@ export const SkillBar = () => {
   });
 
   return (
-    <Card className="flex-row w-96 my-auto">
+    <Card className="flex-row w-full my-auto">
       <section className="flex gap-2">
         {skills.map((skill) => (
           <SkillIcon

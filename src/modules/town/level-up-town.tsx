@@ -40,10 +40,10 @@ export const LevelUpTown = () => {
   }
 
   return (
-    <div className="flex flex-col" style={{}}>
+    <div className="flex flex-col pt-12">
       <div className="flex items-center justify-center gap-2">
         <StatsCard {...player} />
-        <span>-{`>`}</span>
+        <span className="text-4xl text-white font-bold">-{`>`}</span>
         <StatsCard {...upgradedPlayer} />
       </div>
 
@@ -58,12 +58,31 @@ export const LevelUpTown = () => {
 };
 
 function StatsCard(player: PlayerModel) {
+  const values = [
+    {
+      name: "Level",
+      value: player.level,
+    },
+    {
+      name: "Life",
+      value: player.life,
+    },
+    {
+      name: "Mana",
+      value: player.mana,
+    },
+    {
+      name: "ManaRegen",
+      value: player.manaRegen.toFixed(2),
+    },
+  ];
   return (
-    <Card className="p-2 text-base">
-      <span>Level: {player.level}</span>
-      <span>Life: {player.life}</span>
-      <span>Mana: {player.mana}</span>
-      <span> ManaRegen: {player.manaRegen.toFixed(2)}</span>
+    <Card className="p-4 gap-1">
+      {values.map((value) => (
+        <span>
+          {value.name}: <span className="font-bold">{value.value}</span>
+        </span>
+      ))}
     </Card>
   );
 }

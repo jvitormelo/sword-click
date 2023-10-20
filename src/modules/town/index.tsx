@@ -32,7 +32,7 @@ export const Town = () => {
       style={{
         backgroundImage: `url(${LevelUpBg})`,
         backgroundSize: "cover",
-        boxShadow: "inset 0 0 0 2000px rgba(0, 0, 0, 0.4)",
+        boxShadow: "inset 0 0 0 2000px rgba(0, 0, 0, 0.5)",
       }}
     >
       <section className="flex gap-2 mb-4">
@@ -41,8 +41,7 @@ export const Town = () => {
             key={value}
             id={value}
             className={cn(
-              currentView === value && "bg-amber-800 border-amber-950",
-              "p-1"
+              currentView === value && "bg-amber-800 border-amber-950"
             )}
             onClick={() => setCurrentView(value)}
           >
