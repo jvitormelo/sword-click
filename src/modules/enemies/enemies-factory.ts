@@ -14,11 +14,11 @@ export function zombieFactory(): EnemyOnLevel {
     health: 100,
     attack: 6,
     image: Zombie,
-    speed: 30,
+    speed: 40,
     size: size,
     position: {
       x: between(0, boardSize.width - size.width),
-      y: between(0, 24),
+      y: between(0, boardSize.height * 0.15),
     },
     ailments: [],
   };
@@ -38,7 +38,7 @@ export function goblinFactory(): EnemyOnLevel {
     size,
     position: {
       x: between(0, boardSize.width - size.width),
-      y: between(0, 30),
+      y: between(0, boardSize.height * 0.2),
     },
     ailments: [],
   };

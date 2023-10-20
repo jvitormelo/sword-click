@@ -15,6 +15,7 @@ type Store = {
   player: PlayerOnLevel;
   enemies: Map<string, EnemyOnLevel>;
   actions: {
+    spawn: (enemy: EnemyOnLevel) => void;
     addEnergy: (energy: number) => void;
     bulkSpawn: (enemies: EnemyOnLevel[]) => void;
     play: (level: Level) => void;
@@ -64,36 +65,53 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         clearInterval(interval);
       }
 
+      let totalTick = 0;
+
       set({ level: structuredClone(level), isPlaying: true });
 
       interval = setInterval(() => {
         set((state) => {
-          const nextToSpawn = state.level?.enemies.shift();
-
-          const level = {
+          const levelPayload = {
             enemies: state.enemies,
             gold: state.gold,
             player: state.player,
           };
 
-          new EnemiesLevel(level).tick();
-          new PlayerLevel(level).tick();
+          new EnemiesLevel(levelPayload).tick();
+          new PlayerLevel(levelPayload).tick();
 
-          const newEnemies = new Map(level.enemies);
-
-          if (nextToSpawn) {
-            newEnemies.set(nextToSpawn.id, nextToSpawn);
+          if (state.level) {
+            for (const [key, recipe] of state.level.enemies) {
+              if (Array.isArray(recipe)) {
+                for (const enemyRecipe of recipe) {
+                  if (totalTick >= enemyRecipe.spawnTime) {
+                    levelPayload.enemies.set(
+                      enemyRecipe.enemy.id,
+                      enemyRecipe.enemy
+                    );
+                    state.level?.enemies.delete(key);
+                  }
+                }
+              } else {
+                if (totalTick >= recipe.spawnTime) {
+                  levelPayload.enemies.set(recipe.enemy.id, recipe.enemy);
+                  state.level?.enemies.delete(key);
+                }
+              }
+            }
           }
+
+          const newEnemies = new Map(levelPayload.enemies);
 
           return {
             enemies: newEnemies,
-            gold: level.gold,
-            player: { ...level.player },
+            gold: levelPayload.gold,
+            player: { ...levelPayload.player },
           };
         });
 
         const isFinished =
-          get().level?.enemies.length === 0 && get().enemies.size === 0;
+          get().level?.enemies.size === 0 && get().enemies.size === 0;
 
         if (isFinished && interval) {
           clearInterval(interval);
@@ -116,6 +134,7 @@ export const useGameLevelStore = create<Store>((set, get) => ({
             set({ isPlaying: false, level: null, gold: 0 });
           }, 500);
         }
+        totalTick += gameTick;
       }, gameTick);
     },
     bulkSpawn: (enemies: EnemyOnLevel[]) => {

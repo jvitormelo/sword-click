@@ -4,8 +4,8 @@ export const distanceFromTop = {
 };
 
 export const boardSize = {
-  width: 384,
-  height: 384,
+  width: 532,
+  height: 532,
   get dangerZone() {
     return this.height - this.height * 0.1;
   },

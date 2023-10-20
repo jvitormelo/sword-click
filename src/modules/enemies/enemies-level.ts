@@ -12,7 +12,6 @@ export enum Ailment {
 }
 
 export type EnemiesAction = {
-  spawn: (enemy: EnemyOnLevel) => void;
   damageLineArea: (
     position: {
       width: number;
@@ -32,10 +31,6 @@ export type EnemiesAction = {
 
 export class EnemiesLevel implements EnemiesAction {
   constructor(protected level: LevelModel) {}
-
-  spawn(enemy: EnemyOnLevel) {
-    this.level.enemies.set(enemy.id, enemy);
-  }
 
   damageEnemy(id: string, damage: number) {
     const enemy = this.level.enemies.get(id);

@@ -1,10 +1,14 @@
 import { EnemyOnLevel } from "../../domain/types";
 
+export type EnemyRecipe = {
+  spawnTime: number;
+  enemy: EnemyOnLevel;
+};
 export type Level = {
   id: string;
   number: number;
   background: string;
-  enemies: EnemyOnLevel[];
+  enemies: Map<number, EnemyRecipe | EnemyRecipe[]>;
 };
 
 import { useGameLevelStore } from "../../stores/game-level-store";
@@ -35,7 +39,7 @@ function ActiveLevel({ level }: { level: Level }) {
 
   return (
     <div className="text-xs flex flex-col">
-      <span>Enemies: {levelRef.current.length}</span>
+      <span>Enemies: {levelRef.current.size}</span>
       <GoldCounter gold={gold} />
     </div>
   );

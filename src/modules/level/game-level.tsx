@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef } from "react";
 
 import { boardSize, distanceFromTop } from "../../constants";
-import { EnemiesSpawned } from "../enemies/enemies-spawn";
+import { EnemiesSpawned } from "../enemies/enemies-spawned";
 import { useGameLevelStore } from "@/stores/game-level-store";
 
 import { Card } from "@/components/Card";
