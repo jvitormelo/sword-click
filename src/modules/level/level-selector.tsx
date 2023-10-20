@@ -1,4 +1,4 @@
-import { EnemyOnLevel } from "../../domain/types";
+import { EnemyOnLevel } from "../enemies/types";
 
 export type EnemyRecipe = {
   spawnTime: number;

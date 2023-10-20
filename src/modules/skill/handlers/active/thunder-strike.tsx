@@ -11,7 +11,7 @@ import { ActiveSkill, SkillCode, SkillType } from "../../types";
 import ThunderStrikeIcon from "../../../../assets/icons/thunder-strike.png";
 import { between } from "../../../../utils/random";
 import { motion } from "framer-motion";
-import { EnemyOnLevel } from "../../../../domain/types";
+import { EnemyOnLevel } from "../../../enemies/types";
 import { useGameLevelStore } from "../../../../stores/game-level-store";
 import ThunderSound from "@/assets/sounds/thunder-strike-sound.mp3";
 

@@ -1,7 +1,7 @@
 import Goblin from "@/assets/goblin.gif";
 import Zombie from "@/assets/zombie.png";
 import { boardSize } from "@/constants";
-import { EnemyOnLevel } from "@/domain/types";
+import { EnemyOnLevel } from "@/modules/enemies/types";
 import { between } from "../../utils/random";
 import { Position } from "@/types";
 export type EnemyFactory = (props?: { pos: Partial<Position> }) => EnemyOnLevel;

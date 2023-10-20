@@ -5,7 +5,7 @@ import {
   areCircleAndRectangleTouching,
   arePointsTouching,
 } from "../../utils/geometry";
-import { EnemyOnLevel, LevelModel } from "../../domain/types";
+import { EnemyOnLevel, LevelModel } from "./types";
 
 export enum Ailment {
   Burn = "Burn",

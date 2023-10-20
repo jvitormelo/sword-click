@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { EnemyOnLevel } from "../../domain/types";
+import { EnemyOnLevel } from "./types";
 import { motion } from "framer-motion";
 import { Ailment } from "@/modules/enemies/enemies-level";
 import { gameTick } from "@/constants";

@@ -1,4 +1,5 @@
-import { Ailment } from "../modules/enemies/enemies-level";
+import { PlayerOnLevel } from "../player/types";
+import { Ailment } from "./enemies-level";
 
 export type EnemyOnLevel = {
   id: string;
@@ -17,14 +18,6 @@ export type EnemyOnLevel = {
   attack: number;
   speed: number;
   ailments: Ailment[];
-};
-
-export type PlayerOnLevel = {
-  life: number;
-  maxLife: number;
-  mana: number;
-  manaRegen: number;
-  maxMana: number;
 };
 
 export type LevelModel = {

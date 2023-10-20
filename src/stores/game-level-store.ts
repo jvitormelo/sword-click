@@ -4,7 +4,7 @@ import { Level } from "@/modules/level/level-selector";
 import { create } from "zustand";
 import { EnemiesAction, EnemiesLevel } from "../modules/enemies/enemies-level";
 import { PlayerLevel } from "../modules/player/player-level";
-import { EnemyOnLevel, PlayerOnLevel } from "../domain/types";
+import { EnemyOnLevel, PlayerOnLevel } from "../modules/enemies/types";
 import { PlayerModel, updatePlayer } from "@/modules/player/use-player";
 import { useModalStore } from "./modal-store";
 

@@ -1,13 +1,6 @@
 import { queryClient } from "@/lib/query-client";
 import { useQuery } from "@tanstack/react-query";
-
-export type PlayerStats = {
-  level: number;
-  life: number;
-  mana: number;
-  manaRegen: number;
-  skills: string[];
-};
+import { PlayerStats } from "./types";
 
 export type PlayerModel = {
   gold: number;
