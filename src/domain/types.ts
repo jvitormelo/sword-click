@@ -3,6 +3,7 @@ import { Ailment } from "../modules/enemies/enemies-level";
 export type EnemyOnLevel = {
   id: string;
   health: number;
+  name: string;
   position: {
     x: number;
     y: number;

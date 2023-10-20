@@ -12,6 +12,7 @@ export type PlayerStats = {
 export type PlayerModel = {
   gold: number;
   completedLevels: string[];
+  abyssLevel: number;
 } & PlayerStats;
 
 const defaultPlayer: PlayerModel = {
@@ -22,6 +23,7 @@ const defaultPlayer: PlayerModel = {
   gold: 1000,
   skills: [],
   completedLevels: [],
+  abyssLevel: 1,
 };
 
 export const useLoadPlayer = () => {

@@ -18,7 +18,8 @@ type Store = {
     spawn: (enemy: EnemyOnLevel) => void;
     addEnergy: (energy: number) => void;
     bulkSpawn: (enemies: EnemyOnLevel[]) => void;
-    play: (level: Level) => void;
+    // TODO BAD IF > Refactor this
+    play: (level: Level, isAbyss?: boolean) => void;
     setPlayer: (player: PlayerModel) => void;
   } & Omit<EnemiesAction, "tick">;
 };
@@ -60,7 +61,7 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         };
       });
     },
-    play(level) {
+    play(level, isAbyss) {
       if (interval) {
         clearInterval(interval);
       }
@@ -119,20 +120,35 @@ export const useGameLevelStore = create<Store>((set, get) => ({
 
           const level = get().level!;
 
-          setTimeout(() => {
-            useModalStore.getState().actions.openVictory({
-              goldEarned,
-              levelId: level.id,
+          if (isAbyss) {
+            updatePlayer((old) => {
+              const isFirstAbyss = level.number === 1 && old.abyssLevel === 1;
+              return {
+                gold: old.gold + goldEarned,
+                abyssLevel: isFirstAbyss
+                  ? 2
+                  : level.number > old.abyssLevel
+                  ? level.number
+                  : old.abyssLevel,
+              };
             });
-
-            updatePlayer((old) => ({
-              gold: old.gold + goldEarned,
-              completedLevels: Array.from(
-                new Set([...old.completedLevels, level.id])
-              ),
-            }));
             set({ isPlaying: false, level: null, gold: 0 });
-          }, 500);
+          } else {
+            setTimeout(() => {
+              useModalStore.getState().actions.openVictory({
+                goldEarned,
+                levelId: level.id,
+              });
+
+              updatePlayer((old) => ({
+                gold: old.gold + goldEarned,
+                completedLevels: Array.from(
+                  new Set([...old.completedLevels, level.id])
+                ),
+              }));
+              set({ isPlaying: false, level: null, gold: 0 });
+            }, 500);
+          }
         }
         totalTick += gameTick;
       }, gameTick);

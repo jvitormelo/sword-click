@@ -9,7 +9,7 @@ export const Card = forwardRef<HTMLDivElement, PropsWithChildren<DIVProps>>(
       <div
         {...rest}
         className={cn(
-          "flex flex-col bg-slate-800 border border-amber-800 p-4 rounded-md",
+          "flex flex-col bg-slate-950 border border-amber-800 p-4 rounded-md",
           className
         )}
         ref={ref}

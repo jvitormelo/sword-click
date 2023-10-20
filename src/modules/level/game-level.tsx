@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 import { boardSize, distanceFromTop } from "../../constants";
 import { EnemiesSpawned } from "../enemies/enemies-spawned";
@@ -6,6 +6,7 @@ import { useGameLevelStore } from "@/stores/game-level-store";
 
 import { Card } from "@/components/Card";
 import { motion } from "framer-motion";
+import { cn } from "@/utils/cn";
 
 type Props = {
   background: string;
@@ -86,3 +87,28 @@ function DangerZone() {
     />
   );
 }
+
+const ShadowCard = ({
+  children,
+  className,
+}: PropsWithChildren & {
+  className?: string;
+}) => {
+  return (
+    <div
+      style={{
+        textShadow: "0 0 10px #000",
+        background: "rgba(0,0,0,0.6)",
+        boxShadow: "0 0 10px #000",
+      }}
+      className={cn(
+        "absolute rounded-md top-10 font-extrabold text-slate-100 text-xl  w-fit mx-auto p-8 left-0 right-0 flex items-center justify-center",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
+GameLevel.ShadowCard = ShadowCard;
