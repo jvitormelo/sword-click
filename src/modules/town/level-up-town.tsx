@@ -1,7 +1,8 @@
 import { Card } from "@/components/Card";
 import { useModal } from "@/hooks/useModal";
 import { GoldCounter } from "../player/gold-counter";
-import { PlayerStats, updatePlayer, usePlayer } from "../player/use-player";
+import { updatePlayer, usePlayer } from "../player/use-player";
+import { PlayerStats } from "@/modules/player/types";
 
 export const LevelUpTown = () => {
   const { player } = usePlayer();
