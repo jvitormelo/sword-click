@@ -19,7 +19,8 @@ export type EnemiesAction = {
       height: number;
     } & Position,
     damage: number | [number, number],
-    ailments: Ailment[]
+    ailments: Ailment[],
+    enemiesHit?: Map<string, EnemyOnLevel>
   ) => void;
   damageCircleArea: (
     circle: Circle,
@@ -54,7 +55,8 @@ export class EnemiesLevel implements EnemiesAction {
       height: number;
     } & Position,
     _damage: number | [number, number],
-    ailments: Ailment[]
+    ailments: Ailment[],
+    enemiesHit?: Map<string, EnemyOnLevel>
   ) {
     const damage = Array.isArray(_damage) ? between(..._damage) : _damage;
     for (const enemy of this.level.enemies.values()) {
@@ -78,6 +80,11 @@ export class EnemiesLevel implements EnemiesAction {
       if (isTouching) {
         enemy.health -= damage;
         enemy.ailments = [...enemy.ailments, ...ailments];
+
+        console.log(enemiesHit);
+        if (enemiesHit) {
+          enemiesHit.set(enemy.id, enemy);
+        }
       }
     }
 

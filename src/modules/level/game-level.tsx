@@ -8,6 +8,7 @@ import { Card } from "@/components/Card";
 import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 import { AnimationProvider } from "@/providers/animation-provider";
+import { EntitiesOnLevel } from "@/modules/level/entities-on-level";
 
 type Props = {
   background: string;
@@ -56,6 +57,7 @@ export const GameLevel = ({ background, content, audio }: Props) => {
       id="game-level"
     >
       <section className="pointer-events-none select-none">
+        <EntitiesOnLevel />
         <EnemiesSpawned />
         <AnimationProvider />
         {level && <DangerZone />}

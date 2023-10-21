@@ -17,6 +17,7 @@ export enum SkillCode {
   RuleOfThirds = "rule-of-thirds",
   ThunderStrike = "thunder-strike",
   FireSlash = "fire-slash",
+  IceOrb = "ice-orb",
 }
 
 export enum SkillActivationType {
