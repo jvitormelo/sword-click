@@ -7,7 +7,7 @@ import { useGameLevelStore } from "@/stores/game-level-store";
 import { Card } from "@/components/Card";
 import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
-import { AnimationProvider } from "@/providers/animation-provider";
+import { AnimationRender } from "@/modules/animation/animation-render";
 import { EntitiesOnLevel } from "@/modules/level/entities-on-level";
 
 type Props = {
@@ -59,7 +59,7 @@ export const GameLevel = ({ background, content, audio }: Props) => {
       <section className="pointer-events-none select-none">
         <EntitiesOnLevel />
         <EnemiesSpawned />
-        <AnimationProvider />
+        <AnimationRender />
         {level && <DangerZone />}
       </section>
 

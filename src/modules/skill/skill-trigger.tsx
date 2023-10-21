@@ -4,7 +4,7 @@ import { BasicCut } from "@/modules/skill/all/active/basic-cut";
 import { useGameLevelStore } from "../../stores/game-level-store";
 import { useSkillStore } from "./skill-store";
 import { ActiveSkill } from "./types";
-import { useAnimationStore } from "@/stores/animation-store";
+import { useAnimationStore } from "@/modules/animation/animation-store";
 import { playSound } from "@/utils/sound";
 
 export const SkillTrigger = () => {

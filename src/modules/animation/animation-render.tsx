@@ -1,10 +1,11 @@
 import { AnimationObject } from "@/modules/skill/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { memo, useMemo } from "react";
-import { useAnimationStore } from "../stores/animation-store";
+import { useAnimationStore } from "./animation-store";
 
-export const AnimationProvider = () => {
+export const AnimationRender = () => {
   const { animations } = useAnimationStore();
+
   const arr = useMemo(() => Array.from(animations), [animations]);
 
   return (
