@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GoldCounter } from "../player/gold-counter";
 import { updatePlayer, usePlayer } from "../player/use-player";
-import { allSkills } from "../skill/all-skills";
+import { allSkills } from "../skill/all";
 import { useSkillStore } from "../skill/skill-store";
 import { useModal } from "@/hooks/useModal";
 import { SkillIcon } from "../skill/skill-icon";

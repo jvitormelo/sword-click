@@ -1,5 +1,5 @@
 import { cn } from "@/utils/cn";
-import { AnySkill, SkillType } from "./types";
+import { AnySkill, SkillActivationType } from "./types";
 import { Tooltip } from "@/components/Tooltip";
 
 type Props = {
@@ -25,7 +25,7 @@ export const SkillIcon = ({ skill, onClick, active }: Props) => {
         className={cn(
           "w-12 h-12 rounded-md cursor-pointer border-white border",
           active && "border-2 border-amber-800",
-          skill.type === SkillType.Passive &&
+          skill.type === SkillActivationType.Passive &&
             !onClick &&
             "border-blue-500 cursor-default"
         )}

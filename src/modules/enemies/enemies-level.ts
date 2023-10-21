@@ -1,3 +1,4 @@
+import { between } from "@/utils/random";
 import { FPS, boardSize } from "../../constants";
 import { Position } from "../../types";
 import {
@@ -17,7 +18,7 @@ export type EnemiesAction = {
       width: number;
       height: number;
     } & Position,
-    damage: number,
+    damage: number | [number, number],
     ailments: Ailment[]
   ) => void;
   damageCircleArea: (
@@ -52,9 +53,10 @@ export class EnemiesLevel implements EnemiesAction {
       width: number;
       height: number;
     } & Position,
-    damage: number,
+    _damage: number | [number, number],
     ailments: Ailment[]
   ) {
+    const damage = Array.isArray(_damage) ? between(..._damage) : _damage;
     for (const enemy of this.level.enemies.values()) {
       const movementMargin = enemy.speed / FPS / 2;
 

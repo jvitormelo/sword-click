@@ -1,19 +1,23 @@
-import {
-  animationStore,
-  playSound,
-} from "../../../../providers/animation-provider";
-import { distanceFromTop } from "../../../../constants";
-import { Position } from "../../../../types";
-import { closestDistanceToCircle } from "../../../../utils/geometry";
+import { distanceFromTop } from "@/constants";
+import { closestDistanceToCircle } from "@/utils/geometry";
 
-import ThunderStrikeHit from "../../../../assets/skills/thunder-strike-hit.png";
-import { ActiveSkill, SkillCode, SkillType } from "../../types";
-import ThunderStrikeIcon from "../../../../assets/icons/thunder-strike.png";
-import { between } from "../../../../utils/random";
-import { motion } from "framer-motion";
-import { EnemyOnLevel } from "../../../enemies/types";
-import { useGameLevelStore } from "../../../../stores/game-level-store";
+import ThunderStrikeIcon from "@/assets/skills/icons/thunder-strike.png";
 import ThunderSound from "@/assets/sounds/thunder-strike-sound.mp3";
+import { EnemyOnLevel } from "@/modules/enemies/types";
+import { ThunderStrikeAnimation } from "@/modules/skill/all/active/thunder-strike/animation";
+import {
+  ActivateParams,
+  ActiveSkill,
+  SkillAnimationType,
+  SkillCode,
+  SkillActivationType,
+  SkillDamageType,
+} from "@/modules/skill/types";
+import { playAnimation } from "@/stores/animation-store";
+import { gameActions, useGameLevelStore } from "@/stores/game-level-store";
+import { between } from "@/utils/random";
+import { playSound } from "@/utils/sound";
+import { CSSProperties } from "react";
 
 function createDamageRange(min: number, max: number) {
   return [min, max] as [number, number];
@@ -21,7 +25,11 @@ function createDamageRange(min: number, max: number) {
 
 export class ThunderStrikeSkill implements ActiveSkill {
   id = SkillCode.ThunderStrike;
-  type: SkillType.Active = SkillType.Active;
+
+  type: SkillActivationType.Active = SkillActivationType.Active;
+
+  animationType: SkillAnimationType = SkillAnimationType.Image;
+
   aoe = 4;
 
   code = SkillCode.ThunderStrike;
@@ -37,15 +45,19 @@ export class ThunderStrikeSkill implements ActiveSkill {
 
   icon = ThunderStrikeIcon;
 
+  style: Partial<CSSProperties> = {};
+
+  damageType: SkillDamageType = SkillDamageType.Elemental;
+
   private get radius() {
     return this.aoe;
   }
 
-  activate(pos: Position) {
+  activate({ pos }: ActivateParams) {
     const animationDuration = 300;
     const affectedEnemies: EnemyOnLevel[] = [];
 
-    useGameLevelStore.getState().actions.damageCircleArea(
+    gameActions().damageCircleArea(
       {
         radius: this.radius,
         x: pos.x - distanceFromTop.x,
@@ -55,9 +67,7 @@ export class ThunderStrikeSkill implements ActiveSkill {
       affectedEnemies
     );
 
-    if (affectedEnemies.length === 0) return;
-
-    animationStore.getState().addAnimation(
+    playAnimation(
       ThunderStrikeAnimation({
         x: pos.x,
         y: pos.y,
@@ -98,24 +108,19 @@ export class ThunderStrikeSkill implements ActiveSkill {
     }
 
     if (closestDistance.enemy) {
-      useGameLevelStore
-        .getState()
-        .actions.damageEnemy(
-          closestDistance.enemy.id,
-          between(this.damage[0], this.damage[1])
-        );
+      gameActions().damageEnemy(
+        closestDistance.enemy.id,
+        between(this.damage[0], this.damage[1])
+      );
 
       const x =
-        distanceFromTop.x +
-        closestDistance.enemy.position.x +
-        closestDistance.enemy.size.width / 2;
+        closestDistance.enemy.position.x + closestDistance.enemy.size.width / 2;
 
       const y =
-        distanceFromTop.y +
         closestDistance.enemy.position.y +
         closestDistance.enemy.size.height / 2;
 
-      animationStore.getState().addAnimation(
+      playAnimation(
         ThunderStrikeAnimation({
           x,
           y,
@@ -127,35 +132,3 @@ export class ThunderStrikeSkill implements ActiveSkill {
     playSound(ThunderSound, animationDuration);
   }
 }
-
-const ThunderStrikeAnimation = ({ x, y }: { x: number; y: number }) => {
-  return (
-    <motion.img
-      width={20}
-      height={60}
-      className="pointer-events-none"
-      src={ThunderStrikeHit}
-      animate={{
-        opacity: [0, 1],
-        translateY: ["-300%", "-50%"],
-        transition: {
-          duration: 0.1,
-          ease: "easeOut",
-        },
-      }}
-      exit={{
-        opacity: 0,
-        transition: {
-          duration: 0.1,
-        },
-      }}
-      style={{
-        position: "absolute",
-        translateX: "-50%",
-        left: x,
-        top: y,
-        zIndex: 100,
-      }}
-    />
-  );
-};

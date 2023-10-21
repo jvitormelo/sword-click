@@ -1,19 +1,28 @@
+import { CSSProperties } from "react";
 import { Position } from "../../types";
-import { Cut } from "../cut/types";
+
+export enum SkillDamageType {
+  Elemental = "elemental",
+  Physical = "physical",
+}
+
+export enum SkillAnimationType {
+  Image = "image",
+  Element = "element",
+}
 
 export enum SkillCode {
-  ExtendRange = "extend-range",
+  BasicCut = "basic-cut",
+  GreatSlash = "great-slash",
   RuleOfThirds = "rule-of-thirds",
   ThunderStrike = "thunder-strike",
   FireSlash = "fire-slash",
 }
 
-export enum SkillType {
+export enum SkillActivationType {
   Passive,
-  Enhance,
   Guard,
   Active,
-  Ultimate,
 }
 
 export interface BaseSkill {
@@ -24,29 +33,25 @@ export interface BaseSkill {
   code: SkillCode;
 }
 
+export type Damage = [number, number];
+
+export type ActivateParams = { pos: Position };
+
 export type ActiveSkill = BaseSkill & {
-  type: SkillType.Active;
+  type: SkillActivationType.Active;
   cost: number;
   aoe: number;
-
-  damage: [number, number];
-  activate: (absolutePos: Position, boardPos: Position) => void;
-};
-
-export type SkillHandler = {
-  before: (cut: Cut) => void;
-  after: (cut: Cut) => void;
+  damage: Damage;
+  style: CSSProperties;
+  animationType: SkillAnimationType;
+  damageType: SkillDamageType;
+  activate: (params: ActivateParams) => void;
 };
 
 export type PassiveSkill = BaseSkill & {
-  type: SkillType.Passive | SkillType.Guard;
-  handler: SkillHandler;
+  type: SkillActivationType.Passive | SkillActivationType.Guard;
+  before: (cut: ActiveSkill) => void;
+  after: (cut: ActiveSkill) => void;
 };
 
-export type EnhanceSkill = BaseSkill & {
-  type: SkillType.Enhance;
-  handler: SkillHandler;
-  costModifier: number;
-};
-
-export type AnySkill = ActiveSkill | PassiveSkill | EnhanceSkill;
+export type AnySkill = ActiveSkill | PassiveSkill;

@@ -4,9 +4,10 @@ import { Level } from "@/modules/level/level-selector";
 import { create } from "zustand";
 import { EnemiesAction, EnemiesLevel } from "../modules/enemies/enemies-level";
 import { PlayerLevel } from "../modules/player/player-level";
-import { EnemyOnLevel, PlayerOnLevel } from "../modules/enemies/types";
+import { EnemyOnLevel } from "../modules/enemies/types";
 import { PlayerModel, updatePlayer } from "@/modules/player/use-player";
 import { useModalStore } from "./modal-store";
+import { PlayerOnLevel } from "@/modules/player/types";
 
 type Store = {
   gold: number;
@@ -214,3 +215,7 @@ export const useGameLevelStore = create<Store>((set, get) => ({
     },
   },
 }));
+
+export function gameActions() {
+  return useGameLevelStore.getState().actions;
+}

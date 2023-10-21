@@ -7,6 +7,7 @@ import { useGameLevelStore } from "@/stores/game-level-store";
 import { Card } from "@/components/Card";
 import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
+import { AnimationProvider } from "@/providers/animation-provider";
 
 type Props = {
   background: string;
@@ -54,8 +55,11 @@ export const GameLevel = ({ background, content, audio }: Props) => {
       }}
       id="game-level"
     >
-      <EnemiesSpawned />
-      {level && <DangerZone />}
+      <section className="pointer-events-none select-none">
+        <EnemiesSpawned />
+        <AnimationProvider />
+        {level && <DangerZone />}
+      </section>
 
       {!level && (
         <>
@@ -63,8 +67,7 @@ export const GameLevel = ({ background, content, audio }: Props) => {
           {audio && (
             <audio
               ref={(el) => {
-                if (!el) return;
-                el.volume = 0.5;
+                if (el) el.volume = 0.8;
               }}
               src={audio}
               autoPlay

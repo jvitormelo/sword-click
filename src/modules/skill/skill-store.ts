@@ -3,20 +3,19 @@ import { create } from "zustand";
 import {
   ActiveSkill,
   AnySkill,
-  EnhanceSkill,
   PassiveSkill,
-  SkillType,
+  SkillActivationType,
 } from "./types";
-import { allSkills } from "./all-skills";
+import { allSkills } from "./all";
 
 type Store = {
-  equippedSkills: Array<ActiveSkill | EnhanceSkill>;
-  activeSkill: ActiveSkill | EnhanceSkill | null;
+  equippedSkills: Array<ActiveSkill>;
+  activeSkill: ActiveSkill | null;
   passiveSkills: PassiveSkill[];
   guardSkills: PassiveSkill[];
   actions: {
     removeActiveSkill: () => void;
-    activateSkill: (skill: ActiveSkill | EnhanceSkill) => void;
+    activateSkill: (skill: ActiveSkill) => void;
     setSkills: (skills: string[]) => void;
   };
 };
@@ -37,11 +36,12 @@ export const useSkillStore = create<Store>((set) => ({
       });
       const skills = mappedSkills.filter((skill): skill is AnySkill => !!skill);
       const activeSkills = skills.filter(
-        (skill): skill is ActiveSkill | EnhanceSkill =>
-          skill.type === SkillType.Active || skill.type === SkillType.Enhance
+        (skill): skill is ActiveSkill =>
+          skill.type === SkillActivationType.Active
       );
       const passiveSkills = skills.filter(
-        (skill): skill is PassiveSkill => skill.type === SkillType.Passive
+        (skill): skill is PassiveSkill =>
+          skill.type === SkillActivationType.Passive
       );
 
       set({

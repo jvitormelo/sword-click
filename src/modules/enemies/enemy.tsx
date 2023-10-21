@@ -65,7 +65,7 @@ export const Enemy = ({ enemy }: { enemy: EnemyOnLevel }) => {
         },
       }}
       data-id={id}
-      className="z-10"
+      className="z-10 pointer-events-none"
       src={image}
     />
   );
