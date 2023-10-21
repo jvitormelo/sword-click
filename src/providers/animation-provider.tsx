@@ -1,16 +1,23 @@
-import { AnimatePresence } from "framer-motion";
-import { Fragment, useMemo } from "react";
-import { animationStore } from "../stores/animation-store";
+import { AnimationObject } from "@/modules/skill/types";
+import { AnimatePresence, motion } from "framer-motion";
+import { memo, useMemo } from "react";
+import { useAnimationStore } from "../stores/animation-store";
 
 export const AnimationProvider = () => {
-  const { animations } = animationStore();
+  const { animations } = useAnimationStore();
   const arr = useMemo(() => Array.from(animations), [animations]);
 
   return (
     <AnimatePresence>
       {arr.map(([key, animation]) => (
-        <Fragment key={key}>{animation}</Fragment>
+        <Animation key={key} {...animation} />
       ))}
     </AnimatePresence>
   );
 };
+
+const Animation = memo((props: AnimationObject) =>
+  props.src ? <motion.img {...props} /> : <motion.div {...props} />
+);
+
+Animation.displayName = "Animation";

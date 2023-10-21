@@ -4,6 +4,8 @@ import { BasicCut } from "@/modules/skill/all/active/basic-cut";
 import { useGameLevelStore } from "../../stores/game-level-store";
 import { useSkillStore } from "./skill-store";
 import { ActiveSkill } from "./types";
+import { useAnimationStore } from "@/stores/animation-store";
+import { playSound } from "@/utils/sound";
 
 export const SkillTrigger = () => {
   const activeSkill = useSkillStore((s) => s.activeSkill);
@@ -11,6 +13,7 @@ export const SkillTrigger = () => {
   const mana = useGameLevelStore((s) => s.player.mana);
   const actions = useGameLevelStore((s) => s.actions);
   const level = useGameLevelStore((s) => s.level);
+  const { addAnimation } = useAnimationStore((s) => s.actions);
 
   const skillHandler = useCallback(
     (x: number, y: number, activeSkill: ActiveSkill) => {
@@ -18,7 +21,14 @@ export const SkillTrigger = () => {
 
       if (mana < activeSkill.cost) return;
 
-      activeSkill.activate({ pos: { x, y }, actions });
+      activeSkill.activate({
+        pos: { x, y },
+        actions,
+        scene: {
+          playAnimation: addAnimation,
+          playSound: playSound,
+        },
+      });
 
       passives.forEach((passive) => passive.after(activeSkill));
 

@@ -30,7 +30,7 @@ export class Shatter implements ActiveSkill {
     type: SkillDamageType.Ice,
   };
 
-  activate({ actions, pos }: ActivateParams) {
+  activate({ actions, pos, scene }: ActivateParams) {
     actions.damagePointArea(
       {
         pos,
@@ -52,6 +52,24 @@ export class Shatter implements ActiveSkill {
           damage.value[1] += multiplier;
         },
       }
+    );
+
+    scene.playAnimation(
+      {
+        src: IceShatter,
+        width: 30,
+        height: 30,
+        initial: {
+          scale: 0,
+        },
+        animate: {
+          scale: 1,
+        },
+        transition: {
+          duration: 0.1,
+        },
+      },
+      100
     );
   }
 

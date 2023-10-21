@@ -1,5 +1,5 @@
 import SlashSound from "@/assets/sounds/slash.mp3";
-import { BasicCutAnimation } from "@/modules/skill/all/active/basic-cut/animation";
+import { createCutAnimation } from "@/modules/skill/all/active/basic-cut/animation";
 import {
   ActivateParams,
   ActiveSkill,
@@ -9,7 +9,6 @@ import {
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
-import { playAnimation } from "@/stores/animation-store";
 
 import { between } from "@/utils/random";
 import { playSound } from "@/utils/sound";
@@ -37,7 +36,7 @@ export class BasicCut implements ActiveSkill {
     return new BasicCut();
   }
 
-  activate({ pos, actions }: ActivateParams) {
+  activate({ pos, actions, scene }: ActivateParams) {
     const baseHeight = between(50, 80);
     const baseWidth = 3;
 
@@ -57,9 +56,9 @@ export class BasicCut implements ActiveSkill {
       this.damage
     );
     playSound(SlashSound);
-    playAnimation(
-      BasicCutAnimation({
-        position: { ...pos, x: pos.x + randomX },
+    scene.playAnimation(
+      createCutAnimation({
+        pos: { ...pos, x: pos.x + randomX },
         size: { width: baseWidth * this.aoe, height: baseHeight * this.aoe },
         style: {
           ...this.style,

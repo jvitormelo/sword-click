@@ -2,20 +2,21 @@ import { distanceFromTop } from "@/constants";
 import { closestDistanceToCircle } from "@/utils/geometry";
 
 import ThunderStrikeIcon from "@/assets/skills/icons/thunder-strike.png";
+import ThunderStrikeHit from "@/assets/skills/thunder-strike-hit.png";
 import ThunderSound from "@/assets/sounds/thunder-strike-sound.mp3";
 import { EnemyModel } from "@/modules/enemies/types";
-import { ThunderStrikeAnimation } from "@/modules/skill/all/active/thunder-strike/animation";
 import {
   ActivateParams,
   ActiveSkill,
+  AnimationObject,
   Damage,
   SkillActivationType,
   SkillAnimationType,
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
-import { playAnimation } from "@/stores/animation-store";
 import { useGameLevelStore } from "@/stores/game-level-store";
+import { Position } from "@/types";
 import { playSound } from "@/utils/sound";
 import { CSSProperties } from "react";
 
@@ -50,7 +51,7 @@ export class ThunderStrikeSkill implements ActiveSkill {
     return this.aoe;
   }
 
-  activate({ pos, actions }: ActivateParams) {
+  activate({ pos, actions, scene }: ActivateParams) {
     const animationDuration = 300;
 
     const { enemiesHit } = actions.damageCircleArea(
@@ -64,13 +65,7 @@ export class ThunderStrikeSkill implements ActiveSkill {
       this.damage
     );
 
-    playAnimation(
-      ThunderStrikeAnimation({
-        x: pos.x,
-        y: pos.y,
-      }),
-      animationDuration
-    );
+    scene.playAnimation(thunderStrikeHitAnimation(pos), animationDuration);
 
     const enemies = useGameLevelStore.getState().enemies.values();
 
@@ -111,11 +106,8 @@ export class ThunderStrikeSkill implements ActiveSkill {
         closestDistance.enemy.position.y +
         closestDistance.enemy.size.height / 2;
 
-      playAnimation(
-        ThunderStrikeAnimation({
-          x,
-          y,
-        }),
+      scene.playAnimation(
+        thunderStrikeHitAnimation({ x, y }),
         animationDuration
       );
     }
@@ -127,3 +119,32 @@ export class ThunderStrikeSkill implements ActiveSkill {
     return new ThunderStrikeSkill();
   }
 }
+
+const thunderStrikeHitAnimation = ({ x, y }: Position) =>
+  ({
+    width: 20,
+    height: 60,
+    className: "pointer-events-none",
+    src: ThunderStrikeHit,
+    animate: {
+      opacity: [0, 1],
+      translateY: ["-300%", "-50%"],
+      transition: {
+        duration: 0.1,
+        ease: "easeOut",
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: {
+        duration: 0.1,
+      },
+    },
+    style: {
+      position: "absolute",
+      translateX: "-50%",
+      zIndex: 100,
+      left: x,
+      top: y,
+    },
+  } as AnimationObject);

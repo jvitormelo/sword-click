@@ -20,11 +20,11 @@ export class RuleOfThirds implements PassiveSkill {
   counter = 0;
 
   before(skill: ActiveSkill) {
-    if (skill.damageType !== SkillDamageType.Physical) return;
+    if (skill.damage.type !== SkillDamageType.Physical) return;
 
     if (this.counter % 3 === 0) {
-      skill.damage[0] *= 2;
-      skill.damage[1] *= 2;
+      skill.damage.value[0] *= 2;
+      skill.damage.value[1] *= 2;
       // make it red with filter
 
       if (skill.animationType === SkillAnimationType.Image) {

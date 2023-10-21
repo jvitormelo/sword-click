@@ -107,6 +107,9 @@ function spawnRandomNumber(
   span.style.zIndex = "100";
   span.style.fontWeight = "bold";
   span.style.textShadow = `0 0 3px black`;
+  span.style.userSelect = "none";
+  span.style.pointerEvents = "none";
+  span.draggable = false;
 
   // shade of red
   span.style.color = skillDamageTypeColors[damageType];

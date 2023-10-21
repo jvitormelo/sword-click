@@ -10,10 +10,10 @@ import {
 } from "@/modules/skill/types";
 
 import GreatSlashIcon from "@/assets/skills/icons/great-slash.png";
-import { BasicCutAnimation } from "@/modules/skill/all/active/basic-cut/animation";
-import { playAnimation } from "@/stores/animation-store";
+
 import { playSound } from "@/utils/sound";
 import { CSSProperties } from "react";
+import { createCutAnimation } from "@/modules/skill/all/active/basic-cut/animation";
 
 export class GreatSlash implements ActiveSkill {
   id: string = "great-slash";
@@ -34,7 +34,7 @@ export class GreatSlash implements ActiveSkill {
   };
   type: SkillActivationType.Active = SkillActivationType.Active;
 
-  activate({ actions, pos }: ActivateParams) {
+  activate({ actions, pos, scene }: ActivateParams) {
     const width = 15;
     const height = 300;
 
@@ -51,10 +51,10 @@ export class GreatSlash implements ActiveSkill {
       },
       this.damage
     );
-    playAnimation(
-      BasicCutAnimation({
+    scene.playAnimation(
+      createCutAnimation({
         style: this.style,
-        position: pos,
+        pos,
         size: {
           height,
           width,

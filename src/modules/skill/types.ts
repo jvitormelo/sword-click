@@ -1,6 +1,7 @@
-import { CSSProperties } from "react";
+import { CSSProperties, ComponentProps } from "react";
 import { Position } from "../../types";
 import { GameActions } from "@/stores/game-level-store";
+import { motion } from "framer-motion";
 
 export enum Ailment {
   Burn = "Burn",
@@ -41,7 +42,16 @@ export type Damage = {
   ailment: Ailment[];
 };
 
-export type ActivateParams = { pos: Position; actions: GameActions };
+export type AnimationObject = ComponentProps<typeof motion.img>;
+
+export type ActivateParams = {
+  pos: Position;
+  actions: GameActions;
+  scene: {
+    playAnimation: (animation: AnimationObject, duration: number) => void;
+    playSound: (sound: string, duration: number) => void;
+  };
+};
 
 export interface BaseSkill {
   id: string;
