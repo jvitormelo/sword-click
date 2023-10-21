@@ -1,14 +1,10 @@
 import MainCharacterImage from "@/assets/main-character.jpeg";
 import { useEffect, useRef } from "react";
 import { useGameLevelStore } from "../level/game-level-store";
-import { GoldCounter } from "./gold-counter";
-import { usePlayer } from "./use-player";
-import { Card } from "@/components/Card";
 
-export const PlayerSideBar = () => {
+export const PlayerPortrait = () => {
   const life = useGameLevelStore((s) => s.player.life);
   const maxLife = useGameLevelStore((s) => s.player.maxLife);
-  const { player } = usePlayer();
 
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -33,15 +29,10 @@ export const PlayerSideBar = () => {
   }, [life]);
 
   return (
-    <Card className="w-full">
-      <img
-        ref={imgRef}
-        src={MainCharacterImage}
-        className="rounded-md w-full aspect-square border border-amber-700 mb-2"
-      />
-      <span className="text-lg">
-        <GoldCounter gold={player.gold} />
-      </span>
-    </Card>
+    <img
+      ref={imgRef}
+      src={MainCharacterImage}
+      className="rounded-md w-full aspect-square border border-amber-700 mb-2"
+    />
   );
 };

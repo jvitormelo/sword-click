@@ -17,7 +17,7 @@ function getAbyssInfo(abyssLevel: number) {
 
   return {
     level: abyssLevel,
-    monsters: baseMonsterNumber + abyssLevel * 2,
+    monsters: baseMonsterNumber + abyssLevel,
     factories: getEnemies(abyssLevel),
     multiplier: abyssLevel * 0.8,
   };

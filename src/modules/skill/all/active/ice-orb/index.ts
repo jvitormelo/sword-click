@@ -55,12 +55,12 @@ class IceOrbEntity implements EntityOnLevel {
 
   constructor(initial: Position) {
     this.position = {
-      x: initial.x,
-      y: boardSize.dangerZone,
+      x: 0,
+      y: initial.y - this.size.height / 2,
     };
     this.target = {
-      x: initial.x,
-      y: 0,
+      x: boardSize.width,
+      y: initial.y - this.size.height / 2,
     };
 
     this.id = `${this.code}-${Math.random()}`;
@@ -70,7 +70,7 @@ class IceOrbEntity implements EntityOnLevel {
   hitSound: string = IceHitSound;
   image: string = IceOrbImage;
   size: Size = { width: 50, height: 50 };
-  speed: number = 20;
+  speed: number = 40;
   sound: string = IceOrbSound;
   removable: boolean = false;
 
@@ -90,12 +90,12 @@ class IceOrbEntity implements EntityOnLevel {
 
     if (enemiesHit.size > 0) {
       playSound(this.hitSound, 200);
-      this.position.y -= this.speed / 3;
+      this.position.x += this.speed / 3;
     } else {
-      this.position.y -= this.speed;
+      this.position.x += this.speed;
     }
 
-    if (this.position.y < 0) {
+    if (this.position.x >= boardSize.width) {
       this.removable = true;
     }
   }

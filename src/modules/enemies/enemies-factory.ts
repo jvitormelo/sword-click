@@ -5,6 +5,7 @@ import { boardSize } from "@/constants";
 import { EnemyOnLevel } from "@/modules/enemies/enemy-on-level";
 import { Position } from "@/types";
 import { between } from "../../utils/random";
+import { max } from "@/utils/number";
 export type EnemyFactory = (props?: { pos: Partial<Position> }) => EnemyOnLevel;
 
 export const zombieFactory: EnemyFactory = (props) => {
@@ -14,7 +15,7 @@ export const zombieFactory: EnemyFactory = (props) => {
   };
   return new EnemyOnLevel({
     id: crypto.randomUUID(),
-    health: between(100, 500),
+    health: between(80, 200),
     name: "Zombie",
     attack: 6,
     image: Zombie,
@@ -22,8 +23,14 @@ export const zombieFactory: EnemyFactory = (props) => {
     size: size,
     attackSpeed: 1000,
     position: {
-      x: props?.pos.x ?? between(0, boardSize.width - size.width),
-      y: props?.pos.y ?? between(0, boardSize.height * 0.15),
+      x: max(
+        props?.pos.x ?? between(boardSize.width * 0.8, boardSize.width),
+        boardSize.width - size.width
+      ),
+      y: max(
+        props?.pos.y ?? between(0, boardSize.height),
+        boardSize.height - size.height
+      ),
     },
     ailments: [],
     isAttacking: false,
@@ -45,8 +52,8 @@ export const goblinFactory: EnemyFactory = () => {
     image: Goblin,
     size,
     position: {
-      x: between(0, boardSize.width - size.width),
-      y: between(0, boardSize.height * 0.2),
+      x: between(0, boardSize.width * 0.8),
+      y: between(0, boardSize.height),
     },
     ailments: [],
     isAttacking: false,

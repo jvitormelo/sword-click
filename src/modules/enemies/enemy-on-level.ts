@@ -61,7 +61,9 @@ export class EnemyOnLevel {
   }
 
   tick({ totalTicks, player }: TickParams) {
-    const newPosY = this.position.y + this.speed / FPS;
+    const speedByFPS = this.speed / FPS;
+
+    const newPosX = this.position.x - speedByFPS;
 
     if (this.hasAilment(Ailment.Burn)) {
       this.takeDamage({
@@ -71,11 +73,15 @@ export class EnemyOnLevel {
       });
     }
 
+    const halfWidthWithMargin = this.size.width / 2 / 8;
+
+    this.position.x = newPosX;
+
     const isInAttackRange =
-      newPosY + this.size.height / 2 >= boardSize.dangerZone;
+      newPosX - halfWidthWithMargin / 8 <= boardSize.dangerZone;
 
     if (isInAttackRange) {
-      this.position.y = boardSize.dangerZone - this.size.height / 2;
+      this.position.x = boardSize.dangerZone + halfWidthWithMargin / 8;
 
       const isAttackReady = totalTicks % this.attackSpeed === 0;
 
@@ -86,7 +92,7 @@ export class EnemyOnLevel {
       }
     } else {
       this.isAttacking = false;
-      this.position.y = newPosY;
+      this.position.x = newPosX;
     }
   }
 }

@@ -11,6 +11,7 @@ import {
 } from "@/modules/skill/types";
 import { CSSProperties } from "react";
 import IceShatterSound from "@/assets/sounds/ice-shatter.mp3";
+import { max } from "@/utils/number";
 
 export class IceShatter implements ActiveSkill {
   id: string = SkillCode.IceShatter;
@@ -119,8 +120,4 @@ export class IceShatter implements ActiveSkill {
   }
 
   copy = () => new IceShatter();
-}
-
-function max(a: number, b: number) {
-  return a > b ? b : a;
 }

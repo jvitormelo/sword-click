@@ -1,3 +1,11 @@
+- Fazer a skill de fogo
+- Fazer os inimigos sairem da Direita para esquerda
+
+---
+
+- Adicionar drop de item (por enquanto so skill)
+- Remover a compra da skill
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

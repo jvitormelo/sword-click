@@ -1,29 +1,33 @@
-import { ReactNode, useState } from "react";
-import { SkillBuyer } from "./skill-buyer";
-import { LevelUpTown } from "./level-up-town";
-import { Card } from "@/components/Card";
-import { cn } from "@/utils/cn";
 import LevelUpBg from "@/assets/level-up-bg.jpeg";
-
-type TownViews = "skills" | "level";
+import { Card } from "@/components/Card";
+import { GoldCounter } from "@/modules/player/gold-counter";
+import { usePlayer } from "@/modules/player/use-player";
+import { cn } from "@/utils/cn";
+import { ReactNode, useState } from "react";
+import { LevelUpTown } from "./level-up-town";
+import { SkillBuyer } from "@/modules/town/skill-buyer";
 
 enum TownViewsEnum {
   Skills = "skills",
   Level = "level",
 }
 
-const viewsMap: Record<TownViews, ReactNode> = {
+const viewsMap: Record<TownViewsEnum, ReactNode> = {
   [TownViewsEnum.Skills]: <SkillBuyer />,
   [TownViewsEnum.Level]: <LevelUpTown />,
 };
 
-const viewTextMap: Record<TownViews, string> = {
+const viewTextMap: Record<TownViewsEnum, string> = {
   [TownViewsEnum.Skills]: "Skills",
   [TownViewsEnum.Level]: "Level Up",
 };
 
 export const Town = () => {
-  const [currentView, setCurrentView] = useState<TownViews>("skills");
+  const [currentView, setCurrentView] = useState<TownViewsEnum>(
+    TownViewsEnum.Level
+  );
+
+  const { player } = usePlayer();
 
   const views = Object.values(TownViewsEnum);
 
@@ -48,6 +52,9 @@ export const Town = () => {
             {viewTextMap[value]}
           </button>
         ))}
+        <div className="ml-auto text-xl bg-primary flex items-center justify-center rounded-md px-4">
+          <GoldCounter gold={player.gold} />
+        </div>
       </section>
       {viewsMap[currentView]}
     </Card>

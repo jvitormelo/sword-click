@@ -88,7 +88,7 @@ function DangerZone() {
       animate={{
         opacity: [0, 0.6],
       }}
-      className="absolute left-0 bottom-0 rounded-b-md w-full border-t bg-red-300  border-red-500 h-[5%] flex items-center justify-center"
+      className="absolute left-0 bottom-0 rounded-b-md h-full border-t bg-red-300  border-red-500 w-[5%] flex items-center justify-center"
     />
   );
 }

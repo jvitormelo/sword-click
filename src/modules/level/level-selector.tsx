@@ -1,14 +1,15 @@
 import { useGameLevelStore } from "./game-level-store";
 
 import { Card } from "@/components/Card";
+import { LevelOnLevel } from "@/modules/level/level-on-level";
+import { PlayerPortrait } from "@/modules/player/player-side-bar";
 import { Views, useViewStore } from "@/stores/view-store";
 import { cn } from "@/utils/cn";
 import { useRef } from "react";
 import { GoldCounter } from "../player/gold-counter";
-import { usePlayer } from "../player/use-player";
-import { allLevels } from "./all-levels";
+import { usePlayer } from "@/modules/player/use-player";
+import { allLevels } from "@/modules/level/all-levels";
 import { LevelModel } from "@/modules/level/types";
-import { LevelOnLevel } from "@/modules/level/level-on-level";
 
 export const LevelSelector = () => {
   const level = useGameLevelStore((s) => s.level);
@@ -17,6 +18,7 @@ export const LevelSelector = () => {
 
   return (
     <Card className="gap-2 w-full">
+      <PlayerPortrait />
       {isActive ? <ActiveLevel level={level} /> : <Levels />}
     </Card>
   );
