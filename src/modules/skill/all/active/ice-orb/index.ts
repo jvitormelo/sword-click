@@ -2,11 +2,12 @@ import IceOrbImage from "@/assets/skills/ice-orb.jpeg";
 import Icon from "@/assets/skills/icons/ice-orb-icon.png";
 import IceHitSound from "@/assets/sounds/ice-hit.mp3";
 import IceOrbSound from "@/assets/sounds/ice-orb.mp3";
-import { boardSize } from "@/constants";
+import { boardSize, durationSynced } from "@/constants";
 import {
   ActivateParams,
   ActiveSkill,
   Ailment,
+  AnimationObject,
   Damage,
   SkillActivationType,
   SkillAnimationType,
@@ -73,6 +74,42 @@ class IceOrbEntity implements EntityOnLevel {
   speed: number = 40;
   sound: string = IceOrbSound;
   removable: boolean = false;
+
+  public get animationObject(): AnimationObject {
+    console.log("chamou");
+    return {
+      className: "absolute rounded-full",
+      animate: {
+        scale: [1, 1.1, 1],
+        left: this.position.x,
+        top: this.position.y,
+        rotate: [0, 360],
+        transition: {
+          duration: durationSynced,
+          ease: "linear",
+          scale: {
+            duration: 1,
+            repeat: Infinity,
+            ease: "linear",
+          },
+          rotate: {
+            duration: 1,
+            repeat: Infinity,
+            ease: "linear",
+          },
+        },
+      },
+      initial: { left: this.position.x, top: this.position.y },
+      width: this.size.width,
+      height: this.size.height,
+      src: this.image,
+      style: {
+        // Add this line for the `style` prop to include CSS properties
+        position: "absolute",
+        borderRadius: "50%",
+      },
+    };
+  }
 
   tick(level: { enemies: Map<string, EnemyOnLevel> }) {
     const { enemiesHit } = pureDamagePointArea(

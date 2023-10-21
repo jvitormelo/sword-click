@@ -1,4 +1,5 @@
 import { EnemyOnLevel } from "@/modules/enemies/enemy-on-level";
+import { AnimationObject } from "@/modules/skill/types";
 import { Position, Size } from "@/types";
 
 export enum EntityCode {
@@ -15,6 +16,7 @@ export type EntityModel = {
   code: EntityCode;
   sound: string;
   hitSound: string;
+  animationObject: AnimationObject;
 };
 
 export type EntityTickParams = {
