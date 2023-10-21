@@ -5,7 +5,11 @@ import { PlayerOnLevel } from "@/modules/player/types";
 import { PlayerModel, updatePlayer } from "@/modules/player/use-player";
 import { Position, Size } from "@/types";
 import { create } from "zustand";
-import { EnemiesAction, EnemiesLevel } from "../modules/enemies/enemies-level";
+import {
+  Ailment,
+  EnemiesAction,
+  EnemiesLevel,
+} from "../modules/enemies/enemies-level";
 import { EnemyOnLevel } from "../modules/enemies/types";
 import { PlayerLevel } from "../modules/player/player-level";
 import { useModalStore } from "./modal-store";
@@ -120,16 +124,15 @@ export const useGameLevelStore = create<Store>((set, get) => ({
                 height: entity.size.height,
               },
               [10, 20],
-              [],
+              [Ailment.Chill],
               enemiesHit
             );
             console.log(enemiesHit.size);
             if (enemiesHit.size > 0) {
               playSound(entity.hitSound, 200);
-              entity.position.y -= entity.speed / 5;
+              entity.position.y -= entity.speed / 3;
             } else {
               entity.position.y -= entity.speed;
-              entity.speed *= 0.98;
             }
 
             if (entity.position.y < 0) {

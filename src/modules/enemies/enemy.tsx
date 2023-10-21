@@ -14,6 +14,8 @@ export const Enemy = ({ enemy }: { enemy: EnemyOnLevel }) => {
 
   const hasBurn = useMemo(() => ailments.includes(Ailment.Burn), [ailments]);
 
+  const hasChill = useMemo(() => ailments.includes(Ailment.Chill), [ailments]);
+
   useEffect(() => {
     if (health !== maxHealth.current) {
       elementRef.current?.animate(
@@ -43,7 +45,7 @@ export const Enemy = ({ enemy }: { enemy: EnemyOnLevel }) => {
         position: "absolute",
         width: size.width,
         height: size.height,
-        backgroundColor: hasBurn ? "red" : undefined,
+        backgroundColor: hasBurn ? "red" : hasChill ? "blue" : undefined,
       }}
       exit={{
         scale: [1.1, 0.3],

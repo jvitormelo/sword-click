@@ -10,6 +10,7 @@ import { EnemyOnLevel, LevelModel } from "./types";
 
 export enum Ailment {
   Burn = "Burn",
+  Chill = "Chill",
 }
 
 export type EnemiesAction = {
@@ -124,7 +125,9 @@ export class EnemiesLevel implements EnemiesAction {
 
   tick() {
     for (const enemy of this.level.enemies.values()) {
-      const newPosY = enemy.position.y + enemy.speed / FPS;
+      const hasChill = enemy.ailments.includes(Ailment.Chill);
+      const slow = hasChill ? 3 : 1;
+      const newPosY = enemy.position.y + enemy.speed / FPS / slow;
 
       if (enemy.ailments.includes(Ailment.Burn)) {
         enemy.health -= 10;
