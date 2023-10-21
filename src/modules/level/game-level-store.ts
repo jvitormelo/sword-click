@@ -17,7 +17,7 @@ import { EnemyModel } from "../enemies/types";
 import { PlayerOnLevel } from "../player/player-level";
 import { LevelModel } from "@/modules/level/types";
 import { LevelOnLevel } from "@/modules/level/level-on-level";
-import { mainTick } from "@/main";
+import { mainTick } from "@/modules/main";
 
 type EnemyMap = Map<string, EnemyOnLevel>;
 

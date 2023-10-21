@@ -1,9 +1,9 @@
 import { CurrentView } from "@/pages";
 import { LevelSelector } from "./modules/level/level-selector";
 
-import { LifeGlobe } from "./modules/player/life-globe";
 import { ManaGlobe } from "./modules/player/mana-globe";
 import { SkillBar } from "./modules/skill/skill-bar";
+import { LifeGlobe } from "@/modules/player/life-globe";
 
 export function App() {
   return (
