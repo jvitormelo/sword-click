@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion";
-import { useGameLevelStore } from "../../stores/game-level-store";
+import { useGameLevelStore } from "../level/game-level-store";
 import { useMemo } from "react";
 import { Enemy } from "./enemy";
 

@@ -1,17 +1,19 @@
-import { EntityOnLevel, useGameLevelStore } from "@/stores/game-level-store";
+import {
+  EntityOnLevel,
+  useGameLevelStore,
+} from "@/modules/level/game-level-store";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo } from "react";
 
-export const EntitiesOnLevel = () => {
+export const EntitiesRender = () => {
   const entities = useGameLevelStore((s) => s.entities);
 
-  const entitiesArray = useMemo(() => {
-    return Array.from(entities.values());
-  }, [entities]);
+  const entitiesArray = useMemo(() => Array.from(entities), [entities]);
+
   return (
     <AnimatePresence>
-      {entitiesArray.map((entity) => (
-        <SpawnedEntity key={entity.id} {...entity} />
+      {entitiesArray.map(([key, entity]) => (
+        <SpawnedEntity key={key} {...entity} />
       ))}
     </AnimatePresence>
   );

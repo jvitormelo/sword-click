@@ -2,13 +2,13 @@ import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 
 import { boardSize, distanceFromTop } from "../../constants";
 import { EnemiesSpawned } from "../enemies/enemies-spawned";
-import { useGameLevelStore } from "@/stores/game-level-store";
+import { useGameLevelStore } from "@/modules/level/game-level-store";
 
 import { Card } from "@/components/Card";
 import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 import { AnimationRender } from "@/modules/animation/animation-render";
-import { EntitiesOnLevel } from "@/modules/level/entities-on-level";
+import { EntitiesRender } from "@/modules/entities/entities-render";
 
 type Props = {
   background: string;
@@ -57,7 +57,7 @@ export const GameLevel = ({ background, content, audio }: Props) => {
       id="game-level"
     >
       <section className="pointer-events-none select-none">
-        <EntitiesOnLevel />
+        <EntitiesRender />
         <EnemiesSpawned />
         <AnimationRender />
         {level && <DangerZone />}

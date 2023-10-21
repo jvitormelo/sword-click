@@ -5,10 +5,11 @@ import AbyssBgSound from "@/assets/bg-sound/dungeon-bg-sound.mp3";
 
 import AbyssBg from "@/assets/abyss-bg.jpeg";
 import CampfireBg from "@/assets/campfire.jpeg";
-import { Town } from "../town";
-import { GameLevel } from "./game-level";
-import { AbyssSelector } from "../abyss/abyss-selector";
+import { GameLevel } from "@/modules/level/game-level";
+import { Town } from "@/modules/town";
+import { AbyssSelector } from "@/modules/abyss/abyss-selector";
 
+// ainda sem roteamonto
 export function CurrentView() {
   const view = useViewStore((s) => s.view);
 

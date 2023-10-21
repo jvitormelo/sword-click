@@ -12,7 +12,7 @@ import {
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
-import { EntityCode } from "@/stores/game-level-store";
+import { EntityCode } from "@/modules/level/game-level-store";
 import { CSSProperties } from "react";
 
 export class IceOrb implements ActiveSkill {

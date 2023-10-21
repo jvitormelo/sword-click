@@ -1,4 +1,4 @@
-import { useGameLevelStore } from "@/stores/game-level-store";
+import { useGameLevelStore } from "@/modules/level/game-level-store";
 
 export const LifeGlobe = () => {
   const life = useGameLevelStore((s) => s.player.life);

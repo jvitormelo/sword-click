@@ -13,10 +13,10 @@ import {
 } from "@/utils/geometry";
 import { playSound } from "@/utils/sound";
 import { create } from "zustand";
-import { EnemyOnLevel } from "../modules/enemies/enemy-on-level";
-import { EnemyModel } from "../modules/enemies/types";
-import { PlayerLevel } from "../modules/player/player-level";
-import { useModalStore } from "./modal-store";
+import { EnemyOnLevel } from "../enemies/enemy-on-level";
+import { EnemyModel } from "../enemies/types";
+import { PlayerLevel } from "../player/player-level";
+import { useModalStore } from "../../components/Modal/modal-store";
 
 export enum EntityCode {
   IceOrb = "ice-orb",
@@ -369,10 +369,6 @@ export const useGameLevelStore = create<Store>((set, get) => ({
     },
   },
 }));
-
-export function gameActions() {
-  return useGameLevelStore.getState().actions;
-}
 
 function removeDeadEnemies(enemies: Map<string, EnemyModel>) {
   let gold = 0;

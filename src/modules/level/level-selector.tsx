@@ -13,7 +13,7 @@ export type LevelActive = Omit<Level, "enemies"> & {
   enemies: Map<number, EnemyRecipe | EnemyRecipe[]>;
 };
 
-import { useGameLevelStore } from "../../stores/game-level-store";
+import { useGameLevelStore } from "./game-level-store";
 
 import { Card } from "@/components/Card";
 import { Views, useViewStore } from "@/stores/view-store";

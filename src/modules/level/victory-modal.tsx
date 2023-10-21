@@ -1,7 +1,7 @@
 import { Views, useViewStore } from "@/stores/view-store";
 import { GoldCounter } from "../player/gold-counter";
-import { useGameLevelStore } from "@/stores/game-level-store";
-import { useModalStore } from "@/stores/modal-store";
+import { useGameLevelStore } from "@/modules/level/game-level-store";
+import { useModalStore } from "@/components/Modal/modal-store";
 import { allLevels } from "./all-levels";
 
 type Props = {

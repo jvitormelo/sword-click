@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 
 import { BasicCut } from "@/modules/skill/all/active/basic-cut";
-import { useGameLevelStore } from "../../stores/game-level-store";
+import { useGameLevelStore } from "../level/game-level-store";
 import { useSkillStore } from "./skill-store";
 import { ActiveSkill } from "./types";
 import { useAnimationStore } from "@/modules/animation/animation-store";

@@ -4,7 +4,7 @@ import { goblinFactory, zombieFactory } from "../enemies/enemies-factory";
 import { Level } from "../level/level-selector";
 import AbyssBg from "@/assets/abyss-bg.jpeg";
 import { generateEnemies } from "../enemies/generate-enemies";
-import { useGameLevelStore } from "@/stores/game-level-store";
+import { useGameLevelStore } from "@/modules/level/game-level-store";
 import { cn } from "@/utils/cn";
 
 function getEnemies(abyssLevel: number) {

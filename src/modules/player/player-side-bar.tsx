@@ -1,6 +1,6 @@
 import MainCharacterImage from "@/assets/main-character.jpeg";
 import { useEffect, useRef } from "react";
-import { useGameLevelStore } from "../../stores/game-level-store";
+import { useGameLevelStore } from "../level/game-level-store";
 import { GoldCounter } from "./gold-counter";
 import { usePlayer } from "./use-player";
 import { Card } from "@/components/Card";

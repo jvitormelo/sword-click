@@ -15,7 +15,7 @@ import {
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
-import { useGameLevelStore } from "@/stores/game-level-store";
+import { useGameLevelStore } from "@/modules/level/game-level-store";
 import { Position } from "@/types";
 import { playSound } from "@/utils/sound";
 import { CSSProperties } from "react";

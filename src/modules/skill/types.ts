@@ -1,6 +1,6 @@
 import { CSSProperties, ComponentProps } from "react";
 import { Position } from "../../types";
-import { GameActions } from "@/stores/game-level-store";
+import { GameActions } from "@/modules/level/game-level-store";
 import { motion } from "framer-motion";
 
 export enum Ailment {

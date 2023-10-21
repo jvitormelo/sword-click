@@ -1,4 +1,4 @@
-import { CurrentView } from "./modules/level/current-game-level";
+import { CurrentView } from "@/pages";
 import { LevelSelector } from "./modules/level/level-selector";
 
 import { LifeGlobe } from "./modules/player/life-globe";

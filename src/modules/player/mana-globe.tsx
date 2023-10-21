@@ -1,4 +1,4 @@
-import { useGameLevelStore } from "@/stores/game-level-store";
+import { useGameLevelStore } from "@/modules/level/game-level-store";
 
 export const ManaGlobe = () => {
   const energy = useGameLevelStore((s) => s.player.mana);

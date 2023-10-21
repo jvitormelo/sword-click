@@ -9,7 +9,7 @@ import { App } from "./App";
 import { queryClient } from "./lib/query-client";
 import { SkillOverlay } from "./modules/skill/skill-overlay";
 import { GameLoader } from "./providers/game-loader";
-import { ModalProvider } from "./providers/modal-provider";
+import { ModalRender } from "./components/Modal/modal-provider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
         <SkillTrigger />
       </div>
-      <ModalProvider />
+      <ModalRender />
     </QueryClientProvider>
   </React.StrictMode>
 );

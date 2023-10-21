@@ -1,7 +1,7 @@
-import { useModalStore } from "@/stores/modal-store";
+import { useModalStore } from "@/components/Modal/modal-store";
 import { AnimatePresence, motion } from "framer-motion";
 
-export const ModalProvider = () => {
+export const ModalRender = () => {
   const { isOpen, modalProps, actions } = useModalStore();
 
   return (
