@@ -1,4 +1,4 @@
-import IceShatter from "@/assets/skills/ice-shatter.svg";
+import IceShatterImage from "@/assets/skills/ice-shatter.svg";
 import {
   ActivateParams,
   ActiveSkill,
@@ -10,14 +10,15 @@ import {
   SkillDamageType,
 } from "@/modules/skill/types";
 import { CSSProperties } from "react";
+import IceShatterSound from "@/assets/sounds/ice-shatter.mp3";
 
-export class Shatter implements ActiveSkill {
+export class IceShatter implements ActiveSkill {
   id: string = "ice-shatter";
   aoe: number = 1;
   code: SkillCode = SkillCode.IceShatter;
   cost: number = 5;
   description: string = "Shatter a chilled enemy";
-  icon: string = IceShatter;
+  icon: string = IceShatterImage;
   name: string = "Ice Shatter";
   style: CSSProperties = {};
   type: SkillActivationType.Active = SkillActivationType.Active;
@@ -31,7 +32,7 @@ export class Shatter implements ActiveSkill {
   };
 
   activate({ actions, pos, scene }: ActivateParams) {
-    actions.damagePointArea(
+    const { enemiesHit } = actions.damagePointArea(
       {
         pos,
         size: {
@@ -53,25 +54,43 @@ export class Shatter implements ActiveSkill {
         },
       }
     );
+    4;
+
+    if (enemiesHit.size === 0) return;
+    5;
+
+    const duration = 300;
 
     scene.playAnimation(
       {
-        src: IceShatter,
+        src: IceShatterImage,
         width: 30,
         height: 30,
+        style: {
+          position: "absolute",
+          zIndex: 90,
+          left: pos.x,
+          top: pos.y,
+          translateX: "-50%",
+          translateY: "-50%",
+        },
         initial: {
+          opacity: 0,
           scale: 0,
         },
         animate: {
-          scale: 1,
+          opacity: 1,
+          translateX: [0, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 0],
+          scale: 2,
         },
         transition: {
-          duration: 0.1,
+          duration: 0.2,
         },
       },
-      100
+      duration
     );
+    scene.playSound(IceShatterSound, duration);
   }
 
-  copy = () => new Shatter();
+  copy = () => new IceShatter();
 }
