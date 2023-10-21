@@ -27,7 +27,7 @@ export class Shatter implements ActiveSkill {
   damage: Damage = {
     value: [100, 200],
     ailment: [],
-    type: SkillDamageType.Elemental,
+    type: SkillDamageType.Ice,
   };
 
   activate({ actions, pos }: ActivateParams) {

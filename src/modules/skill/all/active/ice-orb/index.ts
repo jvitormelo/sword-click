@@ -24,9 +24,8 @@ export class IceOrb implements ActiveSkill {
   damage: Damage = {
     value: [5, 20],
     ailment: [],
-    type: SkillDamageType.Elemental,
+    type: SkillDamageType.Ice,
   };
-  damageType: SkillDamageType = SkillDamageType.Elemental;
   description: string = "A ball of ice.";
   icon: string = Icon;
   name: string = "Ice Orb";

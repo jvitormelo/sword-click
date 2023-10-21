@@ -1,9 +1,10 @@
 import { PlayerOnLevel } from "@/modules/player/types";
 import { Position, Size } from "@/types";
-import { FPS, boardSize } from "../../constants";
+import { FPS, boardSize, distanceFromTop } from "../../constants";
 import { EnemyModel } from "./types";
-import { Ailment, Damage } from "@/modules/skill/types";
+import { Ailment, Damage, SkillDamageType } from "@/modules/skill/types";
 import { between } from "@/utils/random";
+import { skillDamageTypeColors } from "@/modules/skill/constants";
 
 type TickParams = {
   totalTicks: number;
@@ -49,6 +50,12 @@ export class EnemyOnLevel {
   takeDamage(damage: Damage) {
     const value = between(damage.value[0], damage.value[1]);
 
+    spawnRandomNumber(
+      this.position.x,
+      this.position.y,
+      value.toString(),
+      damage.type
+    );
     this.health -= value;
     this.ailments.push(...damage.ailment);
   }
@@ -57,7 +64,11 @@ export class EnemyOnLevel {
     const newPosY = this.position.y + this.speed / FPS;
 
     if (this.hasAilment(Ailment.Burn)) {
-      this.health -= 10;
+      this.takeDamage({
+        value: [1, 3],
+        ailment: [],
+        type: SkillDamageType.Fire,
+      });
     }
 
     const isInAttackRange =
@@ -78,4 +89,31 @@ export class EnemyOnLevel {
       this.position.y = newPosY;
     }
   }
+}
+
+function spawnRandomNumber(
+  x: number,
+  y: number,
+  content: string,
+  damageType: SkillDamageType
+) {
+  const span = document.createElement("span");
+
+  span.textContent = content;
+  span.style.position = "absolute";
+  span.style.left = `${distanceFromTop.x + x + Math.random() * 20 - 10}px`;
+  span.style.top = `${distanceFromTop.y + y + Math.random() * 20 - 10}px`;
+  span.style.transform = "translate(50%, -50%)";
+  span.style.zIndex = "100";
+  span.style.fontWeight = "bold";
+  span.style.textShadow = `0 0 3px black`;
+
+  // shade of red
+  span.style.color = skillDamageTypeColors[damageType];
+
+  document.body.appendChild(span);
+
+  setTimeout(() => {
+    span.remove();
+  }, 300);
 }

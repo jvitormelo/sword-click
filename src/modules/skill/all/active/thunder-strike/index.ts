@@ -35,7 +35,7 @@ export class ThunderStrikeSkill implements ActiveSkill {
   cost = 30;
 
   damage: Damage = {
-    type: SkillDamageType.Elemental,
+    type: SkillDamageType.Lightning,
     value: [100, 200],
     ailment: [],
   };

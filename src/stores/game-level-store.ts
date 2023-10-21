@@ -187,7 +187,7 @@ export const useGameLevelStore = create<Store>((set, get) => ({
               },
               {
                 ailment: [Ailment.Chill],
-                type: SkillDamageType.Elemental,
+                type: SkillDamageType.Ice,
                 value: [10, 20],
               }
             );

@@ -24,7 +24,7 @@ export class FireSlash implements ActiveSkill {
   code: SkillCode = SkillCode.FireSlash;
   cost = 30;
   damage: Damage = {
-    type: SkillDamageType.Elemental,
+    type: SkillDamageType.Fire,
     value: [30, 40],
     ailment: [Ailment.Burn],
   };

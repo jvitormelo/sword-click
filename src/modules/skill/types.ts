@@ -8,7 +8,9 @@ export enum Ailment {
 }
 
 export enum SkillDamageType {
-  Elemental = "elemental",
+  Fire = "fire",
+  Ice = "ice",
+  Lightning = "lightning",
   Physical = "physical",
 }
 
