@@ -13,7 +13,7 @@ import { CSSProperties } from "react";
 import IceShatterSound from "@/assets/sounds/ice-shatter.mp3";
 
 export class IceShatter implements ActiveSkill {
-  id: string = "ice-shatter";
+  id: string = SkillCode.IceShatter;
   aoe: number = 1;
   code: SkillCode = SkillCode.IceShatter;
   cost: number = 5;
@@ -26,18 +26,23 @@ export class IceShatter implements ActiveSkill {
   animationType: SkillAnimationType = SkillAnimationType.Image;
 
   damage: Damage = {
-    value: [100, 200],
+    value: [80, 120],
     ailment: [],
     type: SkillDamageType.Ice,
   };
 
   activate({ actions, pos, scene }: ActivateParams) {
+    let totalChill = 0;
+
     const { enemiesHit } = actions.damagePointArea(
       {
-        pos,
+        pos: {
+          x: pos.x - 2,
+          y: pos.y - 2,
+        },
         size: {
-          width: 1,
-          height: 1,
+          width: 4,
+          height: 4,
         },
       },
       this.damage,
@@ -47,32 +52,52 @@ export class IceShatter implements ActiveSkill {
           const chillQuantity = target.ailments.filter(
             (ailment) => ailment === Ailment.Chill
           ).length;
+          totalChill += chillQuantity;
           const multiplier = 1 + (chillQuantity * 10) / 100;
 
           damage.value[0] *= multiplier;
           damage.value[1] += multiplier;
+          target.ailments = target.ailments.filter(
+            (ailment) => ailment !== Ailment.Chill
+          );
         },
       }
     );
-    4;
 
     if (enemiesHit.size === 0) return;
-    5;
+
+    this.aoe += totalChill / 10;
 
     const duration = 300;
+    const maxSize = 120;
+    const width = max(30 * this.aoe, maxSize);
+    const height = max(30 * this.aoe, maxSize);
+
+    actions.damagePointArea(
+      {
+        pos: {
+          x: pos.x - width / 2,
+          y: pos.y - height / 2,
+        },
+        size: { width, height },
+      },
+      this.damage,
+      {
+        condition: (enemy) => !enemiesHit.has(enemy.id),
+      }
+    );
 
     scene.playAnimation(
       {
         src: IceShatterImage,
-        width: 30,
-        height: 30,
+        width,
+        height,
         style: {
           position: "absolute",
           zIndex: 90,
-          left: pos.x,
-          top: pos.y,
-          translateX: "-50%",
+          left: pos.x - width / 2,
           translateY: "-50%",
+          top: pos.y,
         },
         initial: {
           opacity: 0,
@@ -89,8 +114,13 @@ export class IceShatter implements ActiveSkill {
       },
       duration
     );
+
     scene.playSound(IceShatterSound, duration);
   }
 
   copy = () => new IceShatter();
+}
+
+function max(a: number, b: number) {
+  return a > b ? b : a;
 }
