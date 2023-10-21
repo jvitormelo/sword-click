@@ -2,7 +2,6 @@ import { FPS, gameTick } from "@/constants";
 
 import { EntityOnLevel } from "@/modules/entities/types";
 
-import { PlayerOnLevel } from "@/modules/player/types";
 import { PlayerModel, updatePlayer } from "@/modules/player/use-player";
 import { Damage } from "@/modules/skill/types";
 import {
@@ -15,9 +14,10 @@ import { create } from "zustand";
 import { useModalStore } from "../../components/Modal/modal-store";
 import { EnemyOnLevel } from "../enemies/enemy-on-level";
 import { EnemyModel } from "../enemies/types";
-import { PlayerLevel } from "../player/player-level";
+import { PlayerOnLevel } from "../player/player-level";
 import { LevelModel } from "@/modules/level/types";
 import { LevelOnLevel } from "@/modules/level/level-on-level";
+import { mainTick } from "@/main";
 
 type EnemyMap = Map<string, EnemyOnLevel>;
 
@@ -67,23 +67,22 @@ export const useGameLevelStore = create<Store>((set, get) => ({
   level: null,
   entities: new Map(),
   gold: 0,
-  player: {
+  player: new PlayerOnLevel({
+    level: 1,
+    life: 0,
     mana: 0,
-    maxMana: 0,
     manaRegen: 0,
-    life: 1,
-    maxLife: 1,
-  },
+    maxLife: 0,
+    maxMana: 0,
+  }),
   actions: {
     setPlayer(data) {
       set({
-        player: {
-          life: data.life,
+        player: new PlayerOnLevel({
+          ...data,
           maxLife: data.life,
-          mana: data.mana,
           maxMana: data.mana,
-          manaRegen: data.manaRegen,
-        },
+        }),
       });
     },
     addEntity(entity) {
@@ -92,20 +91,16 @@ export const useGameLevelStore = create<Store>((set, get) => ({
 
         entities.set(entity.id, entity);
 
-        return {
-          entities,
-        };
+        return { entities };
       });
     },
     addEnergy: (energy) => {
       set((state) => {
-        const player = new PlayerLevel(state.player);
+        const player = new PlayerOnLevel(state.player);
 
         player.addEnergy(energy);
 
-        return {
-          player: { ...state.player },
-        };
+        return { player };
       });
     },
     play(level, isAbyss) {
@@ -118,51 +113,11 @@ export const useGameLevelStore = create<Store>((set, get) => ({
       set({ level: new LevelOnLevel(level), isPlaying: true });
 
       interval = setInterval(() => {
-        set((state) => {
-          const levelPayload = {
-            enemies: state.enemies,
-            player: state.player,
-            entities: state.entities,
-            gold: 0,
-          };
+        const { enemies, gold, player, entities, level } = get();
 
-          for (const entity of levelPayload.entities.values()) {
-            entity.tick({ enemies: levelPayload.enemies });
-            if (entity.removable) {
-              state.entities.delete(entity.id);
-            }
-          }
+        if (!level) throw new Error("Level is null");
 
-          levelPayload.gold += removeDeadEnemies(levelPayload.enemies);
-
-          // Enemies tick
-          for (const enemy of levelPayload.enemies.values()) {
-            enemy.tick({
-              player: levelPayload.player,
-              totalTicks: totalTick,
-            });
-          }
-
-          levelPayload.gold += removeDeadEnemies(levelPayload.enemies);
-
-          // Player tick
-          new PlayerLevel(levelPayload.player).tick();
-
-          // Level tick
-          if (state.level) {
-            state.level.tick(levelPayload.enemies, totalTick);
-          }
-
-          return {
-            enemies: new Map(levelPayload.enemies),
-            gold: state.gold + levelPayload.gold,
-            player: { ...levelPayload.player },
-            entities: new Map(levelPayload.entities),
-          };
-        });
-
-        const isFinished =
-          get().level?.enemies.size === 0 && get().enemies.size === 0;
+        const isFinished = level?.enemies.size === 0 && enemies.size === 0;
 
         if (isFinished && interval) {
           clearInterval(interval);
@@ -210,6 +165,16 @@ export const useGameLevelStore = create<Store>((set, get) => ({
             }, 500);
           }
         }
+
+        const nextTick = mainTick(entities, enemies, player, level, totalTick);
+
+        set({
+          enemies: nextTick.enemies,
+          gold: gold + nextTick.gold,
+          player: nextTick.player,
+          entities: nextTick.entities,
+        });
+
         totalTick += gameTick;
       }, gameTick);
     },
@@ -321,7 +286,7 @@ export const pureDamagePointArea = (
   };
 };
 
-function removeDeadEnemies(enemies: Map<string, EnemyModel>) {
+export function removeDeadEnemies(enemies: Map<string, EnemyModel>) {
   let gold = 0;
   for (const [key, enemy] of enemies) {
     if (enemy.health <= 0) {
