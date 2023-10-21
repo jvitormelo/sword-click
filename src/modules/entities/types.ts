@@ -1,0 +1,27 @@
+import { EnemyOnLevel } from "@/modules/enemies/enemy-on-level";
+import { Position, Size } from "@/types";
+
+export enum EntityCode {
+  IceOrb = "ice-orb",
+}
+
+export type EntityModel = {
+  image: string;
+  position: Position;
+  speed: number;
+  target: Position;
+  id: string;
+  size: Size;
+  code: EntityCode;
+  sound: string;
+  hitSound: string;
+};
+
+export type EntityTickParams = {
+  enemies: Map<string, EnemyOnLevel>;
+};
+
+export type EntityOnLevel = EntityModel & {
+  removable: boolean;
+  tick: (params: EntityTickParams) => void;
+};

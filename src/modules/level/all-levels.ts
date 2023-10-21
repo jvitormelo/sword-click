@@ -1,10 +1,10 @@
+import { LevelModel } from "@/modules/level/types";
 import { goblinFactory, zombieFactory } from "../enemies/enemies-factory";
 import { generateEnemies } from "../enemies/generate-enemies";
-import { Level } from "./level-selector";
 
 import PlainsBackground from "@/assets/plains-background.jpeg";
 
-export const allLevels: Array<Level> = [
+export const allLevels: Array<LevelModel> = [
   {
     id: "level-1",
     number: 1,

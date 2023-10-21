@@ -1,11 +1,11 @@
 import { Card } from "@/components/Card";
 import { usePlayer } from "../player/use-player";
 import { goblinFactory, zombieFactory } from "../enemies/enemies-factory";
-import { Level } from "../level/level-selector";
 import AbyssBg from "@/assets/abyss-bg.jpeg";
 import { generateEnemies } from "../enemies/generate-enemies";
 import { useGameLevelStore } from "@/modules/level/game-level-store";
 import { cn } from "@/utils/cn";
+import { LevelModel } from "@/modules/level/types";
 
 function getEnemies(abyssLevel: number) {
   if (abyssLevel < 10) return [zombieFactory()];
@@ -103,7 +103,7 @@ function getButtonText(level: number, current: boolean) {
 }
 
 // TODO > improve this
-function generateAbyssLevel(abyssInfo: AbyssInfo): Level {
+function generateAbyssLevel(abyssInfo: AbyssInfo): LevelModel {
   return {
     id: `abyss-${abyssInfo.level.toString()}`,
     number: abyssInfo.level,

@@ -1,18 +1,3 @@
-export type EnemyRecipe = {
-  spawnTime: number;
-  enemy: EnemyOnLevel;
-};
-export type Level = {
-  id: string;
-  number: number;
-  background: string;
-  enemies: () => Map<number, EnemyRecipe | EnemyRecipe[]>;
-};
-
-export type LevelActive = Omit<Level, "enemies"> & {
-  enemies: Map<number, EnemyRecipe | EnemyRecipe[]>;
-};
-
 import { useGameLevelStore } from "./game-level-store";
 
 import { Card } from "@/components/Card";
@@ -22,7 +7,8 @@ import { useRef } from "react";
 import { GoldCounter } from "../player/gold-counter";
 import { usePlayer } from "../player/use-player";
 import { allLevels } from "./all-levels";
-import { EnemyOnLevel } from "@/modules/enemies/enemy-on-level";
+import { LevelModel } from "@/modules/level/types";
+import { LevelOnLevel } from "@/modules/level/level-on-level";
 
 export const LevelSelector = () => {
   const level = useGameLevelStore((s) => s.level);
@@ -36,7 +22,7 @@ export const LevelSelector = () => {
   );
 };
 
-function ActiveLevel({ level }: { level: LevelActive }) {
+function ActiveLevel({ level }: { level: LevelOnLevel }) {
   const levelRef = useRef(level.enemies);
   const gold = useGameLevelStore((s) => s.gold);
 
@@ -81,14 +67,14 @@ function Maps() {
   const { player } = usePlayer();
   const { play } = useGameLevelStore((s) => s.actions);
 
-  function selectLevel(level: Level) {
+  function selectLevel(level: LevelModel) {
     play(level);
   }
 
   const visibleLevels = (() => {
     const playerLevels = player.completedLevels
       .map((id) => allLevels.find((l) => l.id === id))
-      .filter((l): l is Level => !!l);
+      .filter((l): l is LevelModel => !!l);
 
     const highestLevel = playerLevels.reduce((acc, level) => {
       if (level.number > acc.number) return level;

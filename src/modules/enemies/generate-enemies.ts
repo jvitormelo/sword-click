@@ -1,7 +1,8 @@
 import { boardSize } from "@/constants";
 import { between } from "@/utils/random";
-import { EnemyRecipe } from "../level/level-selector";
+
 import { EnemyFactory } from "./enemies-factory";
+import { EnemyRecipe } from "@/modules/level/types";
 
 type MultipleSpawn = {
   every: number;

@@ -1,7 +1,5 @@
-import {
-  EntityOnLevel,
-  useGameLevelStore,
-} from "@/modules/level/game-level-store";
+import { EntityOnLevel } from "@/modules/entities/types";
+import { useGameLevelStore } from "@/modules/level/game-level-store";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo } from "react";
 

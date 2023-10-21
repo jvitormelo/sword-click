@@ -1,6 +1,5 @@
+import { Ailment } from "@/modules/skill/types";
 import { Position, Size } from "@/types";
-import { PlayerOnLevel } from "../player/types";
-import { Ailment } from "./enemy-on-level";
 
 export type EnemyModel = {
   id: string;
@@ -15,10 +14,4 @@ export type EnemyModel = {
   isAttacking: boolean;
   /** Every ms */
   attackSpeed: number;
-};
-
-export type LevelModel = {
-  currentTick: number;
-  player: PlayerOnLevel;
-  enemies: Map<string, EnemyModel>;
 };
