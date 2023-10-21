@@ -1,27 +1,24 @@
+import { Position, Size } from "@/types";
 import { PlayerOnLevel } from "../player/types";
-import { Ailment } from "./enemies-level";
+import { Ailment } from "./enemy-on-level";
 
-export type EnemyOnLevel = {
+export type EnemyModel = {
   id: string;
   health: number;
   name: string;
-  position: {
-    x: number;
-    y: number;
-  };
-  size: {
-    width: number;
-    height: number;
-  };
-
+  position: Position;
+  size: Size;
   image: string;
   attack: number;
   speed: number;
   ailments: Ailment[];
+  isAttacking: boolean;
+  /** Every ms */
+  attackSpeed: number;
 };
 
 export type LevelModel = {
+  currentTick: number;
   player: PlayerOnLevel;
-  enemies: Map<string, EnemyOnLevel>;
-  gold: number;
+  enemies: Map<string, EnemyModel>;
 };

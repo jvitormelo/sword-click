@@ -1,19 +1,21 @@
-import { gameTick } from "@/constants";
+import { FPS, gameTick } from "@/constants";
 
-import { Level } from "@/modules/level/level-selector";
+import { Level, LevelActive } from "@/modules/level/level-selector";
 import { PlayerOnLevel } from "@/modules/player/types";
 import { PlayerModel, updatePlayer } from "@/modules/player/use-player";
 import { Position, Size } from "@/types";
-import { create } from "zustand";
 import {
-  Ailment,
-  EnemiesAction,
-  EnemiesLevel,
-} from "../modules/enemies/enemies-level";
-import { EnemyOnLevel } from "../modules/enemies/types";
+  Circle,
+  areCircleAndRectangleTouching,
+  arePointsTouching,
+} from "@/utils/geometry";
+import { between } from "@/utils/random";
+import { playSound } from "@/utils/sound";
+import { create } from "zustand";
+import { Ailment, EnemyOnLevel } from "../modules/enemies/enemy-on-level";
+import { EnemyModel } from "../modules/enemies/types";
 import { PlayerLevel } from "../modules/player/player-level";
 import { useModalStore } from "./modal-store";
-import { playSound } from "@/utils/sound";
 
 export enum EntityCode {
   IceOrb = "ice-orb",
@@ -33,7 +35,7 @@ export type EntityOnLevel = {
 
 type Store = {
   gold: number;
-  level: Level | null;
+  level: LevelActive | null;
   isPlaying: boolean;
   player: PlayerOnLevel;
   enemies: Map<string, EnemyOnLevel>;
@@ -41,12 +43,23 @@ type Store = {
   actions: {
     spawn: (enemy: EnemyOnLevel) => void;
     addEnergy: (energy: number) => void;
-    bulkSpawn: (enemies: EnemyOnLevel[]) => void;
     // TODO BAD IF > Refactor this
     play: (level: Level, isAbyss?: boolean) => void;
     setPlayer: (player: PlayerModel) => void;
     addEntity: (entity: EntityOnLevel) => void;
-  } & Omit<EnemiesAction, "tick">;
+    damageEnemy: (id: string, damage: number) => void;
+    damageLineArea: (
+      position: Size & Position,
+      damage: number | [number, number],
+      ailments: Ailment[],
+      enemiesHit?: Map<string, EnemyModel>
+    ) => void;
+    damageCircleArea: (
+      circle: Circle,
+      damage: number,
+      enemiesHit: EnemyModel[]
+    ) => void;
+  };
 };
 
 let interval: NodeJS.Timeout | null = null;
@@ -89,7 +102,7 @@ export const useGameLevelStore = create<Store>((set, get) => ({
     },
     addEnergy: (energy) => {
       set((state) => {
-        const player = new PlayerLevel(state);
+        const player = new PlayerLevel(state.player);
 
         player.addEnergy(energy);
 
@@ -105,43 +118,36 @@ export const useGameLevelStore = create<Store>((set, get) => ({
 
       let totalTick = 0;
 
-      set({ level: structuredClone(level), isPlaying: true });
+      const toSpawnEnemies = level.enemies();
+
+      set({
+        level: {
+          ...level,
+          enemies: toSpawnEnemies,
+        },
+        isPlaying: true,
+      });
 
       interval = setInterval(() => {
         set((state) => {
+          let gold = 0;
           const levelPayload = {
             enemies: state.enemies,
-            gold: state.gold,
-            player: state.player,
-          };
-          for (const [key, entity] of state.entities) {
-            const enemiesHit = new Map();
-            state.actions.damageLineArea(
-              {
-                x: entity.position.x,
-                y: entity.position.y,
-                width: entity.size.width,
-                height: entity.size.height,
-              },
-              [10, 20],
-              [Ailment.Chill],
-              enemiesHit
-            );
-            console.log(enemiesHit.size);
-            if (enemiesHit.size > 0) {
-              playSound(entity.hitSound, 200);
-              entity.position.y -= entity.speed / 3;
-            } else {
-              entity.position.y -= entity.speed;
-            }
 
-            if (entity.position.y < 0) {
-              state.entities.delete(key);
-            }
+            player: state.player,
+            currentTick: totalTick,
+          };
+
+          for (const enemy of state.enemies.values()) {
+            enemy.tick({
+              player: levelPayload.player,
+              totalTicks: totalTick,
+            });
           }
 
-          new EnemiesLevel(levelPayload).tick();
-          new PlayerLevel(levelPayload).tick();
+          gold += removeDeadEnemies(state.enemies);
+
+          new PlayerLevel(levelPayload.player).tick();
 
           if (state.level) {
             for (const [key, recipe] of state.level.enemies) {
@@ -164,11 +170,39 @@ export const useGameLevelStore = create<Store>((set, get) => ({
             }
           }
 
+          for (const [key, entity] of state.entities) {
+            const enemiesHit = new Map();
+            state.actions.damageLineArea(
+              {
+                x: entity.position.x,
+                y: entity.position.y,
+                width: entity.size.width,
+                height: entity.size.height,
+              },
+              [10, 20],
+              [Ailment.Chill],
+              enemiesHit
+            );
+
+            if (enemiesHit.size > 0) {
+              playSound(entity.hitSound, 200);
+              entity.position.y -= entity.speed / 3;
+            } else {
+              entity.position.y -= entity.speed;
+            }
+
+            if (entity.position.y < 0) {
+              state.entities.delete(key);
+            }
+          }
+
+          gold += removeDeadEnemies(state.enemies);
+
           const newEnemies = new Map(levelPayload.enemies);
 
           return {
             enemies: newEnemies,
-            gold: levelPayload.gold,
+            gold: state.gold + gold,
             player: { ...levelPayload.player },
             entities: new Map(state.entities),
           };
@@ -226,20 +260,8 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         totalTick += gameTick;
       }, gameTick);
     },
-    bulkSpawn: (enemies: EnemyOnLevel[]) => {
-      set((state) => {
-        const newEnemies = new Map(state.enemies);
 
-        for (const enemy of enemies) {
-          newEnemies.set(enemy.id, enemy);
-        }
-
-        return {
-          enemies: newEnemies,
-        };
-      });
-    },
-    spawn: (enemy: EnemyOnLevel) => {
+    spawn: (enemy) => {
       set((state) => {
         const enemies = new Map(state.enemies);
 
@@ -250,38 +272,81 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         };
       });
     },
-    damageLineArea: (line, damage, ailments, enemiesHit) => {
+    damageLineArea: (line, _damage, ailments, enemiesHit) => {
       set((state) => {
-        const enemiesController = new EnemiesLevel(state);
+        const damage = Array.isArray(_damage) ? between(..._damage) : _damage;
+        for (const enemy of state.enemies.values()) {
+          const movementMargin = enemy.speed / FPS / 2;
 
-        enemiesController.damageLineArea(line, damage, ailments, enemiesHit);
+          const isTouching = arePointsTouching(
+            {
+              x: enemy.position.x,
+              y: enemy.position.y - movementMargin,
+              width: enemy.size.width,
+              height: enemy.size.height + movementMargin * 2,
+            },
+            {
+              x: line.x,
+              y: line.y,
+              width: line.width,
+              height: line.height,
+            }
+          );
+
+          if (isTouching) {
+            enemy.health -= damage;
+            enemy.ailments = [...enemy.ailments, ...ailments];
+
+            if (enemiesHit) {
+              enemiesHit.set(enemy.id, enemy);
+            }
+          }
+        }
+
+        const gold = removeDeadEnemies(state.enemies);
 
         return {
           enemies: new Map(state.enemies),
-          gold: state.gold,
+          gold: state.gold + gold,
         };
       });
     },
     damageCircleArea(circle, damage, enemiesHit) {
       set((state) => {
-        const enemiesLevel = new EnemiesLevel(state);
+        for (const enemy of state.enemies.values()) {
+          if (
+            areCircleAndRectangleTouching(circle, {
+              x: enemy.position.x,
+              height: enemy.size.height,
+              width: enemy.size.width,
+              y: enemy.position.y,
+            })
+          ) {
+            enemiesHit.push(enemy);
+            enemy.health -= damage;
+          }
+        }
 
-        enemiesLevel.damageCircleArea(circle, damage, enemiesHit);
-
+        const gold = removeDeadEnemies(state.enemies);
         return {
           enemies: new Map(state.enemies),
-          gold: state.gold,
+          gold,
         };
       });
     },
     damageEnemy(id, damage) {
       set((state) => {
-        const enemiesLevel = new EnemiesLevel(state);
+        const enemy = state.enemies.get(id);
 
-        enemiesLevel.damageEnemy(id, damage);
+        if (!enemy) return state;
+
+        enemy.health -= damage;
+
+        const gold = removeDeadEnemies(state.enemies);
 
         return {
           enemies: new Map(state.enemies),
+          gold,
         };
       });
     },
@@ -290,4 +355,15 @@ export const useGameLevelStore = create<Store>((set, get) => ({
 
 export function gameActions() {
   return useGameLevelStore.getState().actions;
+}
+
+function removeDeadEnemies(enemies: Map<string, EnemyModel>) {
+  let gold = 0;
+  for (const [key, enemy] of enemies) {
+    if (enemy.health <= 0) {
+      enemies.delete(key);
+      gold += 10;
+    }
+  }
+  return gold;
 }

@@ -4,7 +4,7 @@ import { gameActions } from "@/stores/game-level-store";
 import { between } from "@/utils/random";
 
 import FireSound from "@/assets/sounds/fire.mp3";
-import { Ailment } from "@/modules/enemies/enemies-level";
+import { Ailment } from "@/modules/enemies/enemy-on-level";
 
 import { FireSlashAnimation } from "@/modules/skill/all/active/fire-slash/animation";
 import {

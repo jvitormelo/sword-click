@@ -30,10 +30,6 @@ export const PlayerSideBar = () => {
         }
       );
     }
-
-    if (life <= 0) {
-      console.log("You died");
-    }
   }, [life]);
 
   return (

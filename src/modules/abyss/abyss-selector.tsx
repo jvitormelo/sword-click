@@ -28,8 +28,6 @@ type AbyssInfo = ReturnType<typeof getAbyssInfo>;
 export const AbyssSelector = () => {
   const { player } = usePlayer();
 
-  console.log(player.abyssLevel);
-
   return (
     <section className="grid grid-cols-2 gap-4">
       {player.abyssLevel > 1 && (
@@ -110,16 +108,17 @@ function generateAbyssLevel(abyssInfo: AbyssInfo): Level {
     id: `abyss-${abyssInfo.level.toString()}`,
     number: abyssInfo.level,
     background: AbyssBg,
-    enemies: generateEnemies([
-      {
-        factory: zombieFactory,
-        quantity: abyssInfo.monsters,
-        interval: 1000 / (abyssInfo.multiplier + 1),
-        multipleSpawn: {
-          every: 5,
-          quantity: [abyssInfo.level, abyssInfo.level + abyssInfo.multiplier],
+    enemies: () =>
+      generateEnemies([
+        {
+          factory: zombieFactory,
+          quantity: abyssInfo.monsters,
+          interval: 1000 / (abyssInfo.multiplier + 1),
+          multipleSpawn: {
+            every: 5,
+            quantity: [abyssInfo.level, abyssInfo.level + abyssInfo.multiplier],
+          },
         },
-      },
-    ]),
+      ]),
   };
 }

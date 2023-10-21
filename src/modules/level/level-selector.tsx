@@ -1,5 +1,3 @@
-import { EnemyOnLevel } from "../enemies/types";
-
 export type EnemyRecipe = {
   spawnTime: number;
   enemy: EnemyOnLevel;
@@ -8,6 +6,10 @@ export type Level = {
   id: string;
   number: number;
   background: string;
+  enemies: () => Map<number, EnemyRecipe | EnemyRecipe[]>;
+};
+
+export type LevelActive = Omit<Level, "enemies"> & {
   enemies: Map<number, EnemyRecipe | EnemyRecipe[]>;
 };
 
@@ -20,6 +22,7 @@ import { useRef } from "react";
 import { GoldCounter } from "../player/gold-counter";
 import { usePlayer } from "../player/use-player";
 import { allLevels } from "./all-levels";
+import { EnemyOnLevel } from "@/modules/enemies/enemy-on-level";
 
 export const LevelSelector = () => {
   const level = useGameLevelStore((s) => s.level);
@@ -33,7 +36,7 @@ export const LevelSelector = () => {
   );
 };
 
-function ActiveLevel({ level }: { level: Level }) {
+function ActiveLevel({ level }: { level: LevelActive }) {
   const levelRef = useRef(level.enemies);
   const gold = useGameLevelStore((s) => s.gold);
 

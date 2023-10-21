@@ -8,7 +8,6 @@ export const EntitiesOnLevel = () => {
   const entitiesArray = useMemo(() => {
     return Array.from(entities.values());
   }, [entities]);
-  console.log(entitiesArray);
   return (
     <AnimatePresence>
       {entitiesArray.map((entity) => (

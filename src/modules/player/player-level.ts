@@ -1,20 +1,20 @@
 import { FPS } from "@/constants";
-import { LevelModel } from "../enemies/types";
+import { PlayerOnLevel } from "@/modules/player/types";
 
 export class PlayerLevel {
-  constructor(protected level: LevelModel) {}
+  constructor(protected player: PlayerOnLevel) {}
 
   addEnergy(energy: number) {
-    const newEnergy = this.level.player.mana + energy;
+    const newEnergy = this.player.mana + energy;
 
-    if (newEnergy > this.level.player.maxMana) {
-      this.level.player.mana = this.level.player.maxMana;
+    if (newEnergy > this.player.maxMana) {
+      this.player.mana = this.player.maxMana;
     } else {
-      this.level.player.mana = newEnergy;
+      this.player.mana = newEnergy;
     }
   }
 
   tick() {
-    this.addEnergy(this.level.player.manaRegen / FPS);
+    this.addEnergy(this.player.manaRegen / FPS);
   }
 }

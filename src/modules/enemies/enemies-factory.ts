@@ -1,9 +1,10 @@
 import Goblin from "@/assets/goblin.gif";
 import Zombie from "@/assets/zombie.png";
 import { boardSize } from "@/constants";
-import { EnemyOnLevel } from "@/modules/enemies/types";
-import { between } from "../../utils/random";
+
+import { EnemyOnLevel } from "@/modules/enemies/enemy-on-level";
 import { Position } from "@/types";
+import { between } from "../../utils/random";
 export type EnemyFactory = (props?: { pos: Partial<Position> }) => EnemyOnLevel;
 
 export const zombieFactory: EnemyFactory = (props) => {
@@ -11,7 +12,7 @@ export const zombieFactory: EnemyFactory = (props) => {
     height: 48,
     width: 48,
   };
-  return {
+  return new EnemyOnLevel({
     id: crypto.randomUUID(),
     health: 100,
     name: "Zombie",
@@ -19,12 +20,14 @@ export const zombieFactory: EnemyFactory = (props) => {
     image: Zombie,
     speed: 40,
     size: size,
+    attackSpeed: 1000,
     position: {
       x: props?.pos.x ?? between(0, boardSize.width - size.width),
       y: props?.pos.y ?? between(0, boardSize.height * 0.15),
     },
     ailments: [],
-  };
+    isAttacking: false,
+  });
 };
 
 export const goblinFactory: EnemyFactory = () => {
@@ -32,12 +35,13 @@ export const goblinFactory: EnemyFactory = () => {
     height: 24,
     width: 24,
   };
-  return {
+  return new EnemyOnLevel({
     id: crypto.randomUUID(),
     health: 30,
     name: "Goblin",
     attack: 5,
     speed: 80,
+    attackSpeed: 800,
     image: Goblin,
     size,
     position: {
@@ -45,5 +49,6 @@ export const goblinFactory: EnemyFactory = () => {
       y: between(0, boardSize.height * 0.2),
     },
     ailments: [],
-  };
+    isAttacking: false,
+  });
 };

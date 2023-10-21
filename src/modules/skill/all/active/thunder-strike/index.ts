@@ -3,7 +3,7 @@ import { closestDistanceToCircle } from "@/utils/geometry";
 
 import ThunderStrikeIcon from "@/assets/skills/icons/thunder-strike.png";
 import ThunderSound from "@/assets/sounds/thunder-strike-sound.mp3";
-import { EnemyOnLevel } from "@/modules/enemies/types";
+import { EnemyModel } from "@/modules/enemies/types";
 import { ThunderStrikeAnimation } from "@/modules/skill/all/active/thunder-strike/animation";
 import {
   ActivateParams,
@@ -54,7 +54,7 @@ export class ThunderStrikeSkill implements ActiveSkill {
 
   activate({ pos }: ActivateParams) {
     const animationDuration = 300;
-    const affectedEnemies: EnemyOnLevel[] = [];
+    const affectedEnemies: EnemyModel[] = [];
 
     gameActions().damageCircleArea(
       {
@@ -78,7 +78,7 @@ export class ThunderStrikeSkill implements ActiveSkill {
 
     const closestDistance = {
       value: Number.MAX_SAFE_INTEGER,
-      enemy: null as null | EnemyOnLevel,
+      enemy: null as null | EnemyModel,
     };
 
     for (const enemy of enemies) {

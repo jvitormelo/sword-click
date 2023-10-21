@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef } from "react";
-import { EnemyOnLevel } from "./types";
+import { EnemyModel } from "./types";
 import { motion } from "framer-motion";
-import { Ailment } from "@/modules/enemies/enemies-level";
+import { Ailment } from "@/modules/enemies/enemy-on-level";
 import { gameTick } from "@/constants";
 
-export const Enemy = ({ enemy }: { enemy: EnemyOnLevel }) => {
+export const Enemy = ({ enemy }: { enemy: EnemyModel }) => {
   const { id, position, health, size, image, ailments } = enemy;
 
   const maxHealth = useRef(health);
+  const isAnimating = useRef(false);
   const initialPosition = useRef(position);
 
   const elementRef = useRef<HTMLImageElement>(null);
@@ -16,17 +17,47 @@ export const Enemy = ({ enemy }: { enemy: EnemyOnLevel }) => {
 
   const hasChill = useMemo(() => ailments.includes(Ailment.Chill), [ailments]);
 
-  useEffect(() => {
-    if (health !== maxHealth.current) {
-      elementRef.current?.animate(
+  if (enemy.isAttacking && !isAnimating.current) {
+    const prepareAttack = () => {
+      isAnimating.current = true;
+      const animation = elementRef.current?.animate(
         [
-          // shake
+          { transform: "translateY(-6px) rotate(16deg)", scale: 0.9 },
+          { transform: "translateY(6px) rotate(-8deg)", scale: 1.1 },
+        ],
+        {
+          duration: enemy.attackSpeed,
+          easing: "ease-in-out",
+        }
+      );
+
+      if (animation) {
+        animation.onfinish = () => {
+          isAnimating.current = false;
+        };
+      }
+    };
+
+    prepareAttack();
+  }
+
+  useEffect(() => {
+    const translateAnimation = enemy.isAttacking
+      ? []
+      : [
           { transform: "translateX(0px)" },
           { transform: "translateX(-5px)" },
           { transform: "translateX(5px)" },
           { transform: "translateX(-5px)" },
           { transform: "translateX(0px)" },
-          { filter: "brightness(0.5) sepia(100%)" },
+        ];
+    if (health !== maxHealth.current) {
+      elementRef.current?.animate(
+        [
+          // shake
+
+          ...translateAnimation,
+          { filter: "brightness(0.3) sepia(100%)" },
         ],
         {
           duration: 200,

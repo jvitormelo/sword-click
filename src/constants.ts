@@ -14,3 +14,13 @@ export const boardSize = {
 export const FPS = 5;
 
 export const gameTick = 1000 / FPS;
+
+/**
+ * 0.2
+ */
+export const durationSynced = 1000 / FPS / 1000;
+
+/**
+ * 0.2
+ */
+export const durationSyncedMs = 1000 / FPS;
