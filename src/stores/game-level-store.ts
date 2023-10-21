@@ -3,16 +3,17 @@ import { FPS, gameTick } from "@/constants";
 import { Level, LevelActive } from "@/modules/level/level-selector";
 import { PlayerOnLevel } from "@/modules/player/types";
 import { PlayerModel, updatePlayer } from "@/modules/player/use-player";
+import { Ailment, Damage, SkillDamageType } from "@/modules/skill/types";
 import { Position, Size } from "@/types";
 import {
   Circle,
+  Point,
   areCircleAndRectangleTouching,
   arePointsTouching,
 } from "@/utils/geometry";
-import { between } from "@/utils/random";
 import { playSound } from "@/utils/sound";
 import { create } from "zustand";
-import { Ailment, EnemyOnLevel } from "../modules/enemies/enemy-on-level";
+import { EnemyOnLevel } from "../modules/enemies/enemy-on-level";
 import { EnemyModel } from "../modules/enemies/types";
 import { PlayerLevel } from "../modules/player/player-level";
 import { useModalStore } from "./modal-store";
@@ -33,6 +34,33 @@ export type EntityOnLevel = {
   hitSound: string;
 };
 
+type EnemyMap = Map<string, EnemyOnLevel>;
+
+type DamageConfig = {
+  condition?: (enemy: EnemyOnLevel) => boolean;
+  beforeDamage?: (enemy: EnemyOnLevel, damage: Damage) => void;
+};
+
+export type GameActions = {
+  spawn: (enemy: EnemyOnLevel) => void;
+  addEnergy: (energy: number) => void;
+  // TODO BAD IF > Refactor this
+  play: (level: Level, isAbyss?: boolean) => void;
+  setPlayer: (player: PlayerModel) => void;
+  addEntity: (entity: EntityOnLevel) => void;
+  damageEnemy: (id: string, damage: Damage, config?: DamageConfig) => void;
+  damagePointArea: (
+    position: Point,
+    damage: Damage,
+    config?: DamageConfig
+  ) => { enemiesHit: EnemyMap };
+  damageCircleArea: (
+    circle: Circle,
+    damage: Damage,
+    config?: DamageConfig
+  ) => { enemiesHit: EnemyMap };
+};
+
 type Store = {
   gold: number;
   level: LevelActive | null;
@@ -40,26 +68,7 @@ type Store = {
   player: PlayerOnLevel;
   enemies: Map<string, EnemyOnLevel>;
   entities: Map<string, EntityOnLevel>;
-  actions: {
-    spawn: (enemy: EnemyOnLevel) => void;
-    addEnergy: (energy: number) => void;
-    // TODO BAD IF > Refactor this
-    play: (level: Level, isAbyss?: boolean) => void;
-    setPlayer: (player: PlayerModel) => void;
-    addEntity: (entity: EntityOnLevel) => void;
-    damageEnemy: (id: string, damage: number) => void;
-    damageLineArea: (
-      position: Size & Position,
-      damage: number | [number, number],
-      ailments: Ailment[],
-      enemiesHit?: Map<string, EnemyModel>
-    ) => void;
-    damageCircleArea: (
-      circle: Circle,
-      damage: number,
-      enemiesHit: EnemyModel[]
-    ) => void;
-  };
+  actions: GameActions;
 };
 
 let interval: NodeJS.Timeout | null = null;
@@ -171,22 +180,21 @@ export const useGameLevelStore = create<Store>((set, get) => ({
           }
 
           for (const [key, entity] of state.entities) {
-            const enemiesHit = new Map();
-            state.actions.damageLineArea(
+            const { enemiesHit } = state.actions.damagePointArea(
               {
-                x: entity.position.x,
-                y: entity.position.y,
-                width: entity.size.width,
-                height: entity.size.height,
+                pos: entity.position,
+                size: entity.size,
               },
-              [10, 20],
-              [Ailment.Chill],
-              enemiesHit
+              {
+                ailment: [Ailment.Chill],
+                type: SkillDamageType.Elemental,
+                value: [10, 20],
+              }
             );
 
             if (enemiesHit.size > 0) {
               playSound(entity.hitSound, 200);
-              entity.position.y -= entity.speed / 3;
+              entity.position.y -= entity.speed / 2;
             } else {
               entity.position.y -= entity.speed;
             }
@@ -260,7 +268,6 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         totalTick += gameTick;
       }, gameTick);
     },
-
     spawn: (enemy) => {
       set((state) => {
         const enemies = new Map(state.enemies);
@@ -272,34 +279,35 @@ export const useGameLevelStore = create<Store>((set, get) => ({
         };
       });
     },
-    damageLineArea: (line, _damage, ailments, enemiesHit) => {
+    damagePointArea: (line, damage, config) => {
+      const enemiesHit = new Map<string, EnemyOnLevel>();
+
+      const condition = config?.condition ?? (() => true);
+      const beforeDamage = config?.beforeDamage ?? (() => {});
+
       set((state) => {
-        const damage = Array.isArray(_damage) ? between(..._damage) : _damage;
         for (const enemy of state.enemies.values()) {
           const movementMargin = enemy.speed / FPS / 2;
 
           const isTouching = arePointsTouching(
             {
-              x: enemy.position.x,
-              y: enemy.position.y - movementMargin,
-              width: enemy.size.width,
-              height: enemy.size.height + movementMargin * 2,
+              pos: {
+                x: enemy.position.x,
+                y: enemy.position.y - movementMargin,
+              },
+              size: {
+                width: enemy.size.width,
+                height: enemy.size.height + movementMargin * 2,
+              },
             },
-            {
-              x: line.x,
-              y: line.y,
-              width: line.width,
-              height: line.height,
-            }
+            line
           );
 
-          if (isTouching) {
-            enemy.health -= damage;
-            enemy.ailments = [...enemy.ailments, ...ailments];
+          if (isTouching && condition(enemy)) {
+            beforeDamage(enemy, damage);
 
-            if (enemiesHit) {
-              enemiesHit.set(enemy.id, enemy);
-            }
+            enemy.takeDamage(damage);
+            enemiesHit.set(enemy.id, enemy);
           }
         }
 
@@ -310,8 +318,13 @@ export const useGameLevelStore = create<Store>((set, get) => ({
           gold: state.gold + gold,
         };
       });
+
+      return {
+        enemiesHit: enemiesHit,
+      };
     },
-    damageCircleArea(circle, damage, enemiesHit) {
+    damageCircleArea(circle, damage) {
+      const enemiesHit = new Map<string, EnemyOnLevel>();
       set((state) => {
         for (const enemy of state.enemies.values()) {
           if (
@@ -322,17 +335,21 @@ export const useGameLevelStore = create<Store>((set, get) => ({
               y: enemy.position.y,
             })
           ) {
-            enemiesHit.push(enemy);
-            enemy.health -= damage;
+            enemy.takeDamage(damage);
+            enemiesHit.set(enemy.id, enemy);
           }
         }
 
         const gold = removeDeadEnemies(state.enemies);
+
         return {
           enemies: new Map(state.enemies),
-          gold,
+          gold: state.gold + gold,
         };
       });
+      return {
+        enemiesHit: enemiesHit,
+      };
     },
     damageEnemy(id, damage) {
       set((state) => {
@@ -340,7 +357,7 @@ export const useGameLevelStore = create<Store>((set, get) => ({
 
         if (!enemy) return state;
 
-        enemy.health -= damage;
+        enemy.takeDamage(damage);
 
         const gold = removeDeadEnemies(state.enemies);
 

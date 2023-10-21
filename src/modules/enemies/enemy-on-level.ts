@@ -2,11 +2,8 @@ import { PlayerOnLevel } from "@/modules/player/types";
 import { Position, Size } from "@/types";
 import { FPS, boardSize } from "../../constants";
 import { EnemyModel } from "./types";
-
-export enum Ailment {
-  Burn = "Burn",
-  Chill = "Chill",
-}
+import { Ailment, Damage } from "@/modules/skill/types";
+import { between } from "@/utils/random";
 
 type TickParams = {
   totalTicks: number;
@@ -47,6 +44,13 @@ export class EnemyOnLevel {
 
   set speed(value) {
     this.baseSpeed = value;
+  }
+
+  takeDamage(damage: Damage) {
+    const value = between(damage.value[0], damage.value[1]);
+
+    this.health -= value;
+    this.ailments.push(...damage.ailment);
   }
 
   tick({ totalTicks, player }: TickParams) {

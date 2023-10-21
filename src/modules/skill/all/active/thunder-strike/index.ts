@@ -8,20 +8,16 @@ import { ThunderStrikeAnimation } from "@/modules/skill/all/active/thunder-strik
 import {
   ActivateParams,
   ActiveSkill,
+  Damage,
+  SkillActivationType,
   SkillAnimationType,
   SkillCode,
-  SkillActivationType,
   SkillDamageType,
 } from "@/modules/skill/types";
 import { playAnimation } from "@/stores/animation-store";
-import { gameActions, useGameLevelStore } from "@/stores/game-level-store";
-import { between } from "@/utils/random";
+import { useGameLevelStore } from "@/stores/game-level-store";
 import { playSound } from "@/utils/sound";
 import { CSSProperties } from "react";
-
-function createDamageRange(min: number, max: number) {
-  return [min, max] as [number, number];
-}
 
 export class ThunderStrikeSkill implements ActiveSkill {
   id = SkillCode.ThunderStrike;
@@ -38,7 +34,11 @@ export class ThunderStrikeSkill implements ActiveSkill {
 
   cost = 30;
 
-  damage = createDamageRange(90, 120);
+  damage: Damage = {
+    type: SkillDamageType.Elemental,
+    value: [100, 200],
+    ailment: [],
+  };
 
   description = "Strike a point with thunder";
 
@@ -46,24 +46,22 @@ export class ThunderStrikeSkill implements ActiveSkill {
 
   style: Partial<CSSProperties> = {};
 
-  damageType: SkillDamageType = SkillDamageType.Elemental;
-
   private get radius() {
     return this.aoe;
   }
 
-  activate({ pos }: ActivateParams) {
+  activate({ pos, actions }: ActivateParams) {
     const animationDuration = 300;
-    const affectedEnemies: EnemyModel[] = [];
 
-    gameActions().damageCircleArea(
+    const { enemiesHit } = actions.damageCircleArea(
       {
         radius: this.radius,
-        x: pos.x - distanceFromTop.x,
-        y: pos.y - distanceFromTop.y,
+        pos: {
+          x: pos.x - distanceFromTop.x,
+          y: pos.y - distanceFromTop.y,
+        },
       },
-      between(this.damage[0], this.damage[1]),
-      affectedEnemies
+      this.damage
     );
 
     playAnimation(
@@ -82,21 +80,18 @@ export class ThunderStrikeSkill implements ActiveSkill {
     };
 
     for (const enemy of enemies) {
-      const wasAffected = affectedEnemies.find((e) => e.id === enemy.id);
+      const wasAffected = enemiesHit.get(enemy.id);
 
       if (wasAffected) continue;
 
       const distance = closestDistanceToCircle(
         {
-          height: enemy.size.height,
-          width: enemy.size.width,
-          x: enemy.position.x,
-          y: enemy.position.y,
+          size: enemy.size,
+          pos: enemy.position,
         },
         {
           radius: this.radius,
-          x: pos.x - distanceFromTop.x,
-          y: pos.y - distanceFromTop.y,
+          pos: distanceFromTop,
         }
       );
 
@@ -107,10 +102,7 @@ export class ThunderStrikeSkill implements ActiveSkill {
     }
 
     if (closestDistance.enemy) {
-      gameActions().damageEnemy(
-        closestDistance.enemy.id,
-        between(this.damage[0], this.damage[1])
-      );
+      actions.damageEnemy(closestDistance.enemy.id, this.damage);
 
       const x =
         closestDistance.enemy.position.x + closestDistance.enemy.size.width / 2;

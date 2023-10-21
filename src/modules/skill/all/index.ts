@@ -4,6 +4,7 @@ import { RuleOfThirds } from "@/modules/skill/all/passives/rule-of-thirds";
 import { AnySkill } from "@/modules/skill/types";
 import { GreatSlash } from "@/modules/skill/all/active/great-slash";
 import { IceOrb } from "@/modules/skill/all/active/ice-orb";
+import { Shatter as IceShatter } from "@/modules/skill/all/active/shatter";
 
 export const allSkills: AnySkill[] = [
   new RuleOfThirds(),
@@ -11,4 +12,5 @@ export const allSkills: AnySkill[] = [
   new FireSlash(),
   new GreatSlash(),
   new IceOrb(),
+  new IceShatter(),
 ];

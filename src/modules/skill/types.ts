@@ -1,5 +1,11 @@
 import { CSSProperties } from "react";
 import { Position } from "../../types";
+import { GameActions } from "@/stores/game-level-store";
+
+export enum Ailment {
+  Burn = "Burn",
+  Chill = "Chill",
+}
 
 export enum SkillDamageType {
   Elemental = "elemental",
@@ -18,6 +24,7 @@ export enum SkillCode {
   ThunderStrike = "thunder-strike",
   FireSlash = "fire-slash",
   IceOrb = "ice-orb",
+  IceShatter = "shatter",
 }
 
 export enum SkillActivationType {
@@ -25,6 +32,14 @@ export enum SkillActivationType {
   Guard,
   Active,
 }
+
+export type Damage = {
+  value: [number, number];
+  type: SkillDamageType;
+  ailment: Ailment[];
+};
+
+export type ActivateParams = { pos: Position; actions: GameActions };
 
 export interface BaseSkill {
   id: string;
@@ -34,10 +49,6 @@ export interface BaseSkill {
   code: SkillCode;
 }
 
-export type Damage = [number, number];
-
-export type ActivateParams = { pos: Position };
-
 export type ActiveSkill = BaseSkill & {
   type: SkillActivationType.Active;
   cost: number;
@@ -45,7 +56,6 @@ export type ActiveSkill = BaseSkill & {
   damage: Damage;
   style: CSSProperties;
   animationType: SkillAnimationType;
-  damageType: SkillDamageType;
   activate: (params: ActivateParams) => void;
   copy: () => ActiveSkill;
 };

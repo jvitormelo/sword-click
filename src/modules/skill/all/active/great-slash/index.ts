@@ -1,3 +1,4 @@
+import SlashSound from "@/assets/sounds/slash.mp3";
 import {
   ActivateParams,
   ActiveSkill,
@@ -7,14 +8,12 @@ import {
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
-import SlashSound from "@/assets/sounds/slash.mp3";
 
 import GreatSlashIcon from "@/assets/skills/icons/great-slash.png";
-import { CSSProperties } from "react";
-import { playAnimation } from "@/stores/animation-store";
 import { BasicCutAnimation } from "@/modules/skill/all/active/basic-cut/animation";
+import { playAnimation } from "@/stores/animation-store";
 import { playSound } from "@/utils/sound";
-import { gameActions } from "@/stores/game-level-store";
+import { CSSProperties } from "react";
 
 export class GreatSlash implements ActiveSkill {
   id: string = "great-slash";
@@ -22,8 +21,11 @@ export class GreatSlash implements ActiveSkill {
   aoe: number = 1;
   code: SkillCode = SkillCode.GreatSlash;
   cost: number = 15;
-  damage: Damage = [30, 50];
-  damageType: SkillDamageType = SkillDamageType.Physical;
+  damage: Damage = {
+    value: [30, 50],
+    ailment: [],
+    type: SkillDamageType.Physical,
+  };
   description: string = "Slash Vertically a great area";
   icon: string = GreatSlashIcon;
   name: string = "Great Slash";
@@ -32,24 +34,27 @@ export class GreatSlash implements ActiveSkill {
   };
   type: SkillActivationType.Active = SkillActivationType.Active;
 
-  activate(params: ActivateParams) {
+  activate({ actions, pos }: ActivateParams) {
     const width = 15;
     const height = 300;
 
-    gameActions().damageLineArea(
+    actions.damagePointArea(
       {
-        x: params.pos.x,
-        y: params.pos.y - height / 2,
-        width,
-        height,
+        pos: {
+          x: pos.x,
+          y: pos.y - height / 2,
+        },
+        size: {
+          width,
+          height,
+        },
       },
-      this.damage,
-      []
+      this.damage
     );
     playAnimation(
       BasicCutAnimation({
         style: this.style,
-        position: params.pos,
+        position: pos,
         size: {
           height,
           width,

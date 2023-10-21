@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { EnemyModel } from "./types";
 import { motion } from "framer-motion";
-import { Ailment } from "@/modules/enemies/enemy-on-level";
 import { gameTick } from "@/constants";
+import { Ailment } from "@/modules/skill/types";
 
 export const Enemy = ({ enemy }: { enemy: EnemyModel }) => {
   const { id, position, health, size, image, ailments } = enemy;
@@ -13,9 +13,9 @@ export const Enemy = ({ enemy }: { enemy: EnemyModel }) => {
 
   const elementRef = useRef<HTMLImageElement>(null);
 
-  const hasBurn = useMemo(() => ailments.includes(Ailment.Burn), [ailments]);
+  const hasBurn = ailments.includes(Ailment.Burn);
 
-  const hasChill = useMemo(() => ailments.includes(Ailment.Chill), [ailments]);
+  const hasChill = ailments.includes(Ailment.Chill);
 
   if (enemy.isAttacking && !isAnimating.current) {
     const prepareAttack = () => {

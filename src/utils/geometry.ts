@@ -1,22 +1,21 @@
-interface Point {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+import { Position, Size } from "@/types";
+
+export type Point = {
+  pos: Position;
+  size: Size;
+};
 
 export function arePointsTouching(point1: Point, point2: Point): boolean {
   return (
-    point1.x < point2.x + point2.width &&
-    point1.x + point1.width > point2.x &&
-    point1.y < point2.y + point2.height &&
-    point1.y + point1.height > point2.y
+    point1.pos.x < point2.pos.x + point2.size.width &&
+    point1.pos.x + point1.size.width > point2.pos.x &&
+    point1.pos.y < point2.pos.y + point2.size.height &&
+    point1.pos.y + point1.size.height > point2.pos.y
   );
 }
 
 export interface Circle {
-  x: number;
-  y: number;
+  pos: Position;
   radius: number;
 }
 
@@ -33,15 +32,15 @@ export function areCircleAndRectangleTouching(
 ): boolean {
   const closestX = Math.max(
     rectangle.x,
-    Math.min(circle.x, rectangle.x + rectangle.width)
+    Math.min(circle.pos.x, rectangle.x + rectangle.width)
   );
   const closestY = Math.max(
     rectangle.y,
-    Math.min(circle.y, rectangle.y + rectangle.height)
+    Math.min(circle.pos.y, rectangle.y + rectangle.height)
   );
 
-  const distanceX = circle.x - closestX;
-  const distanceY = circle.y - closestY;
+  const distanceX = circle.pos.x - closestX;
+  const distanceY = circle.pos.y - closestY;
 
   return (
     distanceX * distanceX + distanceY * distanceY <=
@@ -49,14 +48,10 @@ export function areCircleAndRectangleTouching(
   );
 }
 
-interface Point {
-  x: number;
-  y: number;
-}
-
 export function closestDistanceToCircle(point: Point, circle: Circle): number {
   const distance = Math.sqrt(
-    Math.pow(circle.x - point.x, 2) + Math.pow(circle.y - point.y, 2)
+    Math.pow(circle.pos.x - point.pos.x, 2) +
+      Math.pow(circle.pos.y - point.pos.y, 2)
   );
   const closestDistance = distance - circle.radius;
   return closestDistance;

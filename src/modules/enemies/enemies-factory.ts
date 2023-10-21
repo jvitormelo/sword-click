@@ -14,11 +14,11 @@ export const zombieFactory: EnemyFactory = (props) => {
   };
   return new EnemyOnLevel({
     id: crypto.randomUUID(),
-    health: 100,
+    health: between(100, 500),
     name: "Zombie",
     attack: 6,
     image: Zombie,
-    speed: 40,
+    speed: between(20, 60),
     size: size,
     attackSpeed: 1000,
     position: {
@@ -40,7 +40,7 @@ export const goblinFactory: EnemyFactory = () => {
     health: 30,
     name: "Goblin",
     attack: 5,
-    speed: 80,
+    speed: between(60, 80),
     attackSpeed: 800,
     image: Goblin,
     size,

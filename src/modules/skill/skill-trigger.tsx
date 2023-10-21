@@ -9,8 +9,7 @@ export const SkillTrigger = () => {
   const activeSkill = useSkillStore((s) => s.activeSkill);
   const passives = useSkillStore((s) => s.passiveSkills);
   const mana = useGameLevelStore((s) => s.player.mana);
-  const { addEnergy } = useGameLevelStore((s) => s.actions);
-
+  const actions = useGameLevelStore((s) => s.actions);
   const level = useGameLevelStore((s) => s.level);
 
   const skillHandler = useCallback(
@@ -19,13 +18,13 @@ export const SkillTrigger = () => {
 
       if (mana < activeSkill.cost) return;
 
-      activeSkill.activate({ pos: { x, y } });
+      activeSkill.activate({ pos: { x, y }, actions });
 
       passives.forEach((passive) => passive.after(activeSkill));
 
-      addEnergy(-activeSkill.cost);
+      actions.addEnergy(-activeSkill.cost);
     },
-    [addEnergy, mana, passives]
+    [actions, mana, passives]
   );
 
   const onClick = useCallback(
