@@ -33,9 +33,7 @@ const SpawnedEntity = ({ image, size, position, sound }: EntityOnLevel) => {
       />
       <motion.img
         className="absolute rounded-full translate-x-1/2 animate-spin"
-        style={{}}
         animate={{
-          rotate: [0, 360],
           translateX: [0, 10, 0],
           scale: [1, 1.1, 1],
           left: position.x,
