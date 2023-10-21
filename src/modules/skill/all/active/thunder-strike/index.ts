@@ -36,12 +36,11 @@ export class ThunderStrikeSkill implements ActiveSkill {
 
   name = "Thunder Strike";
 
-  cost = 10;
+  cost = 30;
 
-  damage = createDamageRange(50, 70);
+  damage = createDamageRange(90, 120);
 
-  description =
-    "Strike a point with thunder, if it hits, it will bounce to the closest enemy";
+  description = "Strike a point with thunder";
 
   icon = ThunderStrikeIcon;
 
@@ -130,5 +129,9 @@ export class ThunderStrikeSkill implements ActiveSkill {
     }
 
     playSound(ThunderSound, animationDuration);
+  }
+
+  copy() {
+    return new ThunderStrikeSkill();
   }
 }

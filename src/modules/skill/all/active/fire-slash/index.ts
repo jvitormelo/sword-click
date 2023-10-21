@@ -24,8 +24,8 @@ export class FireSlash implements ActiveSkill {
   aoe = 8;
   code: SkillCode = SkillCode.FireSlash;
   cost = 30;
-  damage = [30, 50] as [number, number];
-  description = "Deals 30-50 damage to all enemies in a 8 tile radius.";
+  damage = [10, 30] as [number, number];
+  description = "Horizontal slash that burns enemies";
   icon = Icon;
   name = "Fire Slash";
   type: SkillActivationType.Active = SkillActivationType.Active;
@@ -53,5 +53,9 @@ export class FireSlash implements ActiveSkill {
     );
 
     playSound(FireSound, animationDuration);
+  }
+
+  copy() {
+    return new FireSlash();
   }
 }

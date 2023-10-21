@@ -46,6 +46,7 @@ export type ActiveSkill = BaseSkill & {
   animationType: SkillAnimationType;
   damageType: SkillDamageType;
   activate: (params: ActivateParams) => void;
+  copy: () => ActiveSkill;
 };
 
 export type PassiveSkill = BaseSkill & {

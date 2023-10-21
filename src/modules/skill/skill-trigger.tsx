@@ -32,7 +32,7 @@ export const SkillTrigger = () => {
     (e: MouseEvent) => {
       const { offsetX, offsetY } = e;
 
-      skillHandler(offsetX, offsetY, activeSkill ?? new BasicCut());
+      skillHandler(offsetX, offsetY, activeSkill?.copy() ?? new BasicCut());
     },
     [activeSkill, skillHandler]
   );

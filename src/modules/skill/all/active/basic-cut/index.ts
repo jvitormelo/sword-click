@@ -29,6 +29,10 @@ export class BasicCut implements ActiveSkill {
   animationType: SkillAnimationType = SkillAnimationType.Element;
   damageType: SkillDamageType = SkillDamageType.Physical;
 
+  copy() {
+    return new BasicCut();
+  }
+
   activate({ pos }: ActivateParams) {
     const baseHeight = between(50, 80);
     const baseWidth = 3;

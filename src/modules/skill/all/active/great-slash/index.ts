@@ -22,7 +22,7 @@ export class GreatSlash implements ActiveSkill {
   aoe: number = 1;
   code: SkillCode = SkillCode.GreatSlash;
   cost: number = 15;
-  damage: Damage = [50, 70];
+  damage: Damage = [30, 50];
   damageType: SkillDamageType = SkillDamageType.Physical;
   description: string = "Slash Vertically a great area";
   icon: string = GreatSlashIcon;
@@ -58,5 +58,9 @@ export class GreatSlash implements ActiveSkill {
       500
     );
     playSound(SlashSound);
+  }
+
+  copy() {
+    return new GreatSlash();
   }
 }

@@ -15,6 +15,14 @@ export const SkillIcon = ({ skill, onClick, active }: Props) => {
         <div className="w-48 ">
           <div className="font-bold">{skill.name}</div>
           <div className="text-xs">{skill.description}</div>
+          {skill.type === SkillActivationType.Active && (
+            <>
+              <div className="text-xs">
+                Damage: {skill.damage[0]}-{skill.damage[1]}
+              </div>
+              <div className="text-xs text-blue-500">Cost: {skill.cost}</div>
+            </>
+          )}
         </div>
       }
     >

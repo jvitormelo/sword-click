@@ -18,7 +18,6 @@ export const BasicCutAnimation = ({
       className="shadow-md z-30 cursor-pointer"
       style={{
         background: "white",
-        ...style,
         width,
         position: "absolute",
         left: position.x,
@@ -28,6 +27,7 @@ export const BasicCutAnimation = ({
         transformOrigin: "0 100%",
         scaleY: 0,
         translateY: "-50%",
+        ...style,
       }}
       animate={{
         border: style?.border,
