@@ -1,7 +1,8 @@
-import { CSSProperties, ComponentProps } from "react";
-import { Position } from "../../types";
 import { GameActions } from "@/modules/level/game-level-store";
 import { motion } from "framer-motion";
+import { CSSProperties, ComponentProps } from "react";
+import { Position } from "../../types";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
 
 export enum Ailment {
   Burn = "Burn",
@@ -37,6 +38,11 @@ export enum SkillActivationType {
   Active,
 }
 
+export enum ActivationType {
+  Click = "click",
+  Select = "select",
+}
+
 export type Damage = {
   value: [number, number];
   type: SkillDamageType;
@@ -60,23 +66,23 @@ export interface BaseSkill {
   name: string;
   description: string;
   code: SkillCode;
+  coolDown: number;
 }
 
-export type ActiveSkill = BaseSkill & {
+export type ActiveSkillModel = BaseSkill & {
   type: SkillActivationType.Active;
   cost: number;
   aoe: number;
   damage: Damage;
   style: CSSProperties;
   animationType: SkillAnimationType;
-  activate: (params: ActivateParams) => void;
-  copy: () => ActiveSkill;
+  activationType: ActivationType;
 };
 
 export type PassiveSkill = BaseSkill & {
   type: SkillActivationType.Passive | SkillActivationType.Guard;
-  before: (cut: ActiveSkill) => void;
-  after: (cut: ActiveSkill) => void;
+  before: (cut: ActiveSkillModel) => void;
+  after: (cut: ActiveSkillModel) => void;
 };
 
 export type AnySkill = ActiveSkill | PassiveSkill;

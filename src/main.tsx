@@ -10,7 +10,6 @@ import { queryClient } from "./lib/query-client";
 import { SkillOverlay } from "./modules/skill/skill-overlay";
 import { GameLoader } from "./providers/game-loader";
 import { ModalRender } from "./components/Modal/modal-provider";
-import { SkillTrigger } from "@/modules/skill/skill-trigger";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -20,7 +19,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       </GameLoader>
       <div className="pointer-events-none select-none">
         <SkillOverlay />
-        <SkillTrigger />
       </div>
       <ModalRender />
     </QueryClientProvider>

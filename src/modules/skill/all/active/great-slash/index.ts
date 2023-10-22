@@ -1,9 +1,7 @@
 import SlashSound from "@/assets/sounds/slash.mp3";
 import {
   ActivateParams,
-  ActiveSkill,
   Damage,
-  SkillActivationType,
   SkillAnimationType,
   SkillCode,
   SkillDamageType,
@@ -11,14 +9,11 @@ import {
 
 import GreatSlashIcon from "@/assets/skills/icons/great-slash.png";
 
-import { playSound } from "@/utils/sound";
-import { CSSProperties } from "react";
 import { createCutAnimation } from "@/modules/skill/all/active/basic-cut/animation";
+import { playSound } from "@/utils/sound";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
 
-export class GreatSlash implements ActiveSkill {
-  id: string = "great-slash";
-  animationType: SkillAnimationType = SkillAnimationType.Element;
-  aoe: number = 1;
+export class GreatSlash extends ActiveSkill {
   code: SkillCode = SkillCode.GreatSlash;
   cost: number = 15;
   damage: Damage = {
@@ -29,10 +24,12 @@ export class GreatSlash implements ActiveSkill {
   description: string = "Slash Vertically a great area";
   icon: string = GreatSlashIcon;
   name: string = "Great Slash";
-  style: CSSProperties = {
-    border: "1px solid black",
-  };
-  type: SkillActivationType.Active = SkillActivationType.Active;
+
+  constructor() {
+    super();
+    this.style.border = "1px solid black";
+    this.animationType = SkillAnimationType.Element;
+  }
 
   activate({ actions, pos, scene }: ActivateParams) {
     const width = 15;

@@ -1,5 +1,5 @@
 import {
-  ActiveSkill,
+  ActiveSkillModel,
   PassiveSkill,
   SkillCode,
   SkillActivationType,
@@ -16,10 +16,11 @@ export class RuleOfThirds implements PassiveSkill {
   description =
     "Increase the damage of your physical attacks by 100% every 3rd attack.";
   icon = RuleOfThirdsIcon;
+  coolDown: number = 0;
 
   counter = 0;
 
-  before(skill: ActiveSkill) {
+  before(skill: ActiveSkillModel) {
     if (skill.damage.type !== SkillDamageType.Physical) return;
 
     if (this.counter % 3 === 0) {

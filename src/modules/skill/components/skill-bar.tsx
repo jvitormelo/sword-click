@@ -1,20 +1,20 @@
 import { Card } from "@/components/Card";
-import { useEventListener } from "../../hooks/useEventListener";
-import { useSkillActions, useSkillStore } from "./skill-store";
-import { ActiveSkill } from "./types";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
+import { useEventListener } from "../../../hooks/useEventListener";
 import { SkillIcon } from "./skill-icon";
+import { useSkillActions, useSkillStore } from "../skill-store";
 
 export const SkillBar = () => {
   const skills = useSkillStore((s) => s.equippedSkills);
   const passivesSkills = useSkillStore((s) => s.passiveSkills);
   const activeSkill = useSkillStore((s) => s.activeSkill);
-  const { activateSkill, removeActiveSkill } = useSkillActions();
+  const { selectSkill, removeActiveSkill } = useSkillActions();
 
   function toggleSkill(skill: ActiveSkill) {
     if (activeSkill?.id === skill.id) {
       removeActiveSkill();
     } else {
-      activateSkill(skill);
+      selectSkill(skill);
     }
   }
 

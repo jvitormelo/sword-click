@@ -5,27 +5,23 @@ import IceOrbSound from "@/assets/sounds/ice-orb.mp3";
 import { boardSize, durationSynced } from "@/constants";
 import {
   ActivateParams,
-  ActiveSkill,
   Ailment,
   AnimationObject,
   Damage,
-  SkillActivationType,
-  SkillAnimationType,
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
 
-import { EntityCode, EntityOnLevel } from "@/modules/entities/types";
-import { Position, Size } from "@/types";
-import { CSSProperties } from "react";
-import { pureDamagePointArea } from "@/modules/level/game-level-store";
 import { EnemyOnLevel } from "@/modules/enemies/enemy-on-level";
+import { EntityCode, EntityOnLevel } from "@/modules/entities/types";
+import { pureDamagePointArea } from "@/modules/level/game-level-store";
+import { Position, Size } from "@/types";
 import { playSound } from "@/utils/sound";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
 
-export class IceOrb implements ActiveSkill {
-  id: string = "ice-orb";
-  animationType: SkillAnimationType = SkillAnimationType.Image;
-  aoe: number = 1;
+export class IceOrb extends ActiveSkill {
+  icon: string = Icon;
+  name: string = "Ice Orb";
   code: SkillCode = SkillCode.IceOrb;
   cost: number = 50;
   damage: Damage = {
@@ -34,10 +30,6 @@ export class IceOrb implements ActiveSkill {
     type: SkillDamageType.Ice,
   };
   description: string = "A ball of ice.";
-  icon: string = Icon;
-  name: string = "Ice Orb";
-  style: CSSProperties = {};
-  type: SkillActivationType.Active = SkillActivationType.Active;
 
   activate({ actions, pos }: ActivateParams) {
     actions.addEntity(new IceOrbEntity(pos));

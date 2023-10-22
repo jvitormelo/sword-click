@@ -6,21 +6,16 @@ import FireSound from "@/assets/sounds/fire.mp3";
 import FireSlashHit from "@/assets/skills/fire-slash-hit.png";
 import {
   ActivateParams,
-  ActiveSkill,
   Ailment,
   AnimationObject,
   Damage,
-  SkillActivationType,
-  SkillAnimationType,
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
 import { playSound } from "@/utils/sound";
-import { CSSProperties } from "react";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
 
-export class FireSlash implements ActiveSkill {
-  id = "fire-slash";
-  aoe = 8;
+export class FireSlash extends ActiveSkill {
   code: SkillCode = SkillCode.FireSlash;
   cost = 30;
   damage: Damage = {
@@ -31,9 +26,11 @@ export class FireSlash implements ActiveSkill {
   description = "Horizontal slash that burns enemies";
   icon = Icon;
   name = "Fire Slash";
-  type: SkillActivationType.Active = SkillActivationType.Active;
-  style: CSSProperties = {};
-  animationType: SkillAnimationType = SkillAnimationType.Image;
+
+  constructor() {
+    super();
+    this.aoe = 8;
+  }
 
   activate({ pos, actions, scene }: ActivateParams) {
     actions.damagePointArea(

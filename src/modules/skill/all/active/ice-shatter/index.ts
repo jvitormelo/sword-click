@@ -1,30 +1,21 @@
 import IceShatterImage from "@/assets/skills/ice-shatter.svg";
+import IceShatterSound from "@/assets/sounds/ice-shatter.mp3";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
 import {
   ActivateParams,
-  ActiveSkill,
   Ailment,
   Damage,
-  SkillActivationType,
-  SkillAnimationType,
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
-import { CSSProperties } from "react";
-import IceShatterSound from "@/assets/sounds/ice-shatter.mp3";
 import { max } from "@/utils/number";
 
-export class IceShatter implements ActiveSkill {
-  id: string = SkillCode.IceShatter;
-  aoe: number = 1;
+export class IceShatter extends ActiveSkill {
   code: SkillCode = SkillCode.IceShatter;
   cost: number = 5;
   description: string = "Shatter a chilled enemy";
   icon: string = IceShatterImage;
   name: string = "Ice Shatter";
-  style: CSSProperties = {};
-  type: SkillActivationType.Active = SkillActivationType.Active;
-
-  animationType: SkillAnimationType = SkillAnimationType.Image;
 
   damage: Damage = {
     value: [80, 120],

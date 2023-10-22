@@ -5,28 +5,19 @@ import ThunderStrikeIcon from "@/assets/skills/icons/thunder-strike.png";
 import ThunderStrikeHit from "@/assets/skills/thunder-strike-hit.png";
 import ThunderSound from "@/assets/sounds/thunder-strike-sound.mp3";
 import { EnemyModel } from "@/modules/enemies/types";
+import { useGameLevelStore } from "@/modules/level/game-level-store";
 import {
   ActivateParams,
-  ActiveSkill,
   AnimationObject,
   Damage,
-  SkillActivationType,
-  SkillAnimationType,
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
-import { useGameLevelStore } from "@/modules/level/game-level-store";
 import { Position } from "@/types";
 import { playSound } from "@/utils/sound";
-import { CSSProperties } from "react";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
 
-export class ThunderStrikeSkill implements ActiveSkill {
-  id = SkillCode.ThunderStrike;
-
-  type: SkillActivationType.Active = SkillActivationType.Active;
-
-  animationType: SkillAnimationType = SkillAnimationType.Image;
-
+export class ThunderStrikeSkill extends ActiveSkill {
   aoe = 4;
 
   code = SkillCode.ThunderStrike;
@@ -44,8 +35,6 @@ export class ThunderStrikeSkill implements ActiveSkill {
   description = "Strike a point with thunder";
 
   icon = ThunderStrikeIcon;
-
-  style: Partial<CSSProperties> = {};
 
   private get radius() {
     return this.aoe;

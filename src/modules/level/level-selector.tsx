@@ -10,6 +10,7 @@ import { GoldCounter } from "../player/gold-counter";
 import { usePlayer } from "@/modules/player/use-player";
 import { allLevels } from "@/modules/level/all-levels";
 import { LevelModel } from "@/modules/level/types";
+import { useWatchSkillClick } from "@/modules/skill/hooks/use-watch-skill-click";
 
 export const LevelSelector = () => {
   const level = useGameLevelStore((s) => s.level);
@@ -32,8 +33,15 @@ function ActiveLevel({ level }: { level: LevelOnLevel }) {
     <div className="text-xs flex flex-col">
       <span>Enemies: {levelRef.current.size}</span>
       <GoldCounter gold={gold} />
+      <BoardClickWatcher level={level} />
     </div>
   );
+}
+
+function BoardClickWatcher({ level }: { level: LevelOnLevel }) {
+  useWatchSkillClick(level);
+
+  return null;
 }
 
 const viewsTextMap: Record<Views, string> = {

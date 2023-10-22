@@ -111,9 +111,8 @@ export const useGameLevelStore = create<Store>((set, get) => ({
       }
 
       let totalTick = 0;
-      const level2 = new LevelOnLevel(level);
 
-      set({ level: level2, isPlaying: true });
+      set({ level: new LevelOnLevel(level), isPlaying: true });
 
       interval = setInterval(() => {
         const { enemies, gold, player, entities, level } = get();

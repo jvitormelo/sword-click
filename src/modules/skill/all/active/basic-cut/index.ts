@@ -1,10 +1,9 @@
 import SlashSound from "@/assets/sounds/slash.mp3";
 import { createCutAnimation } from "@/modules/skill/all/active/basic-cut/animation";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
 import {
   ActivateParams,
-  ActiveSkill,
   Damage,
-  SkillActivationType,
   SkillAnimationType,
   SkillCode,
   SkillDamageType,
@@ -12,25 +11,23 @@ import {
 
 import { between } from "@/utils/random";
 import { playSound } from "@/utils/sound";
-import { CSSProperties } from "react";
 
-export class BasicCut implements ActiveSkill {
-  id = "basic-cut";
-  aoe: number = 1;
-  code: SkillCode = SkillCode.BasicCut;
-  cost: number = 5;
-  description: string = "Cut the enemy in front of you";
-  icon: string = "";
-  name: string = "Basic Cut";
-  style: CSSProperties = {};
-  type: SkillActivationType.Active = SkillActivationType.Active;
-  animationType: SkillAnimationType = SkillAnimationType.Element;
-
+export class BasicCut extends ActiveSkill {
+  code = SkillCode.BasicCut;
+  name = "Basic Cut";
+  description = "Cut the enemy in front of you";
   damage: Damage = {
     value: [10, 20],
     ailment: [],
     type: SkillDamageType.Physical,
   };
+  icon: string = "";
+
+  constructor() {
+    super();
+    this.cost = 5;
+    this.animationType = SkillAnimationType.Element;
+  }
 
   copy() {
     return new BasicCut();

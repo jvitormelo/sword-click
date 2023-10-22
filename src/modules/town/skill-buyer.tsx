@@ -4,7 +4,7 @@ import { updatePlayer, usePlayer } from "../player/use-player";
 import { allSkills } from "../skill/all";
 import { useSkillStore } from "../skill/skill-store";
 import { useModal } from "@/hooks/useModal";
-import { SkillIcon } from "../skill/skill-icon";
+import { SkillIcon } from "../skill/components/skill-icon";
 
 export const SkillBuyer = () => {
   const [selectSkill, setSelectSkill] = useState<string>("");

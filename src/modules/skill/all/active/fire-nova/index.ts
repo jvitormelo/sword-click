@@ -1,40 +1,43 @@
+import FireNovaImg from "@/assets/skills/fire-nova.png";
+import CombustionSound from "@/assets/sounds/combustion.mp3";
+import { durationSynced, durationSyncedMs } from "@/constants";
+import { NotActivatedError } from "@/modules/skill/errors/not-activated";
+import { ActiveSkill } from "@/modules/skill/skill-on-level";
 import {
   ActivateParams,
-  ActiveSkill,
+  ActivationType,
   Ailment,
   Damage,
-  SkillActivationType,
-  SkillAnimationType,
   SkillCode,
   SkillDamageType,
 } from "@/modules/skill/types";
-import FireNovaImg from "@/assets/skills/fire-nova.png";
-import { CSSProperties } from "react";
 import { boxToRadius } from "@/utils/geometry";
-import { durationSynced, durationSyncedMs } from "@/constants";
-import CombustionSound from "@/assets/sounds/combustion.mp3";
 
-export class FireNova implements ActiveSkill {
-  id: string = SkillCode.FireNova;
-  animationType: SkillAnimationType = SkillAnimationType.Image;
-  aoe: number = 1;
-  code: SkillCode = SkillCode.FireNova;
-  cost: number = 50;
-  damage: Damage = {
-    ailment: [Ailment.Burn],
-    value: [50, 60],
-    type: SkillDamageType.Fire,
-  };
+export class FireNova extends ActiveSkill {
+  name: string = "Fire Nova";
   description: string = "Explode all enemies that are burning.";
   icon: string = FireNovaImg;
-  name: string = "Fire Nova";
-  style: CSSProperties = {};
-  type: SkillActivationType.Active = SkillActivationType.Active;
+  code: SkillCode = SkillCode.FireNova;
+
+  damage: Damage = {
+    value: [30, 50],
+    type: SkillDamageType.Fire,
+    ailment: [],
+  };
+
+  constructor() {
+    super();
+    this.cost = 50;
+    this.coolDown = 4000;
+    this.activationType = ActivationType.Select;
+  }
 
   activate({ actions, scene }: ActivateParams) {
     const burningEnemies = actions.searchEnemies((enemy) =>
       enemy.ailments.includes(Ailment.Burn)
     );
+
+    if (burningEnemies.size === 0) throw new NotActivatedError();
 
     const width = 100 * this.aoe;
     const height = 100 * this.aoe;
@@ -78,5 +81,7 @@ export class FireNova implements ActiveSkill {
     });
   }
 
-  copy: () => ActiveSkill = () => new FireNova();
+  copy() {
+    return new FireNova();
+  }
 }
