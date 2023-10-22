@@ -43,10 +43,6 @@ export class FireNova extends ActiveSkill {
     const height = 100 * this.aoe;
 
     burningEnemies.forEach((enemy) => {
-      // 74 - 24
-      const x = enemy.position.x - enemy.size.width / 2;
-      const y = enemy.position.y - enemy.size.height / 2;
-
       actions.damageCircleArea(
         {
           pos: {
@@ -57,6 +53,10 @@ export class FireNova extends ActiveSkill {
         },
         this.damage
       );
+
+      // 74 - 24
+      const x = enemy.position.x - enemy.size.width / 2;
+      const y = enemy.position.y - enemy.size.height / 2;
 
       scene.playAnimation(
         {
