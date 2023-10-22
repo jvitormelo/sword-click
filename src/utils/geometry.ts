@@ -56,3 +56,7 @@ export function closestDistanceToCircle(point: Point, circle: Circle): number {
   const closestDistance = distance - circle.radius;
   return closestDistance;
 }
+
+export function boxToRadius(boxSize: number) {
+  return boxSize / 2;
+}

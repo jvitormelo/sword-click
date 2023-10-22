@@ -1,10 +1,10 @@
-export function playSound(src: string, removeAfter: number = 300) {
+export function playSound(src: string, removeAfter: number = 300, volume = 1) {
   const audio = new Audio(src);
-  audio.play();
-  audio.volume = 1;
-
-  setTimeout(() => {
-    audio.pause();
-    audio.remove();
-  }, removeAfter);
+  audio.volume = volume;
+  audio.play().then(() => {
+    setTimeout(() => {
+      audio.pause();
+      audio.remove();
+    }, removeAfter);
+  });
 }

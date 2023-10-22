@@ -58,8 +58,8 @@ export class ThunderStrikeSkill implements ActiveSkill {
       {
         radius: this.radius,
         pos: {
-          x: pos.x - distanceFromTop.x,
-          y: pos.y - distanceFromTop.y,
+          x: pos.x,
+          y: pos.y,
         },
       },
       this.damage

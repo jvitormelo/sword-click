@@ -47,6 +47,8 @@ export type GameActions = {
   damageEnemy: (id: string, damage: Damage, config?: DamageConfig) => void;
   damagePointArea: DamagePointArea;
   damageCircleArea: DamageCircleArea;
+  damageAllEnemies: (damage: Damage, config?: DamageConfig) => void;
+  searchEnemies: (condition: (enemy: EnemyOnLevel) => boolean) => EnemyMap;
 };
 
 type Store = {
@@ -109,8 +111,9 @@ export const useGameLevelStore = create<Store>((set, get) => ({
       }
 
       let totalTick = 0;
+      const level2 = new LevelOnLevel(level);
 
-      set({ level: new LevelOnLevel(level), isPlaying: true });
+      set({ level: level2, isPlaying: true });
 
       interval = setInterval(() => {
         const { enemies, gold, player, entities, level } = get();
@@ -203,9 +206,9 @@ export const useGameLevelStore = create<Store>((set, get) => ({
           if (
             areCircleAndRectangleTouching(circle, {
               x: enemy.position.x,
+              y: enemy.position.y,
               height: enemy.size.height,
               width: enemy.size.width,
-              y: enemy.position.y,
             })
           ) {
             enemy.takeDamage(damage);
@@ -239,6 +242,38 @@ export const useGameLevelStore = create<Store>((set, get) => ({
           gold: state.gold + gold,
         };
       });
+    },
+    damageAllEnemies(damage, config) {
+      set((state) => {
+        const enemiesCopy = new Map(state.enemies);
+        const condition = config?.condition ?? (() => true);
+        const beforeDamage = config?.beforeDamage ?? (() => {});
+        for (const enemy of enemiesCopy.values()) {
+          if (condition(enemy)) {
+            beforeDamage(enemy, damage);
+            enemy.takeDamage(damage);
+          }
+        }
+        const gold = removeDeadEnemies(enemiesCopy);
+
+        return {
+          enemies: enemiesCopy,
+          gold: state.gold + gold,
+        };
+      });
+    },
+    searchEnemies(condition) {
+      const state = get();
+
+      const enemies = new Map<string, EnemyOnLevel>();
+
+      for (const enemy of state.enemies.values()) {
+        if (condition(enemy)) {
+          enemies.set(enemy.id, enemy);
+        }
+      }
+
+      return enemies;
     },
   },
 }));

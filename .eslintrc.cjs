@@ -14,6 +14,7 @@ module.exports = {
       "warn",
       { allowConstantExport: true },
     ],
+    "@typescript-eslint/no-floating-promises": "warn",
   },
   parserOptions: {
     ecmaVersion: "latest",

@@ -28,6 +28,7 @@ export enum SkillCode {
   FireSlash = "fire-slash",
   IceOrb = "ice-orb",
   IceShatter = "shatter",
+  FireNova = "fire-nova",
 }
 
 export enum SkillActivationType {
@@ -49,7 +50,7 @@ export type ActivateParams = {
   actions: GameActions;
   scene: {
     playAnimation: (animation: AnimationObject, duration: number) => void;
-    playSound: (sound: string, duration: number) => void;
+    playSound: (sound: string, duration: number, volume?: number) => void;
   };
 };
 

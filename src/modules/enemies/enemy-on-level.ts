@@ -1,10 +1,10 @@
-import { PlayerOnLevel } from "@/modules/player/types";
 import { Position, Size } from "@/types";
 import { FPS, boardSize, distanceFromTop } from "../../constants";
 import { EnemyModel } from "./types";
 import { Ailment, Damage, SkillDamageType } from "@/modules/skill/types";
 import { between } from "@/utils/random";
 import { skillDamageTypeColors } from "@/modules/skill/constants";
+import { PlayerOnLevel } from "@/modules/player/player-level";
 
 type TickParams = {
   totalTicks: number;
