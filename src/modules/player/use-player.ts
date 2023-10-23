@@ -8,7 +8,11 @@ export type PlayerModel = {
   abyssLevel: number;
 } & PlayerStats;
 
-const defaultPlayer: PlayerModel = {
+type PlayerModelWithSkills = PlayerModel & {
+  skills: string[];
+};
+
+const defaultPlayer: PlayerModelWithSkills = {
   level: 1,
   life: 100,
   mana: 100,
@@ -22,7 +26,7 @@ const defaultPlayer: PlayerModel = {
 export const useLoadPlayer = () => {
   return useQuery({
     queryKey: ["player"],
-    queryFn: async () => {
+    queryFn: () => {
       const player = localStorage.getItem("player");
 
       if (!player) {
@@ -31,11 +35,11 @@ export const useLoadPlayer = () => {
         return defaultPlayer;
       }
 
-      const parsed = JSON.parse(player);
+      const parsed = JSON.parse(player) as PlayerModelWithSkills;
       return {
         ...defaultPlayer,
         ...parsed,
-      } as PlayerModel;
+      } as PlayerModelWithSkills;
     },
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -52,11 +56,11 @@ export const usePlayer = () => {
 
 export const updatePlayer = (
   player:
-    | Partial<PlayerModel>
-    | ((oldPlayer: PlayerModel) => Partial<PlayerModel>)
+    | Partial<PlayerModelWithSkills>
+    | ((oldPlayer: PlayerModelWithSkills) => Partial<PlayerModelWithSkills>)
 ) => {
   try {
-    const result = queryClient.setQueryData<PlayerModel>(
+    const result = queryClient.setQueryData<PlayerModelWithSkills>(
       ["player"],
       (oldValue) => {
         if (!oldValue) return oldValue;
